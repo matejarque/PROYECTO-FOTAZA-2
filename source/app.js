@@ -1,8 +1,10 @@
-const express = require('express');
-require('dotenv').config();
-const db = require('./config/db');
-const app = express();
+import express from 'express';
+import dotenv from 'dotenv';
+//import db from './config/db.js';
 const PORT = process.env.PORT || 3000;
+
+dotenv.config();
+const app = express();
 
 
 app.get('/', (req, res) => {
