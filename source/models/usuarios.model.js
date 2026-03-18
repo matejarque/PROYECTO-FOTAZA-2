@@ -11,7 +11,7 @@ export const crearUsuario = async(nombre, correo, contra) => {
     const query = `INSERT INTO usuarios (nombre_usuario, correo_electronico, contrasena)
     VALUES (?, ?, ?)`;
 
-    const [resultado] = await db.query(query, [nombre, correo, contra])
+    const [resultado] = await db.query(query, [nombre, correo, contra]);
     return resultado;
 };
 
@@ -22,9 +22,18 @@ export const crearUsuario = async(nombre, correo, contra) => {
 export const editarUsuario = async() =>{}
 
 //para suspender temporalmente o indefinido (repasar pdf)
-export const suspenderUsuario = async() => {}
+export const suspenderUsuario = async(nombre_usuario, estado) => {
+    const query = `UPDATE usuarios SET estado = ? WHERE nombre_usuario = ?`;
+
+    const [resultado] = await db.query(query,[estado, nombre_usuario]);
+    return [resultado];
+};
 
 
 //para que un superAdmin le de rol de moderador a otro usuario por ¿nombre o correo? a eleccion debe de ser mejor
-export const crearModerador = async() =>{}
+export const crearModerador = async(nombre_usuario) =>{
+    const query = `UPDATE usuarios SET id_rol = 2 WHERE nombre_usuario = ?`;
+    const [resultado] = await db.query(query,[nombre_usuario]);
+    return[resultado];
+}
 
