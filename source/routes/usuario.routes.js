@@ -4,6 +4,6 @@ import { registroUsuario, editarUsuarios } from "../controllers/usuario.controll
 const router = express.Router();
 
 router.post("/registro", registroUsuario);
-router.put("/actualizar", editarUsuarios)
+router.put("/actualizar", editarUsuarios);
 
 export default router;
