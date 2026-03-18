@@ -1,11 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import usuarioRoutes from "./routes/usuario.routes.js"; //invesitgar si se puede importar todo de alguna manera, si no esto va a ser mucho
 //import db from './config/db.js';
 const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 const app = express();
 
+app.use("/usuarios", usuarioRoutes)
 
 app.get('/', (req, res) => {
     res.send('El servidor de fotaza esta activo');
