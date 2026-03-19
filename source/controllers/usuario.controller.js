@@ -74,7 +74,7 @@ export const crearModeradorController = async (req, res) => {
             return res.status(400).json({mensaje: "falta el nombre"});
         }
         await crearModerador(nombre);
-        return res.status(400).json({mensaje: "falta el nombre"});
+        return res.status(200).json({mensaje: "Usuario ahora es moderador"});
 
     } catch (error) {
         console.log("error en el crear moderador", error);
@@ -85,7 +85,7 @@ export const crearModeradorController = async (req, res) => {
 
 export const buscarUsuarioPorNombreController = async(req, res) =>{
     try {
-        const {nombre} = req.body;
+        const {nombre} = req.params;
 
          if (!nombre) {
             return res.status(400).json({ mensaje: "Falta el nombre" });

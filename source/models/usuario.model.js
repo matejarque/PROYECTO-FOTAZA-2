@@ -7,6 +7,8 @@ import db from '../config/db.js'
  * nombre_usuario, correo_electronico, contrasena, id_rol - 
  * id_rol pr defecto les da usuario */
 
+
+//funcion flecha para crear el usuario, solo requiere, nombre, correo y contrasena
 export const crearUsuario = async(nombre, correo, contra) => {
     
     try{
@@ -23,7 +25,7 @@ export const crearUsuario = async(nombre, correo, contra) => {
 };
 
 
-//por si se quiere modificar el usuario (no recuerdo si era necesario)
+//funacion para que el usuario pueda editar su perfil, solo requiere, nombre, correo y para validar el usuario el idusuario
 export const editarUsuario = async(nombre, correo, idusuario) =>{
     try{
         const query = `UPDATE usuarios SET nombre_usuario = ?, correo_electronico = ?  WHERE id_usuario = ?`
@@ -37,7 +39,7 @@ export const editarUsuario = async(nombre, correo, idusuario) =>{
 
 
 
-//para suspender temporalmente o indefinido (repasar pdf)
+//funcion flecha para suspender el usuario lo unico que modifica es su estado(activo, inactivo, baneado) a traves del nombre del mismo
 export const suspenderUsuario = async(nombre_usuario, estado) => {
     try{
     const query = `UPDATE usuarios SET estado = ? WHERE nombre_usuario = ?`;
@@ -54,8 +56,8 @@ export const suspenderUsuario = async(nombre_usuario, estado) => {
 //para que un superAdmin le de rol de moderador a otro usuario por ¿nombre o correo? a eleccion debe de ser mejor
 export const crearModerador = async(nombre_usuario) =>{
     try {
-        const query = `UPDATE usuarios SET id_rol = 2 WHERE nombre_usuario = ?`;
-        const [resultado] = await db.query(query,[nombre_usuario]);
+        const query = `UPDATE usuarios SET id_rol = ? WHERE nombre_usuario = ?`;
+        const [resultado] = await db.query(query,[nombre_usuario, 2]);
         return[resultado];
 
     } catch (error) {
@@ -65,21 +67,21 @@ export const crearModerador = async(nombre_usuario) =>{
 }
 
 
-//realiar estos buscadores para encontrar los usuarios
+//funcion flecha que se encarga de buscar el nombre del usuario sin importar su exactitud
 export const buscarUsuarioPorNombre = async(nombre) =>{
     try {
-        const query = `SELECT nombre_usuario FROM usuarios WHERE nombre_usuario LIKE ?`;
+        const query = `SELECT id_usuario, nombre_usuario, correo_electronico FROM usuarios WHERE nombre_usuario LIKE ?`;
         console.log("error en buscar usuario por nombre");
-        const[resultado] = await db.query(query[`%${nombre}%`]);
+        const[resultado] = await db.query(query, [`%${nombre}%`]);
         console.log("se encontro el usuario");
-        return[resultado];
+        return resultado;
     } catch (error) {
         console.log("error al buscar usuario por nombre model", error);
-        throw errorM;
+        throw error;
     }
 }
 
-//realmente necesario?
+//funcion necesaria para validar un correo existente o no a la hora de crearlo mas adelante
 export const buscarUsuarioPorEmail = async(correo) =>{
     try {
         const query = `SELECT * FROM usuarios WHERE correo_electronico = ?`;
@@ -91,11 +93,10 @@ export const buscarUsuarioPorEmail = async(correo) =>{
     }
 }
 
-//este me sirve para otras funciones
+//necesario para buscar un usuario por id
 export const buscarUsuarioPorId = async() =>{}
 
 //modificar contrasena
 export const cambiarContrasena = async() =>{
-
 }
 
