@@ -24,10 +24,10 @@ export const crearUsuario = async(nombre, correo, contra) => {
 
 
 //por si se quiere modificar el usuario (no recuerdo si era necesario)
-export const editarUsuario = async(nombre, correo, nombreSinEditar) =>{
+export const editarUsuario = async(nombre, correo, idusuario) =>{
     try{
-        const query = `UPDATE usuarios (nombre_usuario, correo_electronico) VALUES(?, ?) WHERE nombre_usuario = ?`
-        const [resultado] = await db.query(query, [nombre, correo, nombreSinEditar]);
+        const query = `UPDATE usuarios SET nombre_usuario = ?, correo_electronico = ?  WHERE id_usuario = ?`
+        const [resultado] = await db.query(query, [nombre, correo, idusuario]);
         return[resultado];
     }catch(error){
         console.log("error en editarusuario model");
@@ -80,8 +80,15 @@ export const buscarUsuarioPorNombre = async(nombre) =>{
 }
 
 //realmente necesario?
-export const buscarUsuarioPorEmail = async() =>{
-   
+export const buscarUsuarioPorEmail = async(correo) =>{
+    try {
+        const query = `SELECT * FROM usuarios WHERE correo_electronico = ?`;
+        console.log("error al buscar usuario por correo");
+        const[resultado] = await db.query(query,[correo]);
+    } catch (error) {
+        console.log("error al buscar usuario por correo");
+        throw error;
+    }
 }
 
 //este me sirve para otras funciones
@@ -89,5 +96,6 @@ export const buscarUsuarioPorId = async() =>{}
 
 //modificar contrasena
 export const cambiarContrasena = async() =>{
+
 }
 

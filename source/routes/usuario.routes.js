@@ -1,9 +1,15 @@
 import express from "express";
-import { registroUsuario, editarUsuarios } from "../controllers/usuario.controller.js";
+import { crearUsuarioController, editarUsuarioController, suspenderUsuarioController, crearModeradorController,
+     buscarUsuarioPorNombreController, buscarUsuarioPorEmailController} 
+from "../controllers/usuario.controller.js";
 
 const router = express.Router();
 
-router.post("/registro", registroUsuario);
-router.put("/actualizar", editarUsuarios);
+router.post("/usuario/registrar", crearUsuarioController); //funciona perfecto
+router.put("/usuario/actualizar-datos", editarUsuarioController);//funciona perfecto
+router.put("/usuario/suspender", suspenderUsuarioController);//probar
+router.put("/usuario/crear/moderador", crearModeradorController);//probar
+router.get("/usuario/buscar/nombre", buscarUsuarioPorNombreController);//probar
+router.get("/usuario/buscar/email", buscarUsuarioPorEmailController);//probar
 
 export default router;
