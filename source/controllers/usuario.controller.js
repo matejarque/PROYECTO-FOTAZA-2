@@ -45,7 +45,7 @@ export const editarUsuarioController = async(req, res) =>{
         const {nombre, correo, idusuario} = req.body;
         if(!nombre){
             return res.status(400).json({mensaje: "error"});
-     }
+        }
 
     await editarUsuario(nombre, correo, idusuario);
     return res.status(200).json({mensaje: "Usuario editado"});
