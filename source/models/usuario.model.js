@@ -71,7 +71,6 @@ export const crearModerador = async(nombre_usuario) =>{
 export const buscarUsuarioPorNombre = async(nombre) =>{
     try {
         const query = `SELECT id_usuario, nombre_usuario, correo_electronico FROM usuarios WHERE nombre_usuario LIKE ?`;
-        console.log("error en buscar usuario por nombre");
         const[resultado] = await db.query(query, [`%${nombre}%`]);
         console.log("se encontro el usuario");
         return resultado;
@@ -87,6 +86,7 @@ export const buscarUsuarioPorEmail = async(correo) =>{
         const query = `SELECT * FROM usuarios WHERE correo_electronico = ?`;
         console.log("error al buscar usuario por correo");
         const[resultado] = await db.query(query,[correo]);
+        return resultado;
     } catch (error) {
         console.log("error al buscar usuario por correo");
         throw error;
@@ -97,6 +97,15 @@ export const buscarUsuarioPorEmail = async(correo) =>{
 export const buscarUsuarioPorId = async() =>{}
 
 //modificar contrasena
-export const cambiarContrasena = async() =>{
+export const cambiarContrasena = async(nombre, contrasena) =>{
+    try {;
+        const query = `UPDATE usuarios SET contrasena = ? WHERE nombre_usuario = ?  `;
+        const [resultado] = await db.query(query, [contrasena, nombre]);
+        return resultado;
+        console.log("contraseña modificada");
+    } catch (error) {
+        console.log("error al cambiar contraseña en model usuario", error);
+        throw error;
+    }
 }
 

@@ -1,19 +1,24 @@
 //lo que pide la funcion nombre, correo, contra
 
-import { crearUsuario, editarUsuario, suspenderUsuario, crearModerador, buscarUsuarioPorNombre, buscarUsuarioPorEmail} from "../models/usuario.model.js";
+import { crearUsuario, editarUsuario, suspenderUsuario, crearModerador, buscarUsuarioPorNombre, buscarUsuarioPorEmail, cambiarContrasena} from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 
 
 export const buscarUsuarioPorEmailController = async(req, res) =>{
     try {
-        const email = req.body;
+        const {email} = req.query; //->pase a query porque con params no me toma el @
         if(!email){
             return res.status(400).json({mensaje: "dato incorrecto email"});
         }
-        await buscarUsuarioPorEmail(email);
-        return res.status(200).json({mensaje: "usuario encontrado"})
+        const resultado =await buscarUsuarioPorEmail(email);
+
+        if (resultado.length === 0) {
+            return res.status(404).json({ mensaje: "usuario no encontrado" });
+        }
+
+        return res.status(200).json({mensaje: "usuario encontrado", dato: resultado});
     } catch (error) {
-        res.status(500).json({mensaje: "error en sercidr controller-buscar-email"}, error)
+        res.status(500).json({mensaje: "error en sercidr controller-buscar-email"});
     }
 }
 
@@ -97,6 +102,24 @@ export const buscarUsuarioPorNombreController = async(req, res) =>{
     } catch (error) {
         console.log("error en buscar usuario por nombre/controller", error);
         return res.status(500).json({mensaje: "error en el servidor"});
+    }
+}
+
+export const cambiarContrasenaController = async(req, res) =>{
+    try {
+        
+        const {nombre, contrasenaNueva} = req.body;
+
+         if (!nombre || !contrasenaNueva) {
+            return res.status(400).json({ mensaje: "Faltan datos" });
+        }
+
+        const hash = await bcrypt.hash(contrasenaNueva, 10);
+        await cambiarContrasena(nombre, hash);
+        
+    } catch (error) {
+        console.log("Error en cambiar contraseña controller", error);
+        return res.status(500).json({mensaje: "error servidor controller cambiar contrasena"});
     }
 }
 
