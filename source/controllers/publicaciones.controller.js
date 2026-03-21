@@ -1,8 +1,4 @@
-import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel } from "../models/publicaciones.model";
-
-
-
-
+import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
 
 
 export const crearPublicacionController = async (req, res) => {
@@ -26,7 +22,8 @@ export const crearPublicacionController = async (req, res) => {
 
 export const listarPublicacionesController = async (req, res) => {
     try {
-        const publicaciones = await listarPublicacionesModel();
+        const {id} = req.body;
+        const publicaciones = await listarPublicacionesModel(id);
         return res.status(200).json({mensaje: "Publicaciones obtenidas", data: publicaciones});
 
     } catch (error) {
@@ -37,13 +34,13 @@ export const listarPublicacionesController = async (req, res) => {
 
 export const obtenerPublicacionPorIdController = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id_usuario } = req.body;
 
-        if (!id) {
+        if (!id_usuario) {
             return res.status(400).json({ mensaje: "Falta el ID" });
         }
 
-        const publicacion = await obtenerPublicacionPorIdModel(id);
+        const publicacion = await obtenerPublicacionPorIdModel(id_usuario);
 
         return res.status(200).json({mensaje: "se encontro la publicacion", data: publicacion});
 
@@ -54,7 +51,33 @@ export const obtenerPublicacionPorIdController = async (req, res) => {
 };
 
 
-export const eliminarPublicacionController = async (req, res) =>{}
-export const editarPublicacionController = async (req, res) =>{}
+//faltan los dos de abajo
+
+export const eliminarPublicacionController = async (req, res) =>{
+try {
+    
+} catch (error) {
+    
+}
+
+}
+
+export const editarPublicacionController = async (req, res) =>{
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+export const obtenerTodasLasPublicacionesController = async (req, res) => {   
+    try {
+        const publicacion = await obtenerTodasLasPublicacionesModel();
+        return res.status(200).json({mensaje: "se encontro la publicacion", data: publicacion});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ mensaje: "Error en el servidor-catchObtenerTodasLasPublicacionesController" });
+    }
+}
 
 

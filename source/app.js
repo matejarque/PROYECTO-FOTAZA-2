@@ -1,7 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
+//import db from './config/db.js'; //-> para poder cargar la base de dato
+//importancion de las rutas
 import usuarioRoutes from "./routes/usuario.routes.js"; 
-//import db from './config/db.js';
+import publicacionesRoutes from "./routes/publicaciones.routes.js";
+
+
+
 const PORT = process.env.PORT || 3000;
 
 dotenv.config();
@@ -10,6 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/usuarios", usuarioRoutes)
+app.use("/publicaciones", publicacionesRoutes);
 
 
 app.get('/', (req, res) => {

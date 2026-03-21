@@ -10,7 +10,7 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
         if(!email){
             return res.status(400).json({mensaje: "dato incorrecto email"});
         }
-        const resultado =await buscarUsuarioPorEmail(email);
+        const resultado = await buscarUsuarioPorEmail(email);
 
         if (resultado.length === 0) {
             return res.status(404).json({ mensaje: "usuario no encontrado" });

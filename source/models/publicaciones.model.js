@@ -7,8 +7,9 @@ comentarios_abiertos
 fecha_creacion
 estado
  */
+import db from '../config/db.js';
 
-
+//funciona, crea la publicacion base
 export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
     try {
         const query = `INSERT publicaciones (titulo, descripcion, id_usuario) VALUES (?, ?, ?)`;
@@ -22,6 +23,7 @@ export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
         throw error;
     }
 };
+//funciona lista las publicaciones de un usuario (solo las activas)
 export const listarPublicacionesModel = async () => {
     try {
         const query = `
@@ -39,7 +41,7 @@ export const listarPublicacionesModel = async () => {
     }
 };
 
-export const obtenerPublicacionPorId = async (id) => {
+export const obtenerPublicacionPorIdModel = async (id) => {
     try {
 
         const query = `SELECT * FROM publicaciones WHERE id_publicacion = ? AND estado = 1`;
@@ -77,5 +79,17 @@ export const eliminarPublicacionModel = async(id)=>{
         throw error;
     }
 
+}
+
+export const obtenerTodasLasPublicacionesModel = async() => {
+    try {
+        const query = `SELECT * FROM publicaciones WHERE estado = ?`;
+        const [resultado] = await db.query(query,(1));
+        return {resultado};
+
+    } catch (error) {
+        console.log("Error en el servidor model obtenerTodasLasPublicacionesModel")
+        throw error;
+    }
 }
 
