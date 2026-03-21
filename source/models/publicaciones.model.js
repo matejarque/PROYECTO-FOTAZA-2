@@ -5,7 +5,7 @@ descripcion
 id_usuario
 comentarios_abiertos
 fecha_creacion
-estado
+estado 
  */
 import db from '../config/db.js';
 
@@ -67,11 +67,11 @@ export const editarPublicacionModel = async (titulo, descripcion, id_publicacion
     }
 }
 
-export const eliminarPublicacionModel = async(id)=>{
+export const eliminarPublicacionModel = async(id_publicacion)=>{
     try {
 
-        const query = `UPDATE publicaciones SET estado = 0 WHERE id_publicacion = ?`;
-        const [resultado] = await db.query(query, [id]);
+        const query = `UPDATE publicaciones SET estado = ? WHERE id_publicacion = ? AND estado = ?`;
+        const [resultado] = await db.query(query, [0, id_publicacion, 1]);
         return resultado;
 
     } catch (error) {

@@ -55,18 +55,37 @@ export const obtenerPublicacionPorIdController = async (req, res) => {
 
 export const eliminarPublicacionController = async (req, res) =>{
 try {
-    
-} catch (error) {
-    
-}
 
+    const { id } = req.params;
+
+    const resultado = await eliminarPublicacionModel(id);
+
+    return res.status(200).json({mensaje: "se elimino la publicacion", data: resultado});
+
+} catch (error) {
+
+    console.log("error eliminarPublicacionController", error);
+
+    return res.status(500).json({mensaje: "error en el servidor eliminarPublicacionController"});
+}
 }
 
 export const editarPublicacionController = async (req, res) =>{
     try {
-        
+        const {id} = req.params;
+        const { titulo, descripcion} = req.body;
+
+        if (!titulo || !descripcion || !id) {
+           return res.status(400).json({mensaje: "faltan datos para actualizar la publicación"});
+        }
+
+        const resultado = await editarPublicacionModel(titulo, descripcion, id);
+
+        return res.status(200).json({mensaje: "publicación actualizada", data: resultado});
+
     } catch (error) {
-        
+        console.log("error editarPublicacionController", error);
+        return res.status(500).json({mensaje: "error en el servidor editarPublicacionController"});
     }
 }
 
