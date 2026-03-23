@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use("/usuarios", usuarioRoutes)
 app.use("/publicaciones", publicacionesRoutes);
-app,use("/comentarios", comentariosRoutes);
+app.use("/comentarios", comentariosRoutes);
 
 
 app.get('/', (req, res) => {

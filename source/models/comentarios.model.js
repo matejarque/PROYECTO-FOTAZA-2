@@ -11,10 +11,10 @@ id_publicacion
  */
 export const crearComentarioModel = async (comentario, idUsuario, idPublicacion) => {
     try {
-        const query = `INSERT INTO contenido, id_usuario, id_publicacion, estado FROM comentarios VALUES(?, ?, ?, ?)`;
-        const [resultado] = await db.query(query, [comentario, idUsuario, idPublicacion, 'activo']);
-        return resultado;
+         const query = `INSERT INTO comentarios (contenido, id_usuario, id_publicacion)VALUES (?, ?, ?)`;
 
+        const [resultado] = await db.query(query, [comentario, idUsuario, idPublicacion]);
+        return resultado;
     } catch (error) {
         console.log("error en crearComentarioModel", error);
         throw error;
@@ -22,8 +22,8 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
 }
 export const listarComentariosPorPublicacionModel = async(idPublicacion) => {
     try {
-        const query = `SELECT contenido, id_usuario WHERE id_publicacion = ? AND estado = ?`;
-        const [resultado] = await db.query(query, [idPublicacion, 'activo']);
+        const query = `SELECT contenido, id_usuario FROM comentarios WHERE id_publicacion = ? AND estado = ? AND estado = ?`;
+        const [resultado] = await db.query(query, [idPublicacion, 'visible', 'reportado']);
         return resultado;
 
     } catch (error) {
@@ -35,7 +35,7 @@ export const listarComentariosPorPublicacionModel = async(idPublicacion) => {
 export const eliminarComentarioModel = async (idComentario) => {
     try {
         const query = `UPDATE comentarios SET estado = ? WHERE id_comentario = ?`;
-        const [resultado] = await db.query(query, ['eliminado',idComentario]);
+        const [resultado] = await db.query(query, ['eliminado', idComentario]);
         return resultado;
 
     } catch (error) {

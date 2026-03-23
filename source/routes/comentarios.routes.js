@@ -1,13 +1,13 @@
 import express from 'express';
-import { crearComentarioController, listarComentariosPorPublicacionController, editarComentarioController, comentarioReportadoController, eliminarComentarioController, listarComentariosReportadosPorUsuarioController } from '../controllers/comentarios.controller';
+import { crearComentarioController, listarComentariosPorPublicacionController, editarComentarioController, comentarioReportadoController, eliminarComentarioController, listarComentariosReportadosPorUsuarioController } from '../controllers/comentarios.controller.js';
 const router = express.Router();
 
-router.post("/crear", crearComentarioController); //probar
-router.get("/publicacion/:idPublicacion", listarComentariosPorPublicacionController);//probar
-router.put("/editar/:idComentario", editarComentarioController);//probar
-router.put("/eliminar/:idComentario", eliminarComentarioController);//probar
-router.put("/reportar/:idComentario", comentarioReportadoController);//probar
-router.get("/reportados/:idUsuario", listarComentariosReportadosPorUsuarioController);//probar
+router.post("/crear", crearComentarioController); //funciona
+router.get("/publicacion/:idPublicacion", listarComentariosPorPublicacionController);//funciona
+router.put("/editar/:idComentario", editarComentarioController);//funciono a la primera insano
+router.put("/eliminar/:idComentario", eliminarComentarioController);//funciono a la primera
+router.put("/reportar/:idComentario", comentarioReportadoController);//funciona, pero me di cuenta que muchos usuarios pueden reportar un comentario, estohay que manejarlo con otra tabla
+router.get("/reportados/:idUsuario", listarComentariosReportadosPorUsuarioController);//-> hay que acerlo en otra tabla
 
 
 export default router;
