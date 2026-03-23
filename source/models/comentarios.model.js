@@ -57,6 +57,7 @@ export const comentarioReportadoModel = async (idComentario) => {
 }
 
 
+
 export const editarComentarioModel = async (idComentario, modificacion) => {
     try {
         const query = `UPDATE comentarios SET contenido = ? WHERE id_comentario = ?`;
