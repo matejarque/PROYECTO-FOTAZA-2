@@ -6,19 +6,18 @@ import dotenv from 'dotenv';
 import usuarioRoutes from "./routes/usuario.routes.js"; 
 import publicacionesRoutes from "./routes/publicaciones.routes.js";
 import comentariosRoutes from "./routes/comentarios.routes.js"
-import reporteComentarios from "./routes/reporte_comentarios.routes.js"
+import reporteComentariosRoutes from "./routes/reporte_comentarios.routes.js"
 
 const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 const app = express();
 
-
 app.use(express.json());
 app.use("/usuarios", usuarioRoutes)
 app.use("/publicaciones", publicacionesRoutes);
 app.use("/comentarios", comentariosRoutes);
-app.use("/reporte-comentario", reporteComentarios); 
+app.use("/reporte-comentarios", reporteComentariosRoutes); 
 
 
 app.get('/', (req, res) => {

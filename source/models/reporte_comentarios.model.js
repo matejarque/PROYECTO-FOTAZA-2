@@ -1,9 +1,9 @@
 import db from '../config/db.js';
 
-export const reporte_comentarios_reporteComentarioModel = async(idComentario) => {
+export const reporte_comentarios_reporteComentarioModel = async(idComentario, idUsuario, motivo) => {
     try {
-        const query = `INSERT INTO reporte_comentarios (id_comentario, id_usuario, motivo)`;
-        const [resultado] = await db.query(query, [idComentario])
+        const query = `INSERT INTO reportes_comentarios (id_comentario, id_usuario, motivo) VALUES (?,?,?)`;
+        const [resultado] = await db.query(query, [idComentario, idUsuario, motivo])
         return resultado;
 
     } catch (error) {
@@ -32,6 +32,20 @@ export const reporte_comentarios_comentarioMasReportadoModel = async() => {
     throw error;
   }
 }
+ 
 
-//podre agregar alguna consulta para automatizar el contador de reportes y asi quitarle la visibilidad al comentario?
-//por ejemplo si llega a 5 reportes un comentario pasa de visible a oculto
+export const reporte_comentarios_verificarReporteExistenteModel = async (idComentario, idUsuario) => {
+    try {
+
+        const query = `SELECT * FROM reportes_comentarios WHERE id_comentario = ? AND id_usuario = ?`;
+
+        const [resultado] = await db.query(query, [idComentario, idUsuario]);
+        return resultado;
+
+    } catch (error) {
+
+        console.log("error en verificarReporteExistenteModel", error);
+        throw error;
+
+    }
+};
