@@ -20,7 +20,6 @@ export const listarEtiquetasPopularesModel = async () => {
     }
 }
 
-
 export const buscarOCrearEtiquetaModel = async (nombre) => {
     try {
         const insertQuery = `INSERT IGNORE INTO etiquetas (nombre) VALUES (?)`;

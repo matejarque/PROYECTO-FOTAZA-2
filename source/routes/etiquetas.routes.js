@@ -1,11 +1,10 @@
-import router from 'express';
+import express from 'express';
 const router = express.Router();
 import {buscarOCrearEtiquetaController, listarEtiquetasPopularesController} from '../controllers/etiquetas.controller.js'
 
 
-router.post("/buscar-crear", buscarOCrearEtiquetaController);
-router.get("/listar", listarEtiquetasPopularesController);
-
+router.post("/buscar-crear", buscarOCrearEtiquetaController);//funciona
+router.get("/listar", listarEtiquetasPopularesController);//funciona
 
 
 

@@ -5,8 +5,11 @@ import dotenv from 'dotenv';
 //importancion de las rutas
 import usuarioRoutes from "./routes/usuario.routes.js"; 
 import publicacionesRoutes from "./routes/publicaciones.routes.js";
-import comentariosRoutes from "./routes/comentarios.routes.js"
-import reporteComentariosRoutes from "./routes/reporte_comentarios.routes.js"
+import comentariosRoutes from "./routes/comentarios.routes.js";
+import reporteComentariosRoutes from "./routes/reporte_comentarios.routes.js";
+import etiquetasRoutes from "./routes/etiquetas.routes.js";
+import rolRoutes from "./routes/roles.routes.js";
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +21,8 @@ app.use("/usuarios", usuarioRoutes)
 app.use("/publicaciones", publicacionesRoutes);
 app.use("/comentarios", comentariosRoutes);
 app.use("/reporte-comentarios", reporteComentariosRoutes); 
+app.use("/etiquetas", etiquetasRoutes);
+app.use("/rol", rolRoutes);
 
 
 app.get('/', (req, res) => {
