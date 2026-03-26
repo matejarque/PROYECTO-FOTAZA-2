@@ -22,7 +22,7 @@ app.use("/publicaciones", publicacionesRoutes);
 app.use("/comentarios", comentariosRoutes);
 app.use("/reporte-comentarios", reporteComentariosRoutes); 
 app.use("/etiquetas", etiquetasRoutes);
-app.use("/rol", rolRoutes);
+app.use("/roles", rolRoutes);
 
 
 app.get('/', (req, res) => {

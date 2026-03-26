@@ -6,7 +6,11 @@ export const listarRolesController = async (req, res) => {
         const {nombreRol} = req.query; 
         const resultado = await listarRolesModel(nombreRol);
 
-        return res.status(200).json({mensaje: "usuarios obtenidos",data: resultado});
+        if (!resultado || resultado.length === 0) {
+            return res.status(200).json({ mensaje: "No se encontraron usuarios con ese rol", data: [] });
+        }
+
+        return res.status(200).json({mensaje: "usuarios obtenidos", data: resultado});
     } catch (error) {
         console.log("Error en listarRolesController", error);
         return res.status(500).json({ mensaje: "error en el serviddor" });

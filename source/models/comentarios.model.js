@@ -22,7 +22,7 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
 }
 export const listarComentariosPorPublicacionModel = async(idPublicacion) => {
     try {
-        const query = `SELECT contenido, id_usuario FROM comentarios WHERE id_publicacion = ? AND estado = ? AND estado = ?`;
+        const query = `SELECT contenido, id_usuario FROM comentarios WHERE id_publicacion = ? AND estado IN (?, '?)`;
         const [resultado] = await db.query(query, [idPublicacion, 'visible', 'reportado']);
         return resultado;
 
