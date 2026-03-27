@@ -9,7 +9,7 @@ import comentariosRoutes from "./routes/comentarios.routes.js";
 import reporteComentariosRoutes from "./routes/reporte_comentarios.routes.js";
 import etiquetasRoutes from "./routes/etiquetas.routes.js";
 import rolRoutes from "./routes/roles.routes.js";
-
+import seguidoresRoutes from "./routes/seguidor.routes.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,6 +23,7 @@ app.use("/comentarios", comentariosRoutes);
 app.use("/reporte-comentarios", reporteComentariosRoutes); 
 app.use("/etiquetas", etiquetasRoutes);
 app.use("/roles", rolRoutes);
+app.use("/seguidores", seguidoresRoutes);
 
 
 app.get('/', (req, res) => {
