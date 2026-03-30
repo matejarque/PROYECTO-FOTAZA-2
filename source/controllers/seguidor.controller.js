@@ -45,3 +45,24 @@ export const dejarDeSeguirController = async (req, res) => {
         return res.status(500).json({ mensaje: "Error interno al intentar dejar de seguir" });
     }
 }
+
+
+
+
+export const contarSeguidoresController = async (req, res) => {
+    try {
+        const {id_usuario} = req.params;
+
+        if (!id_usuario) {
+            return res.status(400).json({ mensaje: "falta el ID del usuario para contar seguidores" });
+        }
+
+        const retornoSeguidores = await contarSeguidoresModel(id_usuario);
+        
+        return res.status(200).json({mensaje: "seguidos obtenidos k", data: retornoSeguidores});
+
+    } catch (error) {
+        console.log("error en contarSeguidoresController:", error);
+        return res.status(500).json({ mensaje: "Eerror ontar seguidores" });
+    }
+};
