@@ -1,4 +1,4 @@
-import {} from '../models/seguidor.model.js';
+import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel} from '../models/seguidor.model.js';
 //seguirModel dejarDeSeguirModel idUsuarioSeguidor, idUsuarioSeguido
 export const seguirController = async (req, res) => {
     try {
@@ -10,7 +10,7 @@ export const seguirController = async (req, res) => {
         }
 
         if (parseInt(idUsuarioSeguidor) === parseInt(idUsuarioSeguido)) {
-            return res.status(400).json({ mensaje: "No se puede autoseguir" });
+            return res.status(404).json({ mensaje: "No se puede autoseguir" });
         }
 
         const resultado = await seguirModel(idUsuarioSeguidor, idUsuarioSeguido);
@@ -35,10 +35,10 @@ export const dejarDeSeguirController = async (req, res) => {
         const resultado = await dejarDeSeguirModel(idUsuarioSeguidor, idUsuarioSeguido);
 
         if (resultado.affectedRows === 0) {
-            return res.status(404).json({ mensaje: "no se encontro la ruta/o no existe esa relacion" });
+            return res.status(404).json({ mensaje: "no se encontro la ruta no existe esa relacion" });
         }
 
-        return res.status(200).json({mensaje: "Ya no seguís a este usuario", data: resultado });
+        return res.status(200).json({mensaje: "Ya no segus a este usuario", data: resultado });
 
     } catch (error) {
         console.log("Error en dejarDeSeguirController:", error);
