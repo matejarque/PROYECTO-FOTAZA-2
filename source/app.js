@@ -11,6 +11,7 @@ import etiquetasRoutes from "./routes/etiquetas.routes.js";
 import rolRoutes from "./routes/roles.routes.js";
 import seguidoresRoutes from "./routes/seguidor.routes.js";
 import licenciasRoutes from "./routes/licencias.routes.js";
+import imagenesRoutes from "./routes/imagenes.routes.js";
 const PORT = process.env.PORT || 3000;
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use("/etiquetas", etiquetasRoutes);
 app.use("/roles", rolRoutes);
 app.use("/seguidores", seguidoresRoutes);
 app.use("/licencias", licenciasRoutes);
+app.use("/imagenes", imagenesRoutes);
 
 
 app.get('/', (req, res) => {
