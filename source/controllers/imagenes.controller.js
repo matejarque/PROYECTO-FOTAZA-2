@@ -10,7 +10,7 @@ export const registrarImagenAPublicacionController = async(req, res)=>{
         if(!idPublicacion || !rutaUrl || !idLicencia || !marcaDeAgua){
             return res.status(400).json({error: "faltant datos"});
         }
-        const [resul] = await registrarImagenAPublicacionModel(idPublicacion, rutaUrl, idLicencia, marcaDeAgua);
+        const resul = await registrarImagenAPublicacionModel(idPublicacion, rutaUrl, idLicencia, marcaDeAgua);
         res.status(200).json({imagenRegistrada: resul});
 
 

@@ -4,7 +4,7 @@ import express from "express";
 const router = express.Router();
 
 
-router.post("/registrar-imagen", registrarImagenAPublicacionController);
-router.get("/listar-imagenes-por-publicacion/:idPublicacion", listarImagenesPorPublicacionController);
+router.post("/registrar-imagen", registrarImagenAPublicacionController);//funciona
+router.get("/listar-imagenes-por-publicacion/:idPublicacion", listarImagenesPorPublicacionController);//funciona
 
 export default router;
