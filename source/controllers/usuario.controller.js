@@ -1,6 +1,6 @@
 //lo que pide la funcion nombre, correo, contra
 
-import { crearUsuario, editarUsuario, suspenderUsuario, crearModerador, buscarUsuarioPorNombre, buscarUsuarioPorEmail, cambiarContrasena} from "../models/usuario.model.js";
+import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioModel, crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 
 
@@ -10,7 +10,7 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
         if(!email){
             return res.status(400).json({mensaje: "dato incorrecto email"});
         }
-        const resultado = await buscarUsuarioPorEmail(email);
+        const resultado = await buscarUsuarioPorEmailModel(email);
 
         if (resultado.length === 0) {
             return res.status(404).json({ mensaje: "usuario no encontrado" });
@@ -18,6 +18,7 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
 
         return res.status(200).json({mensaje: "usuario encontrado", dato: resultado});
     } catch (error) {
+        console.log("error en buscarUsuarioPorEmailController", error);
         res.status(500).json({mensaje: "error en sercidr controller-buscar-email"});
     }
 }
@@ -26,16 +27,17 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
 export const crearUsuarioController = async(req, res) =>{
     try{
 
-        const { nombre, correo, contra } = req.body;
+        const { nombre, correo, contra, biografia, fotoPerfil, pais } = req.body;
         if(!nombre || !correo || !contra){
             return res.status(400).json({mensaje: "faltan datos"})
         }
         
         
         const hash = await bcrypt.hash(contra, 10);
-        await crearUsuario(nombre, correo, hash)
+        const resultado = await crearUsuarioModel(nombre, correo, hash, biografia || null, fotoPerfil || null, pais || null);
+        return res.status(200).json({mensaje: "Usuario creado correctamente", idUsuario: resultado.insertId});
     } catch(error){
-        console.log("ERROR REGISTRO:", error);
+        console.log("ERROR REGISTRO/crearUsuarioController:", error);
         res.status(500).json({mensaje: "error en el servidr"})
     }
 }
@@ -47,7 +49,7 @@ export const editarUsuarioController = async(req, res) =>{
             return res.status(400).json({mensaje: "error"});
         }
 
-    await editarUsuario(nombre, correo, idusuario);
+    await editarUsuarioModel(nombre, correo, idusuario);
     return res.status(200).json({mensaje: "Usuario editado"});
 
     }catch(error){
@@ -62,7 +64,7 @@ export const suspenderUsuarioController = async(req, res) =>{
                 return res.status(400).json({mensaje: "faltan datos"})
             }
              console.log("error en suspender usuario controller salteif"); 
-            await suspenderUsuario(nombre, estado);
+            await suspenderUsuarioModel(nombre, estado);
             return res.status(200).json({mensaje: "usuario dormido"});
     
     }catch(error){
@@ -78,7 +80,7 @@ export const crearModeradorController = async (req, res) => {
         if(!nombre){
             return res.status(400).json({mensaje: "falta el nombre"});
         }
-        await crearModerador(nombre);
+        await crearModeradorModel(nombre);
         return res.status(200).json({mensaje: "Usuario ahora es moderador"});
 
     } catch (error) {
@@ -96,7 +98,7 @@ export const buscarUsuarioPorNombreController = async(req, res) =>{
             return res.status(400).json({ mensaje: "Falta el nombre" });
         }
         
-        const usuarios = await buscarUsuarioPorNombre(nombre);
+        const usuarios = await buscarUsuarioPorNombreModel(nombre);
         return res.status(200).json({mensaje: "Usuario encontrado", data: usuarios});
 
     } catch (error) {
@@ -115,7 +117,7 @@ export const cambiarContrasenaController = async(req, res) =>{
         }
 
         const hash = await bcrypt.hash(contrasenaNueva, 10);
-        await cambiarContrasena(nombre, hash);
+        await cambiarContrasenaModel(nombre, hash);
         
     } catch (error) {
         console.log("Error en cambiar contraseña controller", error);

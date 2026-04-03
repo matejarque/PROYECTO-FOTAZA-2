@@ -6,12 +6,12 @@ import{ crearPublicacionController, eliminarPublicacionController,
 const router = express.Router();
 
 
-router.post("/crear", crearPublicacionController);//funciona
-router.get("/obtener/id", obtenerPublicacionPorIdController);//funciona
-router.put("/actualizar/:id", editarPublicacionController);//funciona
-router.put("/eliminar/:id", eliminarPublicacionController);//funciona
-router.get("/listar/todas", listarPublicacionesController); //funciona
-router.get("/obener/todas", obtenerTodasLasPublicacionesController)//funciona -> trae todas las publicaciones de todo lo usuarios
+router.post("/", crearPublicacionController);//funciona
+router.get("/:id", obtenerPublicacionPorIdController);//funciona
+router.get("/", listarPublicacionesController); //funciona
+router.get("/obener-todas", obtenerTodasLasPublicacionesController)//funciona -> trae todas las publicaciones de todo lo usuarios
+router.put("/:id", editarPublicacionController);//funciona
+router.put("/:id", eliminarPublicacionController);//funciona
 
 
 export default router;

@@ -1,4 +1,4 @@
-import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
+import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
 
 
 export const crearPublicacionController = async (req, res) => {
@@ -11,7 +11,7 @@ export const crearPublicacionController = async (req, res) => {
 
         const resultado = await crearPublicacionModel(titulo, descripcion, idUsuario);
 
-        return res.status(201).json({mensaje: "Publicación creada", id: resultado.insertId});
+        return res.status(200).json({mensaje: "Ppublicacion creada", id: resultado.insertId});
 
     } catch (error) {
         console.log("error en crearPublicacionController", error);
@@ -22,8 +22,8 @@ export const crearPublicacionController = async (req, res) => {
 
 export const listarPublicacionesController = async (req, res) => {
     try {
-        const {id} = req.body;
-        const publicaciones = await listarPublicacionesModel(id);
+    
+        const publicaciones = await listarPublicacionesModel();
         return res.status(200).json({mensaje: "Publicaciones obtenidas", data: publicaciones});
 
     } catch (error) {
@@ -34,13 +34,13 @@ export const listarPublicacionesController = async (req, res) => {
 
 export const obtenerPublicacionPorIdController = async (req, res) => {
     try {
-        const { id_usuario } = req.body;
+        const { id_publicacion } = req.params;
 
-        if (!id_usuario) {
+        if (!id_publicacion) {
             return res.status(400).json({ mensaje: "Falta el ID" });
         }
 
-        const publicacion = await obtenerPublicacionPorIdModel(id_usuario);
+        const publicacion = await obtenerPublicacionPorIdModel(id_publicacion);
 
         return res.status(200).json({mensaje: "se encontro la publicacion", data: publicacion});
 
@@ -80,7 +80,9 @@ export const editarPublicacionController = async (req, res) =>{
         }
 
         const resultado = await editarPublicacionModel(titulo, descripcion, id);
-
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({mensaje: "Publicacion no encontrada" });
+        }
         return res.status(200).json({mensaje: "publicación actualizada", data: resultado});
 
     } catch (error) {
