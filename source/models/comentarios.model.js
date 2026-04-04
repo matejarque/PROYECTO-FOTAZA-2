@@ -22,8 +22,11 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
 }
 export const listarComentariosPorPublicacionModel = async(idPublicacion) => {
     try {
-        const query = `SELECT contenido, id_usuario FROM comentarios WHERE id_publicacion = ? AND estado IN (?, '?)`;
-        const [resultado] = await db.query(query, [idPublicacion, 'visible', 'reportado']);
+        const query = `SELECT c.id_comentario, c.contenido, c.fecha_creacion, u.nombre_usuario 
+            FROM comentarios c
+            JOIN usuarios u ON c.id_usuario = u.id_usuario
+            WHERE c.id_publicacion = ? AND c.estado IN ('visible', 'reportado') ORDER BY c.fecha_creacion DESC`;
+        const [resultado] = await db.query(query, [idPublicacion]);
         return resultado;
 
     } catch (error) {

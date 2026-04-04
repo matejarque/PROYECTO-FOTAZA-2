@@ -127,3 +127,13 @@ export const obtenerPublicacionesPorUsuarioModel = async (idUsuario) => {
     return resultado;
 };
 
+export const buscarPublicacionesModel = async (termino) => {
+    const query = `
+        SELECT p.*, u.nombre_usuario 
+        FROM publicaciones p
+        JOIN usuarios u ON p.id_usuario = u.id_usuario
+        WHERE (p.titulo LIKE ? OR p.descripcion LIKE ?) AND p.estado = 1`;
+    const [res] = await db.query(query, [`%${termino}%`, `%${termino}%`]);
+    return res;
+};
+

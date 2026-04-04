@@ -91,6 +91,9 @@ export const listarComentariosPorPublicacionController = async (req, res) => {
 
         const { idPublicacion } = req.params;
 
+        if(!idPublicacion){
+            return res.status(404).json({mensaje: "faltan datos"});
+        }
         const resultado = await listarComentariosPorPublicacionModel(idPublicacion);
         return res.status(200).json({mensaje: "comentarios encontrados", data: resultado});
 
