@@ -1,6 +1,6 @@
 import db from "../config/db.js";
 
-// Registrar una denuncia (ya sea a publicación o comentario)
+// Registrar una denuncia (publicacion o comentario)
 export const registrarDenunciaModel = async (idDenunciante, idPublicacion, idComentario, idMotivo, descripcion) => {
     try {
         const query = `INSERT INTO denuncias (id_usuario_denunciante, id_publicacion, id_comentario, id_motivo, descripcion) VALUES (?, ?, ?, ?, ?)`;
@@ -12,7 +12,7 @@ export const registrarDenunciaModel = async (idDenunciante, idPublicacion, idCom
     }
 };
 
-// Contar cuántos usuarios distintos denunciaron una publicación (Regla de las 3 denuncias)
+// Contar cuantos usuarios distintos denunciaron una publicacion -> (Regla de las 3 denuncias)
 export const contarDenunciasUnicasModel = async (idPublicacion) => {
     try {
         const query = `SELECT COUNT(DISTINCT id_usuario_denunciante) as total FROM denuncias WHERE id_publicacion = ?`;
