@@ -35,9 +35,9 @@ export const contarDenunciasUnicasController = async (req, res) => {
     }
 }
 
-export const listarMotivosDenunciaModel = async(req, res) => {
+export const listarPublicacionesParaValidarController = async(req, res) => {
     try {
-        const resultado = await listarMotivosDenunciaModel();
+        const resultado = await listarPublicacionesParaValidarModel();
         return res.status(200).json({mensaje: "Motivos Listados", resul: resultado});
     } catch (error) {
         console.log("Error en registrar contarDenunciasUnicasController", error);

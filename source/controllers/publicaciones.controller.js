@@ -1,4 +1,4 @@
-import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
+import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
 
 
 export const crearPublicacionController = async (req, res) => {
