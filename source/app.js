@@ -17,6 +17,7 @@ import motivoDenunciaRoutes from "./routes/motivos_denuncia.routes.js";
 import denunciasRoutes from "./routes/denuncias.routes.js";
 import notificacionesRoutes from "./routes/notificaciones.routes.js"
 import interesImagenRoutes from "./routes/imagenes.routes.js"
+import coleccionesRoutes from "./routes/colecciones.routes.js";
 const PORT = process.env.PORT || 3000;
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.use("/motivo-denuncia", motivoDenunciaRoutes);
 app.use("/denuncias", denunciasRoutes);
 app.use("/notificaciones", notificacionesRoutes);
 app.use("/interes-imagen", interesImagenRoutes);
+app.use("/colecciones", coleccionesRoutes);
 app.get('/', (req, res) => {
     res.send('El servidor de fotaza esta activo');
 });
