@@ -20,6 +20,30 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
         throw error;
     }
 }
+
+export const modificarAperturaDeComentariosEnPublicacionModel = async (id_publicacion, id_usuario, comenarios_abiertos, ) => {
+    try {
+        const query = `UPDATE publicaciones SET comentarios_abiertos = ? WHERE id_publicacion = ? AND id_usuario = ?`
+        const [resultado] = await db.query(query, [comenarios_abiertos, id_publicacion, id_usuario]);
+        return resultado;
+    } catch (error) {
+        console.log("error en modificarAperturaDeComentariosEnPublicacion", error);
+        throw error;
+    }
+}
+
+export const verificarEstadadoDeComentariosEnPublicacionModel = async (idPublicacion) => {
+    try {
+        const query = `SELECT comentarios_abiertos FROM publicaciones WHERE id_publicacion = ?`
+        const [resultado] = await db.query(query, [idPublicacion]);
+        return resultado;
+    } catch (error) {
+        console.log("Errro en verificarEstadoDeComentariosEnPublicacionModel", error);
+        throw error;
+    }
+}
+
+
 export const listarComentariosPorPublicacionModel = async(idPublicacion) => {
     try {
         const query = `SELECT c.id_comentario, c.contenido, c.fecha_creacion, u.nombre_usuario 
