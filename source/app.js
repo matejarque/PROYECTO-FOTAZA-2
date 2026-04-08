@@ -52,6 +52,10 @@ app.get('/db', async (req, res) => {
     }
 });
 
+app.all(/.*/, (req, res)=>{
+    return res.status(404).send('<h1>404 No Disponible</h1>');
+})
+
 app.listen(PORT, () => {
     console.log(`Servidor levantado en el puerto ${PORT}`);
 });

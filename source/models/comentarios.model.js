@@ -21,10 +21,10 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
     }
 }
 
-export const modificarAperturaDeComentariosEnPublicacionModel = async (id_publicacion, id_usuario, comenarios_abiertos, ) => {
+export const modificarAperturaDeComentariosEnPublicacionModel = async (idPublicacion, comentarioAbierto, idUsuario ) => {
     try {
         const query = `UPDATE publicaciones SET comentarios_abiertos = ? WHERE id_publicacion = ? AND id_usuario = ?`
-        const [resultado] = await db.query(query, [comenarios_abiertos, id_publicacion, id_usuario]);
+        const [resultado] = await db.query(query, [comentarioAbierto, idPublicacion, idUsuario]);
         return resultado;
     } catch (error) {
         console.log("error en modificarAperturaDeComentariosEnPublicacion", error);
@@ -71,6 +71,7 @@ export const eliminarComentarioModel = async (idComentario) => {
     }
 }
 
+
 export const comentarioReportadoModel = async (idComentario) => {
      try {
         const query = `UPDATE comentarios SET estado = ? WHERE id_comentario = ?`;
@@ -85,10 +86,10 @@ export const comentarioReportadoModel = async (idComentario) => {
 
 
 
-export const editarComentarioModel = async (idComentario, modificacion) => {
+export const editarComentarioModel = async (idComentario, modificacion, idUsuario) => {
     try {
-        const query = `UPDATE comentarios SET contenido = ? WHERE id_comentario = ?`;
-        const [resultado] = await db.query(query, [modificacion, idComentario]);
+        const query = `UPDATE comentarios SET contenido = ? WHERE id_comentario = ? AND id_usuario = ?`;
+        const [resultado] = await db.query(query, [modificacion, idComentario, idUsuario]);
         return resultado;
 
     } catch (error) {

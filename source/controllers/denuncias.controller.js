@@ -1,10 +1,5 @@
-import {registrarDenunciaModel, contarDenunciasUnicasModel, listarPublicacionesParaValidarModel} from "../models/denuncias.model.js";
+import {registrarDenunciaModel, contarDenunciasComentarioModel, contarDenunciasUnicasModel, listarPublicacionesParaValidarModel} from "../models/denuncias.model.js";
 
-/**
- * recibe idDenunciante, idPublicacion, idComentario, idMotivo, descripcion
- * idPublicacion
- *
- */
 
 export const registrarDenunciaController  = async(req,res)=>{
     try {

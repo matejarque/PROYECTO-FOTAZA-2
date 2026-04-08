@@ -66,11 +66,13 @@ export const obtenerPublicacionPorIdModel = async (id) => {
     }
 };
 
-export const editarPublicacionModel = async (titulo, descripcion, id_publicacion) => {
+export const editarPublicacionModel = async (titulo, descripcion, id_publicacion, id_usuario) => {
     try {
 
-        const query =`UPDATE publicaciones SET titulo = ?, descripcion = ? WHERE id_publicacion = ? AND estado = 1`;
-        const [resultado]=await db.query(query, [titulo, descripcion, id_publicacion]);
+        const query =`UPDATE publicaciones SET titulo = ?, descripcion = ? 
+        WHERE id_publicacion = ? 
+        AND id_usuario = ? AND estado = 1`;
+        const [resultado]=await db.query(query, [titulo, descripcion, id_publicacion, id_usuario]);
         return resultado;
 
     } catch (error) {

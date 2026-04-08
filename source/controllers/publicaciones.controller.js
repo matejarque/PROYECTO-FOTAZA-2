@@ -1,9 +1,10 @@
 import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
-import { suspenderUsuarioModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
+import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
 
 export const crearPublicacionController = async (req, res) => {
     try {
-        const { titulo, descripcion, idUsuario } = req.body;
+        const {idUsuario} = req.params;//mas adelante modificar a session
+        const { titulo, descripcion } = req.body;
 
         if (!titulo || !descripcion || !idUsuario) {
             return res.status(400).json({ mensaje: "Faltan datos" });
@@ -71,14 +72,15 @@ try {
 
 export const editarPublicacionController = async (req, res) =>{
     try {
-        const {id} = req.params;
+        const {idPublicacion} = req.params;
+        const {idUsuario} = req.params; //esta diferente porque lueg lo paso por session
         const { titulo, descripcion} = req.body;
 
-        if (!titulo || !descripcion || !id) {
+        if (!titulo || !descripcion || !idPublicacion) {
            return res.status(400).json({mensaje: "faltan datos para actualizar la publicación"});
         }
 
-        const resultado = await editarPublicacionModel(titulo, descripcion, id);
+        const resultado = await editarPublicacionModel(titulo, descripcion, idPublicacion, idUsuario);
         if (resultado.affectedRows === 0) {
             return res.status(404).json({mensaje: "Publicacion no encontrada" });
         }
@@ -121,7 +123,7 @@ export const validarYBajarPublicacionController = async (req, res) => {
             const [usuario] = await buscarUsuarioPorIdModel(id_usuario_autor);
             
             if (usuario) {
-                await suspenderUsuarioModel(usuario.nombre_usuario, 'inactivo');
+                await suspenderUsuarioODarDeAltaModel(usuario.nombre_usuario, 'inactivo');
                 return res.status(200).json({mensaje: "Se elimino la publicacion, se alcanzaron las tres publicaciones eliminadas, usuario suspendido"});
             }
         }

@@ -1,6 +1,5 @@
 import {
-comentarioReportadoModel,
-crearComentarioModel,
+crearComentarioModel,comentarioReportadoModel,
 editarComentarioModel,
 eliminarComentarioModel,
 listarComentariosReportadosPorUsuarioModel, listarComentariosPorPublicacionModel, 
@@ -10,8 +9,8 @@ verificarEstadadoDeComentariosEnPublicacionModel, modificarAperturaDeComentarios
 
 export const crearComentarioController = async (req, res) => {
     try {
-        
-        const { comentario, idUsuario, idPublicacion } = req.body;
+        const {idUsuario} = req.params; //cambiar a session
+        const { comentario, idPublicacion } = req.body;
 
         if (!comentario || !idUsuario || !idPublicacion) {
             return res.status(400).json({mensaje: "faltan datos para crear el comentario"});
@@ -41,20 +40,20 @@ export const crearComentarioController = async (req, res) => {
 
 export const modificarEstadoComentariosController = async (req, res) => {
     try {
-        const { idPublicacion } = req.params;
-        const { nuevoEstado, idUsuario } = req.body; 
+        const { idPublicacion, idUsuario } = req.params;
+        const { comentarioAbierto } = req.body; 
 
-        if (nuevoEstado === undefined || !idUsuario) {
-            return res.status(400).json({ mensaje: "faltan datos uevoEstado o idUsuario" });
+        if (comentarioAbierto === undefined || !idUsuario) {
+            return res.status(400).json({ mensaje: "faltan datos comentarioAbierto o idUsuario" });
         }
 
-        const resultado = await modificarAperturaDeComentariosEnPublicacionModel(idPublicacion, nuevoEstado, idUsuario);
+        const resultado = await modificarAperturaDeComentariosEnPublicacionModel(idPublicacion, comentarioAbierto, idUsuario);
 
         if (resultado.affectedRows === 0) {
             return res.status(400).json({mensaje: "No se pudo actualizar"});
         }
 
-        const estadoTexto = nuevoEstado === 1 ? "abiertos" : "cerrados";
+        const estadoTexto = comentarioAbierto === 1 ? 1 : 0;
         return res.status(200).json({ mensaje: `Los comentarios ahora estan ${estadoTexto}` });
 
     } catch (error) {
@@ -66,11 +65,15 @@ export const modificarEstadoComentariosController = async (req, res) => {
 
 export const editarComentarioController = async (req, res) => {
     try {
-
-        const { idComentario } = req.params;
+        //lueg cambiar el id usuario a .session
+        const { idComentario, idUsuario } = req.params;
         const { modificacion } = req.body;
 
-        const resultado = await editarComentarioModel(idComentario, modificacion);
+        if(!idComentario || !idUsuario || !modificacion){
+            return res.status(400).json({mensaje: "Faltan datos"});
+        }
+
+        const resultado = await editarComentarioModel(idComentario, modificacion, idUsuario);
 
         return res.status(200).json({mensaje: "comentario actualizado", data: resultado});
 
@@ -104,7 +107,7 @@ export const comentarioReportadoController = async (req, res) => {
 export const eliminarComentarioController = async (req, res) => {
     try {
 
-        const { idComentario } = req.params;
+        const { idComentario} = req.params;//pasarUsuario a session
 
         const resultado = await eliminarComentarioModel(idComentario);
         return res.status(200).json({mensaje: "comentario eliminado", data: resultado});

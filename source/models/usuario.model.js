@@ -26,11 +26,11 @@ export const crearUsuarioModel = async(nombre, correo, contra, biografia, fotoPe
 
 
 //funacion para que el usuario pueda editar su perfil, solo requiere, nombre, correo y para validar el usuario el idusuario
-export const editarUsuarioModel = async(nombre, correo, biografia, fotoPerfil, pais, idusuario) =>{
+export const editarUsuarioModel = async(nombre, biografia, fotoPerfil, pais, idUsuario) =>{
     try{
         const query = `UPDATE usuarios 
-        SET nombre_usuario = ?, correo_electronico = ?, bio = ?, foto_perfil = ?, pais = ? WHERE id_usuario = ?`
-        const [resultado] = await db.query(query, [nombre, correo, biografia, fotoPerfil, pais, idusuario]);
+        SET nombre_usuario = ?, bio = ?, foto_perfil = ?, pais = ? WHERE id_usuario = ? AND estado = 1`;
+        const [resultado] = await db.query(query, [nombre, biografia, fotoPerfil, pais, idUsuario]);
         return resultado;
     }catch(error){
         console.log("error en editarusuario model");
@@ -41,7 +41,7 @@ export const editarUsuarioModel = async(nombre, correo, biografia, fotoPerfil, p
 
 
 //funcion flecha para suspender el usuario lo unico que modifica es su estado(activo, inactivo, baneado) a traves del nombre del mismo
-export const suspenderUsuarioModel = async(nombre_usuario, estado) => {
+export const suspenderUsuarioODarDeAltaModel = async(nombre_usuario, estado) => {
     try{
     const query = `UPDATE usuarios SET estado = ? WHERE nombre_usuario = ?`;
     const [resultado] = await db.query(query,[estado, nombre_usuario]);
@@ -58,7 +58,7 @@ export const suspenderUsuarioModel = async(nombre_usuario, estado) => {
 export const crearModeradorModel = async(nombre_usuario) =>{
     try {
         
-        const query = `UPDATE usuarios SET id_rol = 2 WHERE nombre_usuario = ?`;
+        const query = `UPDATE usuarios SET id_rol = 2 WHERE nombre_usuario = ? AND estado = 'activo'`;
         const [resultado] = await db.query(query,[nombre_usuario]);
         return resultado;
 
@@ -73,9 +73,9 @@ export const crearModeradorModel = async(nombre_usuario) =>{
 export const buscarUsuarioPorNombreModel = async(nombre) =>{
     try {
 
-        const query = `SELECT id_usuario, nombre_usuario, correo_electronico, foto_perfil 
+        const query = `SELECT id_usuario, nombre_usuario, foto_perfil, bio, pais 
         FROM usuarios 
-        WHERE nombre_usuario LIKE ?`;
+        WHERE nombre_usuario LIKE ? AND estado = 'activo'`;
 
         const[resultado] = await db.query(query, [`%${nombre}%`]);
         console.log("se encontro el usuario");
@@ -87,11 +87,11 @@ export const buscarUsuarioPorNombreModel = async(nombre) =>{
 }
 
 //funcion necesaria para validar un correo existente o no a la hora de crearlo mas adelante
-export const buscarUsuarioPorEmailModel = async(correo) =>{
+export const buscarUsuarioPorEmailModel = async(pais) =>{
     try {
-        const query = `SELECT * FROM usuarios WHERE correo_electronico = ?`;
+        const query = `SELECT id_usuario, nombre_usuario, foto_perfil, bio, pais FROM usuarios WHERE pais = ? AND estado = 'activo'`;
         console.log("error al buscar usuario por correo");
-        const[resultado] = await db.query(query,[correo]);
+        const[resultado] = await db.query(query,[pais]);
         return resultado;
     } catch (error) {
         console.log("error al buscar usuario por correo");
@@ -119,10 +119,10 @@ export const buscarUsuarioPorIdModel = async(id) =>{
 }
 
 //modificar contrasena
-export const cambiarContrasenaModel = async(nombre, contrasena) =>{
+export const cambiarContrasenaModel = async(idUsuario, contrasena) =>{
     try {;
-        const query = `UPDATE usuarios SET contrasena = ? WHERE nombre_usuario = ?  `;
-        const [resultado] = await db.query(query, [contrasena, nombre]);
+        const query = `UPDATE usuarios SET contrasena = ? WHERE id_usuario = ? AND estado = 'activo' `;
+        const [resultado] = await db.query(query, [contrasena, idUsuario]);
         return resultado;
         console.log("contraseña modificada");
     } catch (error) {

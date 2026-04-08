@@ -1,19 +1,19 @@
 //lo que pide la funcion nombre, correo, contra
 
-import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioModel, crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
+import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioODarDeAltaModel, crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 
 
 export const buscarUsuarioPorEmailController = async(req, res) =>{
     try {
-        const {email} = req.query; //->pase a query porque con params no me toma el @
-        if(!email){
-            return res.status(400).json({mensaje: "dato incorrecto email"});
+        const {pais} = req.params; 
+        if(!pais){
+            return res.status(400).json({mensaje: "dato incorrecto pais"});
         }
-        const resultado = await buscarUsuarioPorEmailModel(email);
+        const resultado = await buscarUsuarioPorEmailModel(pais);
 
         if (resultado.length === 0) {
-            return res.status(404).json({ mensaje: "usuario no encontrado" });
+            return res.status(404).json({ mensaje: "usuarios no encontrado" });
         }
 
         return res.status(200).json({mensaje: "usuario encontrado", dato: resultado});
@@ -44,28 +44,30 @@ export const crearUsuarioController = async(req, res) =>{
 
 export const editarUsuarioController = async(req, res) =>{
     try{
-        const {nombre, correo, idusuario} = req.body;
-        if(!nombre){
-            return res.status(400).json({mensaje: "error"});
+        const {idUsuario} = req.params; //mas a futuro modificar a session
+        const {nombre, biografia, fotoPerfil, pais} = req.body;
+        if(!idUsuario){
+            return res.status(400).json({mensaje: "error, falta el idUsuario"});
         }
 
-    await editarUsuarioModel(nombre, correo, idusuario);
+    await editarUsuarioModel(nombre, biografia, fotoPerfil, pais, idUsuario);
     return res.status(200).json({mensaje: "Usuario editado"});
 
     }catch(error){
-       return res.status(500).json({mensaje: "error"}, error);
+        console.log("error en editarUsuarioController", error)
+       return res.status(500).json({mensaje: "error en servidor/editarUsuarioController"});
     }
 }
 //nombre_usuario, estado
-export const suspenderUsuarioController = async(req, res) =>{
+export const suspenderUsuarioODarDeAltaController = async(req, res) =>{
     try{
         const {nombre, estado} = req.body;
             if(!nombre || !estado){
                 return res.status(400).json({mensaje: "faltan datos"})
             }
              console.log("error en suspender usuario controller salteif"); 
-            await suspenderUsuarioModel(nombre, estado);
-            return res.status(200).json({mensaje: "usuario dormido"});
+            await suspenderUsuarioODarDeAltaModel(nombre, estado);
+            return res.status(200).json({mensaje: "estado de usuario modificado"});
     
     }catch(error){
         console.log("error en suspender usuario controller", error);
@@ -76,11 +78,11 @@ export const suspenderUsuarioController = async(req, res) =>{
 
 export const crearModeradorController = async (req, res) => {
     try {
-        const {nombre} = req.body;
-        if(!nombre){
+        const { nombre_usuario } = req.body;
+        if(!nombre_usuario){
             return res.status(400).json({mensaje: "falta el nombre"});
         }
-        await crearModeradorModel(nombre);
+        await crearModeradorModel(nombre_usuario);
         return res.status(200).json({mensaje: "Usuario ahora es moderador"});
 
     } catch (error) {
@@ -99,6 +101,9 @@ export const buscarUsuarioPorNombreController = async(req, res) =>{
         }
         
         const usuarios = await buscarUsuarioPorNombreModel(nombre);
+        if(usuarios.length === 0){
+            return res.status(404).json({mensaje: "este usuario no existe"});
+        }
         return res.status(200).json({mensaje: "Usuario encontrado", data: usuarios});
 
     } catch (error) {
@@ -109,15 +114,15 @@ export const buscarUsuarioPorNombreController = async(req, res) =>{
 
 export const cambiarContrasenaController = async(req, res) =>{
     try {
-        
-        const {nombre, contrasenaNueva} = req.body;
+        const {idUsuario} = req.params; //pasar mas a delante a session
+        const {contrasenaNueva} = req.body;
 
-         if (!nombre || !contrasenaNueva) {
+         if (!idUsuario || !contrasenaNueva) {
             return res.status(400).json({ mensaje: "Faltan datos" });
         }
 
         const hash = await bcrypt.hash(contrasenaNueva, 10);
-        await cambiarContrasenaModel(nombre, hash);
+        await cambiarContrasenaModel(idUsuario, hash);
         return res.status(200).json({ mensaje: "Contraseña actualizada" });
     } catch (error) {
         console.log("Error en cambiar contraseña controller", error);

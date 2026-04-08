@@ -1,17 +1,17 @@
 import express from "express";
-import { crearUsuarioController, editarUsuarioController, suspenderUsuarioController, crearModeradorController,
+import { crearUsuarioController, editarUsuarioController, suspenderUsuarioODarDeAltaController, crearModeradorController,
      buscarUsuarioPorNombreController, buscarUsuarioPorEmailController, cambiarContrasenaController} 
 from "../controllers/usuario.controller.js";
-//import { cambiarContrasena } from "../models/usuario.model.js";
+
 
 const router = express.Router();
-
+//funcionan todas las rutas
 router.post("/registrar", crearUsuarioController); //funciona perfecto
-router.put("/actualizar-datos", editarUsuarioController);//funciona perfecto
-router.put("/suspender", suspenderUsuarioController);//Funciona perfecto
-router.put("/crear/moderador", crearModeradorController);//Funciona perfecto
-router.put("/actualizar/contrasena/", cambiarContrasenaController); //probar
-router.get("/buscar/:nombre", buscarUsuarioPorNombreController);//funciona
-router.get("/buscar/email", buscarUsuarioPorEmailController);//probar
+router.put("/editar/:idUsuario", editarUsuarioController);//funciona perfecto
+router.put("/estado", suspenderUsuarioODarDeAltaController);//Funciona perfecto
+router.put("/crear-moderador", crearModeradorController);//Funciona perfecto
+router.put("/actualizar-contrasena/:idUsuario", cambiarContrasenaController); //probar
+router.get("/buscar-por-nombre/:nombre", buscarUsuarioPorNombreController);//funciona
+router.get("/buscar-por-pais/:pais", buscarUsuarioPorEmailController);//busca por pais no por email
 
 export default router;
