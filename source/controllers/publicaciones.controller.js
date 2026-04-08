@@ -1,5 +1,5 @@
-import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel } from "../models/publicaciones.model.js";
-
+import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
+import { suspenderUsuarioModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
 
 export const crearPublicacionController = async (req, res) => {
     try {
@@ -51,7 +51,6 @@ export const obtenerPublicacionPorIdController = async (req, res) => {
 };
 
 
-//faltan los dos de abajo
 
 export const eliminarPublicacionController = async (req, res) =>{
 try {
@@ -100,5 +99,61 @@ export const obtenerTodasLasPublicacionesController = async (req, res) => {
         return res.status(500).json({ mensaje: "Error en el servidor-catchObtenerTodasLasPublicacionesController" });
     }
 }
+
+export const validarYBajarPublicacionController = async (req, res) => {
+    try {
+        const { id_publicacion, id_usuario_autor } = req.body;
+
+        if (!id_publicacion || !id_usuario_autor) {
+            return res.status(400).json({ mensaje: "Faltan datos id_publicacion o id_usuario_autor" });
+        }
+
+        //se da de baja la publicacion
+        await eliminarPublicacionModel(id_publicacion);
+
+        // (lo nuevo) se cuentan cuantas publicaciones bajadas tiene el usuario
+        const totalBajas = await contarPublicacionesBajasPorUsuarioModel(id_usuario_autor);
+
+        // si el total de las publicaciones bajadas es de 3 automaticamente se da de baja al usuario
+        if (totalBajas >= 3) {
+
+            //Podria haber realizado unos join para hacer todo de una misma consulta, pero tengo una que buscar usuario por id.
+            const [usuario] = await buscarUsuarioPorIdModel(id_usuario_autor);
+            
+            if (usuario) {
+                await suspenderUsuarioModel(usuario.nombre_usuario, 'inactivo');
+                return res.status(200).json({mensaje: "Se elimino la publicacion, se alcanzaron las tres publicaciones eliminadas, usuario suspendido"});
+            }
+        }
+
+        return res.status(200).json({ mensaje: "Publicacion eliminada por el validador/moderador" });
+
+    } catch (error) {
+        console.log("error en validarYBajarPublicacionController", error);
+        return res.status(500).json({ mensaje: "Error en el servidor al validar publicación" });
+    }
+};
+
+export const publicacionesDeUsuariosSeguidosController = async (req, params) => {
+    try {
+        const {idUsuarioLogueado} = req.params//luego pasarlo a req.session
+        if(!idUsuarioLogueado){
+            return res.status(400).json({mensaje: "falta el id del usuario logueado"});
+        }
+        const resultado = await publicacionesDeUsuariosSeguidosModel(idUsuarioLogueado);
+
+        if(resultado.affectedRows === 0){
+            return res.status(400).json({mensaje: "Aun no existen publicaciones"});
+        }
+
+        return res.status(200).json({mensaje: "se listaron todas las publicaciones de tus seguidos"});
+
+    } catch (error) {
+        console.log("errir en publicacionesDeUsuariosSeguidsController");
+        res.status(500).json({dato: "error en el servidor/publicacionesDeUsuariosSeguidosController"});
+    }
+}
+
+
 
 

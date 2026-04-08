@@ -31,7 +31,7 @@ export const editarUsuarioModel = async(nombre, correo, biografia, fotoPerfil, p
         const query = `UPDATE usuarios 
         SET nombre_usuario = ?, correo_electronico = ?, bio = ?, foto_perfil = ?, pais = ? WHERE id_usuario = ?`
         const [resultado] = await db.query(query, [nombre, correo, biografia, fotoPerfil, pais, idusuario]);
-        returnresultado;
+        return resultado;
     }catch(error){
         console.log("error en editarusuario model");
         throw error;
@@ -131,3 +131,23 @@ export const cambiarContrasenaModel = async(nombre, contrasena) =>{
     }
 }
 
+
+//----Lo utilizo para auto eliminar un usuario
+//
+/**
+ * Cuando un usuario llega a las 3 publicaciones “bajadas” el sistema inactiva su cuenta.
+ * 
+ */
+export const contarPublicacionesBajasPorUsuarioModel = async (idUsuario) => {
+    try {
+        //La consulta cuenta la cantidad de veces donde el usuario tenga la publicacion eliminada
+        const query = `SELECT COUNT(*) as total FROM publicaciones WHERE id_usuario = ? AND estado = 0`;
+
+        const [resultado] = await db.query(query, [idUsuario]);//se espera una promesa donde se le pasa el idUsuario para la query
+        return resultado[0].total;//se retorna el resultado total resultante de la consulta
+
+    } catch (error) {
+        console.log("Error en contarPublicacionesBajasPorUsuarioModel", error);
+        throw error;
+    }
+};

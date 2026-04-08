@@ -1,5 +1,5 @@
 import {crearColeccionController, cambiarEstadoPublicoOPrivadoController, agregarPublicacionAColeccionController, 
-    crearColeccionController, listarColeccionesUsuarioController, obtenerPublicacionesDeColeccionController} from "../controllers/colecciones.controller.js";
+     listarColeccionesUsuarioController, obtenerPublicacionesDeColeccionController} from "../controllers/colecciones.controller.js";
 import expres from "express";
 const routes = expres.Router();
 

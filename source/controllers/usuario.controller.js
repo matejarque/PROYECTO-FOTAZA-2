@@ -118,11 +118,10 @@ export const cambiarContrasenaController = async(req, res) =>{
 
         const hash = await bcrypt.hash(contrasenaNueva, 10);
         await cambiarContrasenaModel(nombre, hash);
-        
+        return res.status(200).json({ mensaje: "Contraseña actualizada" });
     } catch (error) {
         console.log("Error en cambiar contraseña controller", error);
         return res.status(500).json({mensaje: "error servidor controller cambiar contrasena"});
     }
 }
-
 

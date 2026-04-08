@@ -137,3 +137,22 @@ export const buscarPublicacionesModel = async (termino) => {
     return res;
 };
 
+/**
+ * Obtiene las publicaciones de los usuarios seguidos por el usuario actual.
+ * Requerimiento TPI 4: Sección "Publicaciones de usuarios que sigo".
+ */
+export const publicacionesDeUsuariosSeguidosModel = async (idUsuarioLogueado) => {
+    try {
+        const quety = `SELECT p.*, u.nombre_usuario 
+            FROM publicaciones p
+            JOIN seguidores s ON p.id_usuario = s.id_usuario_seguido
+            JOIN usuarios u ON p.id_usuario = u.id_usuario
+            WHERE s.id_usuario_seguidor = ? AND p.estado = 1
+            ORDER BY p.fecha_creacion DESC`;
+        const [resultado] = await db.query(quety, [idUsuarioLogueado]);
+        
+    } catch (error) {
+        console.log("error en publicacionesDeUsuarioSeguidos");
+        throw error;
+    }
+}

@@ -59,7 +59,7 @@ export const modificarEstadoComentariosController = async (req, res) => {
 
     } catch (error) {
         console.log("Error en modificarEstadoComentariosController", error);
-        return res.status(500).json({ mensaje: "Error al intentar cambiar el estado de los comentarios" });
+        return res.status(500).json({ mensaje: "Error al intentar cambiar el estado de los comentarios modificarEstadoComentarioController" });
     }
 };
 

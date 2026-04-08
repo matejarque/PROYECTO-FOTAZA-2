@@ -2,6 +2,7 @@ import express from 'express';
 import { crearComentarioController, listarComentariosPorPublicacionController, editarComentarioController, modificarEstadoComentariosController, comentarioReportadoController, eliminarComentarioController, listarComentariosReportadosPorUsuarioController } from '../controllers/comentarios.controller.js';
 const router = express.Router();
 
+//tengo que probar todas las rutas de nuevo
 router.post("/crear", crearComentarioController); //funciona
 router.get("/publicacion/:idPublicacion", listarComentariosPorPublicacionController);//funciona
 router.put("/editar/:idComentario", editarComentarioController);//funciono a la primera insano
