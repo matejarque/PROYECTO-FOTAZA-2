@@ -4,7 +4,11 @@ import express from "express";
 const Router = express.Router();
 
 Router.post("/", registrarDenunciaController);
-Router.get("/contar", contarDenunciasUnicasController);
+
+//esta no debe de ser una ruta, si no el metodo para contar cuando se denuncia asi se quita la publicacion si llega a 3
+//Router.get("/contar/:idPublicacion", contarDenunciasUnicasController);
+
+//funciona
 Router.get("/listar", listarPublicacionesParaValidarController);
 
 

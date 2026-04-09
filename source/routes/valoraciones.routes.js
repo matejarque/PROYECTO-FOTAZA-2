@@ -2,8 +2,8 @@ import {registrarValoracionController, sacarPromedioValoracionesController} from
 import express from "express";
 const router = express.Router();
 
-
-router.post("/valorar", registrarValoracionController);//funciona
+//funcionan
+router.post("/valorar/:idUsuario", registrarValoracionController);//funciona
 router.get("/promediar/:idImagen", sacarPromedioValoracionesController);//funciona
 
 

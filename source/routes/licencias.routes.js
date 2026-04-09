@@ -2,6 +2,8 @@ import {crearLicenciasController, traerLicenciasController} from "../controllers
 import express from "express";
 //no copyright - copyright
 const routes = express.Router();
+
+//funcionan->quitar-crear-licencias
 routes.post('/crear-licencia', crearLicenciasController);//funciona
 routes.get('/traer-licencias', traerLicenciasController);//funciona
 

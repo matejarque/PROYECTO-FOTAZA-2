@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 export const crearColeccionModel = async (id_usuario, nombre, descripcion, estado) => {
     try {
-        const query = `INSERT INTO coleccion (id_usuario, nombre, descripcion, estado) VALUES (?, ?, ?, ?)`;
+        const query = `INSERT INTO colecciones (id_usuario, nombre, descripcion, estado) VALUES (?, ?, ?, ?)`;
         const [resultado] = await db.query(query, [id_usuario, nombre, descripcion, estado]);
         return resultado;
     } catch (error) {
@@ -14,8 +14,8 @@ export const crearColeccionModel = async (id_usuario, nombre, descripcion, estad
 
 export const cambiarEstadoPublicoOPrivadoModel = async (id_coleccion, id_usuario, estado) => {
  try {
-        const query = `UPDATE coleccion 
-        SET estado = ? WHERE id_coleccion = ? AND id_uuario = ? `;
+        const query = `UPDATE colecciones
+        SET estado = ? WHERE id_coleccion = ? AND id_usuario = ? `;
         const [resultado] = await db.query(query, [estado, id_coleccion, id_usuario]);
         return resultado;
  } catch (error) {
@@ -35,6 +35,8 @@ export const listarColeccionesUsuarioModel = async (id_usuario) => {
         throw error;
     }
 }
+
+
 //obtenerPublicacionesDeColeccionModel
 export const obtenerPublicacionesDeColeccionModel = async (id_coleccion) => {
     const query = `

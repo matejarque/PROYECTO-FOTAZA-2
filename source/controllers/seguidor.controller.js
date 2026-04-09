@@ -1,7 +1,8 @@
-import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel} from '../models/seguidor.model.js';
+import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel, verificarSeguimientoModel} from '../models/seguidor.model.js';
 //seguirModel dejarDeSeguirModel idUsuarioSeguidor, idUsuarioSeguido
 export const seguirController = async (req, res) => {
     try {
+        //const {idUsuarioSeguidor} = req.session;
         const { idUsuarioSeguidor, idUsuarioSeguido } = req.body;
 
         
@@ -13,8 +14,16 @@ export const seguirController = async (req, res) => {
             return res.status(404).json({ mensaje: "No se puede autoseguir" });
         }
 
-        const resultado = await seguirModel(idUsuarioSeguidor, idUsuarioSeguido);
-        return res.status(200).json({ mensaje: "ahora lo sigue", data: resultado});
+        const existe = await verificarSeguimientoModel(idUsuarioSeguidor, idUsuarioSeguido);
+
+        if(existe.length === 1){
+            return res.status(409).json({mensaje: "ya sigues este usuario, no puedes seguirlo nuevamente"});
+
+        }else{
+            const resultado = await seguirModel(idUsuarioSeguidor, idUsuarioSeguido);
+            return res.status(200).json({ mensaje: "ahora lo sigue", data: resultado});
+        }
+        
         
     } catch (error) {
         console.log("Error en seguirController:", error);
@@ -26,6 +35,7 @@ export const seguirController = async (req, res) => {
 
 export const dejarDeSeguirController = async (req, res) => {
     try {
+        //const {idUsuarioSeguidor} = req.session;
         const { idUsuarioSeguidor, idUsuarioSeguido } = req.body;
 
         if (!idUsuarioSeguidor || !idUsuarioSeguido) {

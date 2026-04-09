@@ -1,7 +1,8 @@
-import {generarInteresImagenModel, eliminarInteresImagenModel, traerInteresImagenModel} from "../models/interes_imagen.mode.js";
+import {generarInteresImagenModel, eliminarInteresImagenModel, traerInteresImagenModel} from "../models/interes_imagen.model.js";
 
 export const generarInteresImagenController = async (req, res) => {
     try {
+        //const {id_usuario_interesado} = req.session;
         const {id_imagen, id_usuario_interesado} = req.body;
         if(!id_imagen || !id_usuario_interesado){
             return res.status(400).json({mensaje: "Datos faltantes, id_imagen o id_usuario_interesado"});
@@ -19,6 +20,7 @@ export const generarInteresImagenController = async (req, res) => {
 
 export const eliminarInteresImagenController = async (req, res) => {
     try {
+        //const {id_usuario_interesado} = req.session
        const {id_interes, id_usuario_interesado} = req.body;
         if(!id_interes || !id_usuario_interesado){
             return res.status(400).json({mensaje: "Faltan datos id_interes/id_usuario_interesasdo"});
@@ -32,15 +34,15 @@ export const eliminarInteresImagenController = async (req, res) => {
     }
 }
 
-export const traerInteresImagenController = async (params) => {
+export const traerInteresImagenController = async (req, res) => {
     try {
-        const {id_usuario_interesado} = req.params;
+        const {id_usuario_interesado} = req.params;//modificarlo a session
 
         if(!id_usuario_interesado){
             return res.status(400).json({mensaje: "Falta dato id_usuario_interesasdo"});
         }
 
-        const resultado = await eliminarInteresImagenModel(id_usuario_interesado);
+        const resultado = await traerInteresImagenModel(id_usuario_interesado);
         return res.status(200).json({mensaje: "se listo correctamente", resultado: resultado});
 
     } catch (error) {

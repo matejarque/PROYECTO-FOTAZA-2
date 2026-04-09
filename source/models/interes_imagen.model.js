@@ -4,7 +4,7 @@ import db from "../config/db.js";
 
 export const generarInteresImagenModel = async(id_imagen, id_usuario_interesado) => {
     try {
-        const query = `INSERT INTO interes_imagen (id_imagen, id_usuario_interesado) VALUES (?, ?)`;
+        const query = `INSERT INTO intereses_imagen (id_imagen, id_usuario_interesado) VALUES (?, ?)`;
         const [resultado] = await db.query(query,[id_imagen, id_usuario_interesado]);
         return resultado;
     } catch (error) {
@@ -15,7 +15,7 @@ export const generarInteresImagenModel = async(id_imagen, id_usuario_interesado)
 
 export const eliminarInteresImagenModel = async(id_interes, id_usuario_interesado)=>{
     try {
-        const query = `DELETE FROM interes_imagen WHERE id_interes = ? AND id_usuario_interesado = ?`;
+        const query = `DELETE FROM intereses_imagen WHERE id_interes = ? AND id_usuario_interesado = ?`;
         const [resultado] = await db.query(query, [id_interes, id_usuario_interesado]);
         return resultado;
     } catch (error) {

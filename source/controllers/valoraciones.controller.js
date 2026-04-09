@@ -3,7 +3,9 @@ import {registrarValoracionModel, obtenerAutorDeImagenModel,verificarVotoExisten
 //idImagen, idUsuario, puntuacion -> model
 export const registrarValoracionController = async (req, res) => {
     try {
-        const { idImagen, idUsuario, puntuacion } = req.body;
+        //const {idUsuario} = req.session;
+        const {idUsuario} = req.params;
+        const {idImagen, puntuacion} = req.body;
 
         if (!idImagen || !idUsuario || !puntuacion) {
             return res.status(400).json({mensaje: "faltan datos" });

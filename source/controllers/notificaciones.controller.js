@@ -3,23 +3,25 @@ import {crearNotificacionModel, obtenerNotificacionesUsuarioModel, marcarLeidaMo
 
 export const crearNotificacionController = async (req, res) => {
     try {
-        const { idDestino, idOrigen, tipoEvento, tipoRecurso, idRecurso } = req.body;
+        //const {idOrigen} = req.session;
+        const {id_usuario_destino, id_usuario_origen, tipo_evento, tipo_recurso, id_recurso, leido} = req.body;
 
-        if (!idDestino || !idOrigen || !tipoEvento) {
+        if (!id_usuario_destino || !id_usuario_origen || !tipo_evento) {
             return res.status(400).json({ mensaje: "Faltan datos obligatorios para la notificación" });
         }
 
-        const resultado = await crearNotificacionModel(idDestino, idOrigen, tipoEvento, tipoRecurso, idRecurso);
-        return res.status(200).json({mensaje: "Notificación creada con éxito",id: resultado.insertId});
+        const resultado = await crearNotificacionModel(id_usuario_destino, id_usuario_origen, tipo_evento, tipo_recurso, id_recurso, leido);
+        return res.status(200).json({mensaje: "notifiacion creada con exito",id: resultado.insertId});
     } catch (error) {
         console.error("Error en crearNotificacionController:", error);
-        return res.status(500).json({ mensaje: "Error interno al crear notificación" });
+        return res.status(500).json({ mensaje: "Error interno al crear notificacion"});
     }
 };
 
 
 export const obtenerNotificacionesUsuarioController = async (req, res) => {
     try {
+        //const {id_usuario_origen} = req.session;
         const { idUsuario } = req.params; // truta -> /notificaciones/:idUsuario
 
         const notificaciones = await obtenerNotificacionesUsuarioModel(idUsuario);
@@ -38,15 +40,15 @@ export const obtenerNotificacionesUsuarioController = async (req, res) => {
 
 export const marcarLeidaController = async (req, res) => {
     try {
-        const { idNotificacion } = req.params;
+        const { idNotificacion, id_usuario_destino } = req.params;
 
-        const resultado = await marcarLeidaModel(idNotificacion);
+        const resultado = await marcarLeidaModel(idNotificacion, id_usuario_destino);
 
         if (resultado.affectedRows === 0) {
             return res.status(404).json({ mensaje: "Notificación no encontrada" });
         }
 
-        return res.status(200).json({ mensaje: "Notificación marcada como leída" });
+        return res.status(200).json({ mensaje: "Notificaciion leida" });
     } catch (error) {
         console.error("Error en marcarLeidaController:", error);
         return res.status(500).json({ mensaje: "Error al actualizar notificación" });

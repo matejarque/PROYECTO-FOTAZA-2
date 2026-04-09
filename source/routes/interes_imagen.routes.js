@@ -3,9 +3,10 @@ import express from "express";
 
 const router = express.Router();
 
+//funcionan pero requieren modificaciones
 router.post("/", generarInteresImagenController);
 router.delete("/eliminar", eliminarInteresImagenController);
-router.get("/listar", traerInteresImagenController);
+router.get("/listar/:id_usuario_interesado", traerInteresImagenController);
 
 
 

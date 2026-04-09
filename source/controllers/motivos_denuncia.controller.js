@@ -2,6 +2,8 @@ import {editarMotivoDenunciaModel, listarMotivosDenunciaModel, crearMotivoDenunc
 
 export const crearMotivoDenunciaController = async (req, res) => {
     try {
+        //const {idUsuario} = req.session;
+        //const {idUsuario} = req.params;
         const {nombre} = req.body;
         const resultado = await crearMotivoDenunciaModel(nombre);
         return res.status(200).json({mensaje: "motivo creado", resul: resultado});

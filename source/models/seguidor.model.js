@@ -61,3 +61,14 @@ export const contarSeguidoresModel = async (id_usuario) => {
         throw error;
     }
 }
+
+export const verificarSeguimientoModel = async (id_usuario_seguidor, id_usuario_seguido) => {
+    try{
+        const query = `SELECT * FROM seguidores WHERE id_usuario_seguidor = ? AND id_usuario_seguido = ?`;
+        const [resultado] = await db.query(query, [id_usuario_seguidor, id_usuario_seguido]);
+        return resultado;
+    }catch(error){
+        console.log("error en verificarSeguimientoModel", error);
+        throw error;
+    }
+}

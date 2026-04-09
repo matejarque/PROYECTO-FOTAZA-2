@@ -13,12 +13,17 @@ export const listarEtiquetasPopularesController = async (req, res) => {
 export const buscarOCrearEtiquetaController = async (req, res) => {
     try {
         const { nombre } = req.body;
-
+        
         if (!nombre) {
             return res.status(400).json({ mensaje: "El nombre de la etiqueta es obligatorio" });
         }
 
-        const resultado = await buscarOCrearEtiquetaModel(nombre);
+        let nombreFormateado = nombre.trim().toLowerCase();
+        if (!nombreFormateado.startsWith('#')) {
+            nombreFormateado = `#${nombreFormateado}`;
+        }
+
+        const resultado = await buscarOCrearEtiquetaModel(nombreFormateado);
         return res.status(201).json({ mensaje: 'Etiqueta procesada correctamente', data: resultado });
 
     } catch (error) {
@@ -26,3 +31,9 @@ export const buscarOCrearEtiquetaController = async (req, res) => {
         return res.status(500).json({ mensaje: "Error al procesar la etiqueta" });
     }
 }
+
+/**Para mas adelante, ahora la voy a saltar, por si llegan a ingresar una etiqueta fuera de las normas.
+ * 
+ * export const eliminarEtiquetas
+ * 
+ */

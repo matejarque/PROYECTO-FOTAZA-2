@@ -3,7 +3,7 @@ import db from "../config/db.js";
 //no es tan necesaria porque se podria crear directamente en la base de datos
 export const crearMotivoDenunciaModel = async (params) => {
     try {
-        const query = `INSERT INTO motivos_denuncia (nombre) VALUES (?)`;
+        const query = `INSERT INTO motivos_denuncia (nombre) VALUES (?) WHERE`;
         const [resul] = await db.query(query, [params])
         return resul;
     } catch (error) {

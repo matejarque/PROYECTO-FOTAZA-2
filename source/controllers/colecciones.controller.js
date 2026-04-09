@@ -8,9 +8,10 @@ import {crearColeccionModel, cambiarEstadoPublicoOPrivadoModel,
 
 export const crearColeccionController = async (req, res) => {
     try {
+        //const {id_usuario} = req.session
         const {id_usuario, nombre, descripcion, estado} = req.body;
-        if(!id_usuario || !nombre || !estado){
-            return res.statu(400).json({mensaje: "debe de ingresar todos los datos "});
+        if(!id_usuario || !nombre || estado === undefined){
+            return res.status(400).json({mensaje: "debe de ingresar todos los datos "});
         }
         const resultado = await crearColeccionModel(id_usuario, nombre, descripcion, estado);
         return res.status(200).json({mensaje: "Se ha creado correctamente la coleccion", dato: resultado.insertId});
@@ -24,8 +25,9 @@ export const crearColeccionController = async (req, res) => {
 
 export const cambiarEstadoPublicoOPrivadoController = async(req, res) => {
     try {
+        //const {id_usuario} = req.session;
         const {id_coleccion, id_usuario, estado} = req.body;
-        if(!id_coleccion || !id_usuario || !estado){
+        if(!id_coleccion || !id_usuario || estado === undefined){
             return res.status(400).json({mensasje: "Faltan datos"});
         }
         const resultado = await cambiarEstadoPublicoOPrivadoModel(id_coleccion, id_usuario, estado);
@@ -39,7 +41,8 @@ export const cambiarEstadoPublicoOPrivadoController = async(req, res) => {
 
 export const listarColeccionesUsuarioController = async (req, res) => {
     try {
-        const { id_usuario } = req.user; // ->recordar de sacarlo de jwt
+        //const { id_usuario } = req.user; // ->recordar de sacarlo de jwt
+        const {id_usuario} = req.params;
         const resultado = await listarColeccionesUsuarioModel(id_usuario);
         res.status(200).json(resultado);
     } catch (error) {
@@ -73,6 +76,8 @@ export const obtenerPublicacionesDeColeccionController = async (req, res) => {
 export const agregarPublicacionAColeccionController = async (req, res) => {
     
     try {
+        //agregar el idUsuario, si no, cualquiera podrria agregarla
+        //Agregar alguna logica para evitar cargar la misma publicacion
         const {id_coleccion, id_publicacion} = req.body;
         if(!id_coleccion || !id_publicacion){
             return res.status(400).json({mensasje: "Faltan datos"});

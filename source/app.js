@@ -16,7 +16,7 @@ import valoracionesRoutes from "./routes/valoraciones.routes.js";
 import motivoDenunciaRoutes from "./routes/motivos_denuncia.routes.js";
 import denunciasRoutes from "./routes/denuncias.routes.js";
 import notificacionesRoutes from "./routes/notificaciones.routes.js"
-import interesImagenRoutes from "./routes/imagenes.routes.js"
+import interesImagenRoutes from "./routes/interes_imagen.routes.js"
 import coleccionesRoutes from "./routes/colecciones.routes.js";
 const PORT = process.env.PORT || 3000;
 

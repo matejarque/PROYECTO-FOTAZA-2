@@ -3,11 +3,12 @@ import {registrarDenunciaModel, contarDenunciasComentarioModel, contarDenunciasU
 
 export const registrarDenunciaController  = async(req,res)=>{
     try {
+        //const {idDenunciante} = req.session;
         const {idDenunciante, idPublicacion, idComentario, idMotivo, descripcion} = req.body;
         if(!idPublicacion || !idMotivo){
             return res.status(400).json({mensaje: "faltan idPublicacion o idMotivo"});
         }
-        const resultado  = await registrarDenunciaModel(idPublicacion, idComentario, idMotivo, descripcion);
+        const resultado  = await registrarDenunciaModel(idDenunciante, idPublicacion, idComentario, idMotivo, descripcion);
         return res.status(200).json({mensaje: "denuncia registrada", resul: resultado});
 
     } catch (error) {
