@@ -1,6 +1,15 @@
+//variable de entorno
 import express from 'express';
 import dotenv from 'dotenv';
-//import db from './config/db.js'; //-> para poder cargar la base de dato
+import session from 'express-session';
+import path from 'path';
+import { fileURLToPath } from 'url';
+//import db from './config/db.init.js'; //-> para poder cargar la base de dato
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //importancion de las rutas
 import usuarioRoutes from "./routes/usuario.routes.js"; 
@@ -18,10 +27,27 @@ import denunciasRoutes from "./routes/denuncias.routes.js";
 import notificacionesRoutes from "./routes/notificaciones.routes.js"
 import interesImagenRoutes from "./routes/interes_imagen.routes.js"
 import coleccionesRoutes from "./routes/colecciones.routes.js";
+
+//inicializar la web
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-dotenv.config();
-const app = express();
+//configuracion de del motor de plantillas
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, '/views'));
+
+//midelwares globales
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+//para el aauth
+app.use(session({
+    secret: process.env.SESSION_SECRET
+}));
+
+
+
 
 app.use(express.json());
 app.use("/usuarios", usuarioRoutes)
@@ -39,8 +65,9 @@ app.use("/denuncias", denunciasRoutes);
 app.use("/notificaciones", notificacionesRoutes);
 app.use("/interes-imagen", interesImagenRoutes);
 app.use("/colecciones", coleccionesRoutes);
+
 app.get('/', (req, res) => {
-    res.send('El servidor de fotaza esta activo');
+    res.render('index');
 });
 
 
@@ -52,6 +79,8 @@ app.get('/db', async (req, res) => {
     }
 });
 
+
+//maneja errores 404 -> modificar a una vista con PUG
 app.all(/.*/, (req, res)=>{
     return res.status(404).send('<h1>404 No Disponible</h1>');
 })
