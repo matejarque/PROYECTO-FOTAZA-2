@@ -1,7 +1,20 @@
-doctype html
-html
-  head
-    title Fotaza 2
-  body
-    h1= mensaje
-    p Bienvenidos al motor de plantillas PUG.
+extends layout
+
+block content
+  .text-center.py-5
+    h1.display-4 ¡Bienvenido a Fotaza 2!
+    p.lead Una comunidad para compartir tus imagenes.
+    hr.my-4
+    
+    if usuarioLogueado
+      p Hola de nuevo, #{usuarioLogueado.nombre}. 
+      p Aqui veras las publicaciones mas valoradas o de gente que seguis.
+    else
+      p Inicia sesion para poder subir tus fotos, comentar y votar las mejores capturas.
+      .d-flex.justify-content-center.gap-3
+        //- Cambiamos 'a' por 'button' para que el Modal funcione 100% bien
+        button.btn.btn-primary.btn-lg(type="button" data-bs-toggle="modal" data-bs-target="#modalRegistro") Empezar ahora
+        a.btn.btn-outline-secondary.btn-lg(href="/login") Ya tengo cuenta
+
+    //- El include debe llevar la misma sangría que el contenido del bloque
+    include ./partials/modal-registro.pug

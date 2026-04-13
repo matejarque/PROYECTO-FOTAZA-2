@@ -1,7 +1,7 @@
 //variable de entorno
 import express from 'express';
 import dotenv from 'dotenv';
-import session from 'express-session';
+//import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from 'url';
 //import db from './config/db.init.js'; //-> para poder cargar la base de dato
@@ -33,8 +33,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //configuracion de del motor de plantillas
-app.set('view engine', 'pug');
+//carga del view
 app.set('views', path.join(__dirname, '/views'));
+app.set('view engine', 'pug');
 
 //midelwares globales
 app.use(express.json());
@@ -42,11 +43,12 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //para el aauth
+/*
 app.use(session({
     secret: process.env.SESSION_SECRET
 }));
 
-
+*/
 
 
 app.use(express.json());
@@ -67,7 +69,7 @@ app.use("/interes-imagen", interesImagenRoutes);
 app.use("/colecciones", coleccionesRoutes);
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', {usuarioLogueado: null});
 });
 
 
