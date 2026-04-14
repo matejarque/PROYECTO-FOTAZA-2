@@ -1,0 +1,29 @@
+#modalRegistro.modal.fade(tabindex="-1" aria-hidden="true")
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header
+        h5.modal-title Crear tu cuenta en Fotaza 2
+        button.btn-close(type="button" data-bs-dismiss="modal")
+      .modal-body
+        form(action="/usuarios/registrar" method="POST" enctype="multipart/form-data")
+          .mb-3
+            label.form-label Correo electrónico
+            input.form-control(type="email" name="email" required)
+          .mb-3
+            label.form-label Nombre Usuario
+            input.form-control(type="text" name="nombre_usuario" required)
+          .mb-3
+            label.form-label Foto de perfil
+            input.form-control(type="file" name="foto_perfil" accept="image/*")
+          .row.mb-3
+            .col
+              label.form-label Contraseña
+              input.form-control(type="password" name="password" required)
+            .col
+              label.form-label Repetir
+              input.form-control(type="password" name="passwordConfirm" required)
+          .d-grid
+            button.btn.btn-primary(type="submit") Registrarse
+        .mt-3.text-center
+          small ¿Ya tienes cuenta? 
+          a(href="#" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Inicia sesion

@@ -1,0 +1,11 @@
+#modalCheck.modal.fade(tabindex="-1" aria-hidden="true")
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header.border-0
+        button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+      .modal-body.text-center.pb-5
+        h4.mb-4 Para subir contenido necesitas una cuenta
+        p.text-muted ¿Ya tienes una cuenta en Fotaza 2?
+        .d-grid.gap-2.col-8.mx-auto
+          button.btn.btn-primary.rounded-pill(type="button" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Si, iniciar sesion
+          button.btn.btn-outline-dark.rounded-pill(type="button" data-bs-toggle="modal" data-bs-target="#modalRegistro") No, quiero registrarme

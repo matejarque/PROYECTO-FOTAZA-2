@@ -1,0 +1,16 @@
+#modalIniciarSesion.modal.fade(tabindex="-1" aria-labelledby="modalIniciarSesionLabel" aria-hidden="true")
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header
+        h5#modalIniciarSesionLabel.modal-title Iniciar Sesion
+        button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+      .modal-body
+        form(action="/usuarios/verificar-inicio-sesion" method="POST")
+          .mb-3
+            label.form-label Usuario o Email
+            input.form-control(type="text" name="identificador" placeholder="Usuario o Email" required)
+          .mb-3
+            label.form-label Contraseña
+            input.form-control(type="password" id="loginPassword" required)
+          .d-grid
+            button.btn.btn-primary(type="submit") Iniciar Sesion

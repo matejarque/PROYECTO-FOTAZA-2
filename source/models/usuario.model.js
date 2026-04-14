@@ -131,7 +131,35 @@ export const cambiarContrasenaModel = async(idUsuario, contrasena) =>{
     }
 }
 
+//se podria modificar a por si el usuario esta suspendido que muestre a la hora de iniciar sesion un alert o algo: "Su usuario se encuentra suspendido";
+export const verificarExistenciaNombreUsuarioModel = async(nombre) => {
+    try {
+        const query = `SELECT id_usuario, nombre_usuario, correo_electronico, contrasena 
+        FROM usuarios 
+        WHERE estado = 1 AND nombre = ?`;
+        const [resultado] = await db.query(query, [nombre]);
+        return resultado;
+    } catch (error) {
+        console.log("Error en veririficarExistenciaNombreUsuarioModel", error)
+        throw error;
+    }
+}
 
+//al final uni ambas en una consulta
+/*
+export const verificarContrasenaUsuarioModel = async (nombre) => {
+    try {
+        const query = `SELECT contrasena 
+        FROM usuario WHERE nombre = ? AND estado = 1`;
+        const [resultado] = db.query(query, [nombre]);
+        return resultado;
+    } catch (error) {
+        console.log("Error en verificarContrasenaUsuarioModel", error)
+        throw error;
+    }
+}
+
+*/
 //----Lo utilizo para auto eliminar un usuario
 //
 /**

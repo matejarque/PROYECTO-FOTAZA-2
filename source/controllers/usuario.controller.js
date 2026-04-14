@@ -1,6 +1,7 @@
 //lo que pide la funcion nombre, correo, contra
 
-import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioODarDeAltaModel, crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
+import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioODarDeAltaModel, 
+    verificarExistenciaNombreUsuarioModel ,crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
 
 
@@ -130,3 +131,36 @@ export const cambiarContrasenaController = async(req, res) =>{
     }
 }
 
+
+export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
+    try {
+        //se obtienen ls datos necesarios
+        const { nombre, contrasena } = req.body;
+
+        //se validan si estan ingresados
+        if (!nombre || !contrasena) {
+            return res.status(400).json({ mensaje: "Falta alguno de los datos" });
+        }
+
+        //se realiza la consulta para ver si el nombre existe, si no existe tira un error
+        const usuarioEncontrado = await verificarExistenciaNombreUsuarioModel(nombre);
+
+        if (!usuarioEncontrado) {
+            return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
+        }
+
+        //se comparan ambas contraseñas, la primera en texto plano y la segunda es la hasheada
+        const coinciden = await bcrypt.compare(contrasena, usuarioEncontrado.contrasena);
+
+        //si no coinciden tira error
+        if (!coinciden) {
+            return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
+        }
+
+        return res.status(200).json({ mensaje: "Login exitoso", usuario: usuarioEncontrado.nombre });
+
+    } catch (error) {
+        console.log("error en verificarContrasenaUsuarioController", error);
+        return res.status(500).json({ mensaje: "Error interno del servidor" });
+    }
+}
