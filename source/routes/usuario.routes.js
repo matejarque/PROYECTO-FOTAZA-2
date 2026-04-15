@@ -14,5 +14,4 @@ router.put("/actualizar-contrasena/:idUsuario", cambiarContrasenaController); //
 router.get("/buscar-por-nombre/:nombre", buscarUsuarioPorNombreController);//funciona
 router.get("/buscar-por-pais/:pais", buscarUsuarioPorEmailController);//busca por pais no por email
 router.get("/verificar-inicio-sesion", verificarDatosInicioSesionUsuarioController);
-
 export default router;

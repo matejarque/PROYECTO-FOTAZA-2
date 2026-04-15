@@ -3,6 +3,8 @@
 import { crearUsuarioModel, editarUsuarioModel, suspenderUsuarioODarDeAltaModel, 
     verificarExistenciaNombreUsuarioModel ,crearModeradorModel, buscarUsuarioPorNombreModel, buscarUsuarioPorEmailModel, cambiarContrasenaModel} from "../models/usuario.model.js";
 import bcrypt from "bcrypt";
+import {listarPublicacionesModel} from '../models/publicaciones.model.js';
+
 
 
 export const buscarUsuarioPorEmailController = async(req, res) =>{
@@ -28,14 +30,15 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
 export const crearUsuarioController = async(req, res) =>{
     try{
 
-        const { nombre, correo, contra, biografia, fotoPerfil, pais } = req.body;
-        if(!nombre || !correo || !contra){
+        
+        const {  nombre_usuario, email, password, biografia, foto_perfil, pais } = req.body;
+        if(!nombre_usuario || !email|| !password){
             return res.status(400).json({mensaje: "faltan datos"})
         }
         
         
-        const hash = await bcrypt.hash(contra, 10);
-        const resultado = await crearUsuarioModel(nombre, correo, hash, biografia || null, fotoPerfil || null, pais || null);
+        const hash = await bcrypt.hash(password, 10);
+        const resultado = await crearUsuarioModel(nombre_usuario, email, hash, biografia || null, foto_perfil || null, pais || null);
         return res.status(200).json({mensaje: "Usuario creado correctamente", idUsuario: resultado.insertId});
     } catch(error){
         console.log("ERROR REGISTRO/crearUsuarioController:", error);
@@ -164,3 +167,15 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
         return res.status(500).json({ mensaje: "Error interno del servidor" });
     }
 }
+
+
+//tuve que agregarlo para cargar la pagina apenas se entra -> esto es de publicaciones, pero lo hago en usuario porque es para ellos
+export const mostrarPaginaInicioController = async (req, res) => {
+    try {
+        const publicaciones = await listarPublicacionesModel(); 
+        res.render('index', {publicaciones: publicaciones, usuarioLogueado: req.session.usuarioLogueado || null });
+    } catch (error) {
+        console.error("Error al cargar la pagina:", error);
+        res.status(500).send("Error al cargar la pagina");
+    }
+};

@@ -26,16 +26,19 @@ export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
 export const listarPublicacionesModel = async () => {
     try {
         const query = `
-           SELECT 
-            p.id_publicacion,
-            p.titulo,
-            p.descripcion,
-            p.fecha_creacion,
-            p.estado,
-            u.nombre_usuario
-        FROM publicaciones p JOIN usuarios u ON p.id_usuario = u.id_usuario
-        WHERE p.estado = 1 ORDER BY p.fecha_creacion DESC`;
-
+            SELECT    
+                p.id_publicacion,
+                p.titulo,
+                u.nombre_usuario,
+                i.ruta_url
+            FROM publicaciones p 
+            JOIN usuarios u ON p.id_usuario = u.id_usuario
+            LEFT JOIN imagenes i ON p.id_publicacion = i.id_publicacion
+            WHERE p.estado = 1 
+            GROUP BY p.id_publicacion 
+            ORDER BY p.fecha_creacion DESC 
+            LIMIT 12`;
+            
         const [resultado] = await db.query(query);
         return resultado;
 

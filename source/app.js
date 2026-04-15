@@ -1,21 +1,23 @@
-//variable de entorno
+// ----------------------------------------------------- IMPORTACIONES ----------------------------------
 import express from 'express';
 import dotenv from 'dotenv';
-//import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from 'url';
-//import db from './config/db.init.js'; //-> para poder cargar la base de dato
+import session from 'express-session';
+//IMPORTO DIRECTAMENTE DE MODEL, COMO ES EL HOME PRINCIAPL
+import { listarPublicacionesModel } from "./models/publicaciones.model.js";
+
+// --------------------------------------------- CONFIGURACION DE VARIABLES Y RUTAS ----------------------------------
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//importancion de las rutas
+// Importacion de todas las rutas
 import usuarioRoutes from "./routes/usuario.routes.js"; 
 import publicacionesRoutes from "./routes/publicaciones.routes.js";
 import comentariosRoutes from "./routes/comentarios.routes.js";
-//import reporteComentariosRoutes from "./routes/reporte_comentarios.routes.js";
 import etiquetasRoutes from "./routes/etiquetas.routes.js";
 import rolRoutes from "./routes/roles.routes.js";
 import seguidoresRoutes from "./routes/seguidor.routes.js";
@@ -24,38 +26,69 @@ import imagenesRoutes from "./routes/imagenes.routes.js";
 import valoracionesRoutes from "./routes/valoraciones.routes.js";
 import motivoDenunciaRoutes from "./routes/motivos_denuncia.routes.js";
 import denunciasRoutes from "./routes/denuncias.routes.js";
-import notificacionesRoutes from "./routes/notificaciones.routes.js"
-import interesImagenRoutes from "./routes/interes_imagen.routes.js"
+import notificacionesRoutes from "./routes/notificaciones.routes.js";
+import interesImagenRoutes from "./routes/interes_imagen.routes.js";
 import coleccionesRoutes from "./routes/colecciones.routes.js";
 
-//inicializar la web
+
+
+
+
+// -----------------------------------------------------  INICIALIZACION DE TODA LA APP     ----------------------------------
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//configuracion de del motor de plantillas
-//carga del view
+
+
+// // -----------------------------------------------------  CONFIGURACION DE PUG ----------------------------------
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'pug');
 
-//midelwares globales
+
+
+
+// -----------------------------------------------------  MIDELWARES GLOBALES ----------------------------------
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//para el aauth
-/*
+
+ // ConfiguraciION DE SESION
 app.use(session({
-    secret: process.env.SESSION_SECRET
+    secret: process.env.SESSION_SECRET, 
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false, 
+        maxAge: 3600000 
+    }
 }));
 
-*/
 
 
-app.use(express.json());
-app.use("/usuarios", usuarioRoutes)
+
+
+// -----------------------------------------------------  RUTA RAIZ ------------- ----------------------------------
+
+app.get('/', async (req, res) => {
+    try {
+        const publicaciones = await listarPublicacionesModel();
+        
+        res.render('index', { 
+            publicaciones: publicaciones,  usuarioLogueado: req.session ? req.session.usuarioLogueado : null});
+    } catch (error) {
+        console.error("Error al cargar las publicaciones en el Home:", error);
+        res.render('index', { publicaciones: [], usuarioLogueado: null });
+    }
+});
+
+
+
+// -----------------------------------------------------  USO DE RUTAS  --------------------------------------------
+
+app.use("/usuarios", usuarioRoutes);
 app.use("/publicaciones", publicacionesRoutes);
 app.use("/comentarios", comentariosRoutes);
-//app.use("/reporte-comentarios", reporteComentariosRoutes); 
 app.use("/etiquetas", etiquetasRoutes);
 app.use("/roles", rolRoutes);
 app.use("/seguidores", seguidoresRoutes);
@@ -68,25 +101,25 @@ app.use("/notificaciones", notificacionesRoutes);
 app.use("/interes-imagen", interesImagenRoutes);
 app.use("/colecciones", coleccionesRoutes);
 
-app.get('/', (req, res) => {
-    res.render('index', {usuarioLogueado: null});
+
+
+
+// -----------------------------------------------------  RUTAS DE UTILIDAD Y ERRORES ----------------------------------
+
+
+
+// Ruta de prueba para la DB 
+app.get('/db', (req, res) => {
+    res.send("Chequea la consola de tu terminal para ver el estado de la conexión.");
 });
 
-
-app.get('/db', async (req, res) => {
-    try {
-        console.log("Conexion a la DB exitosa")
-    } catch (error) {
-        res.status(500).send(`Error de conexion: ${error.message}`);
-    }
+// Para manejar erorres 404, podria agregar otros
+app.all(/.*/, (req, res) => {
+    res.status(404).send('<h1>404 No Disponible - Fotaza 2</h1>');
 });
 
-
-//maneja errores 404 -> modificar a una vista con PUG
-app.all(/.*/, (req, res)=>{
-    return res.status(404).send('<h1>404 No Disponible</h1>');
-})
-
+// --- LEvantar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor levantado en el puerto ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });
