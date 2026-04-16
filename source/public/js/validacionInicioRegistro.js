@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let error = false;
 
             if (!regexEmail.test(email) || email.length > 35) {
-                alert("Email inválido o demasiado largo.");
+                alert("Email inválido.");
                 error = true;
             }
             if (nombreUsuario.length < 6 || nombreUsuario.length > 20) {

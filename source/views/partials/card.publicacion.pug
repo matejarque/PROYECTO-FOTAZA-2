@@ -1,0 +1,27 @@
+col-12.col-sm-6.col-md-4
+  .card.shadow-sm.h-100.publicacion-card
+    .card-body
+      //POr el momento todo es estatico, aun no realizo para que cargue del servidor
+      //- Nombre encima 
+      .d-flex.align-items-center.mb-2
+        a.text-decoration-none.small.fw-bold.text-primary(href="#") 
+          | @usuario_demo
+
+      //- el titulo
+      h6.card-title.mb-1 Título de la Imagen
+
+      //-  la descripcion
+      p.card-text.text-muted.small.mb-3
+        | Esta es una descripción de ejemplo para cumplir con los requisitos del proyecto Fotaza 2.
+
+    //- la imagen
+    .position-relative
+      img.card-img-top(
+        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop" 
+        alt="Imagen publicación"
+        style="height: 250px; object-fit: cover;")
+
+    //Faltan los botones para: reportar contenido - interes - Puntuar -Comentar
+    //Foto de perfil al lado del nombre
+    //necesito hacer un carrusel porque una publicacion puede tener varias imagenes
+    //No se como hacer para que se vean los comentarios, es dentro de la misma card?

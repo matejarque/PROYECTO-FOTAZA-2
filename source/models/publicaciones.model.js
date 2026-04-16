@@ -30,12 +30,12 @@ export const listarPublicacionesModel = async () => {
                 p.id_publicacion,
                 p.titulo,
                 u.nombre_usuario,
-                i.ruta_url
+                MIN(i.ruta_url) AS ruta_url 
             FROM publicaciones p 
             JOIN usuarios u ON p.id_usuario = u.id_usuario
             LEFT JOIN imagenes i ON p.id_publicacion = i.id_publicacion
             WHERE p.estado = 1 
-            GROUP BY p.id_publicacion 
+            GROUP BY p.id_publicacion, p.titulo, u.nombre_usuario 
             ORDER BY p.fecha_creacion DESC 
             LIMIT 12`;
             
