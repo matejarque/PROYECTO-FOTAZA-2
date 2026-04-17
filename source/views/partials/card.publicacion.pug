@@ -3,8 +3,14 @@
     .card-body
       //- nombre
       .d-flex.align-items-center.mb-1
-        a.text-decoration-none.small.fw-bold.text-primary(href="#") 
-          | @usuario_demo
+        a.d-flex.align-items-center.text-decoration-none(href="#") 
+          img.rounded-pill.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width: 30px; height: 30px; object-fit: cover;")
+          span.small.fw-bold.text-primary @usuario_demo
+
+      .d-flex.align-items-center.mb-1 
+        .text-warning
+        small.text-muted
+          | 4.2 / 5 (128 votos)
           
       //-titulo
       h6.card-title.mb-1 Título de la Imagen
@@ -14,34 +20,86 @@
         | Esta es una descripción de ejemplo para cumplir con los requisitos del proyecto Fotaza 2.
 
     //- imagenes
-    .position-relative
-      img.card-img-top(
-        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop" 
-        alt="Imagen publicación"
-        style="height: 250px; object-fit: cover;"
+    //- carrusel
+    #carrusel1.carousel.slide(data-bs-ride="false")
+
+      // indicadores
+      .carousel-indicators
+        button(
+          type="button"
+          data-bs-target="#carrusel1"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Imagen 1"
+        )
+        button(
+          type="button"
+          data-bs-target="#carrusel1"
+          data-bs-slide-to="1"
+          aria-label="Imagen 2")
+
+      // imagenes
+      .carousel-inner
+
+        .carousel-item.active
+          img.d-block.w-100(
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop"
+            alt="Imagen 1"
+            style="height:250px; object-fit:cover;"
+          )
+
+        .carousel-item
+          img.d-block.w-100(
+            src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1000&auto=format&fit=crop"
+            alt="Imagen 2"
+            style="height:250px; object-fit:cover;"
+          )
+
+      // boton anterior
+      button.carousel-control-prev(
+        type="button"
+        data-bs-target="#carrusel1"
+        data-bs-slide="prev"
       )
+        span.carousel-control-prev-icon(aria-hidden="true")
+        span.visually-hidden Anterior
+
+      // boton siguiente
+      button.carousel-control-next(
+        type="button"
+        data-bs-target="#carrusel1" 
+        data-bs-slide="next")
+
+        span.carousel-control-next-icon(aria-hidden="true")
+        span.visually-hidden Siguiente
+
 
     //- botones obligatorios para regularizar el tp
     .card-footer.bg-white.border-top-0.pt-3
       .d-flex.justify-content-between.gap-1.mb-2
-        //-  puntuar
+        //- puntuar
         button.btn.btn-sm.btn-outline-primary.flex-fill(type="button" title="Puntuar imagen")
-          | Puntuar
+          | ⭐ Puntuar
         
         //- boton para Sistema de comentarios 
         button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" title="Comentar publicación")
-          |  Comentar
+          | 💬 Comentar
         
         //-  Boton Me interesa 
         button.btn.btn-sm.btn-outline-success.flex-fill(type="button" title="Notificar interés al autor")
-          |  Interés
+          | ✨ Interés
 
       //- boton denuncia: 
       .d-grid
-        button.btn.btn-sm.btn-link.text-danger.text-decoration-none(type="button" title="Denunciar esta publicación")
-          |  Reportar contenido
+        button.btn.btn-sm.btn-link.text-danger.text-decoration-none(
+          type="button"
+          title="Denunciar esta publicación"
+          data-bs-toggle="modal"
+          data-bs-target="#modalReportar")
+          | 🚩 Reportar contenido
 
-
+    
     //Foto de perfil al lado del nombre
     //necesito hacer un carrusel porque una publicacion puede tener varias imagenes
     //No se como hacer para que se vean los comentarios, es dentro de la misma card?

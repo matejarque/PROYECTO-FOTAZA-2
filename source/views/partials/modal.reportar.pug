@@ -1,0 +1,20 @@
+#modalReportar.modal.fade(tabindex="-1")
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header
+        h5.modal-title Reportar publicacion 
+        button.btn-close(type="button" data-bs-dismiss="modal")
+
+      .modal-body
+        p ¿Cual es el motivo de reporte?
+
+        //luego cargarlo con la base de datos
+        select.form-select.mb-3
+          option Spam
+          option Contenido ofensivo
+          option Contenido inapropiado
+          option Otro
+
+      .modal-footer
+        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+        button.btn.btn-danger(type="button") Enviar reporte
