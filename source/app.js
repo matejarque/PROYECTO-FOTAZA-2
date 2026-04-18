@@ -41,7 +41,7 @@ const PORT = process.env.PORT || 3000;
 
 
 // // -----------------------------------------------------  CONFIGURACION DE PUG ----------------------------------
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
@@ -74,11 +74,11 @@ app.get('/', async (req, res) => {
     try {
         const publicaciones = await listarPublicacionesModel();
         
-        res.render('index', { 
+        res.render('pages/index', { 
             publicaciones: publicaciones,  usuarioLogueado: req.session ? req.session.usuarioLogueado : null});
     } catch (error) {
         console.error("Error al cargar las publicaciones en el Home:", error);
-        res.render('index', { publicaciones: [], usuarioLogueado: null });
+        res.render('pages/index', { publicaciones: [], usuarioLogueado: null });
     }
 });
 
