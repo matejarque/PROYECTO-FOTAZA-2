@@ -2,11 +2,11 @@ import express from "express";
 import { crearUsuarioController, editarUsuarioController, suspenderUsuarioODarDeAltaController, crearModeradorController,
      buscarUsuarioPorNombreController, buscarUsuarioPorEmailController, cambiarContrasenaController, verificarDatosInicioSesionUsuarioController} 
 from "../controllers/usuario.controller.js";
-
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
 //funcionan todas las rutas
-router.post("/registrar", crearUsuarioController); //funciona perfecto
+router.post("/registrar", upload.single("foto_perfil") ,crearUsuarioController); //funciona perfecto
 router.put("/editar/:idUsuario", editarUsuarioController);//funciona perfecto
 router.put("/estado", suspenderUsuarioODarDeAltaController);//Funciona perfecto
 router.put("/crear-moderador", crearModeradorController);//Funciona perfecto

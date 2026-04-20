@@ -7,11 +7,11 @@
       .modal-body
         form(action="/usuarios/registrar" method="POST" enctype="multipart/form-data")
           .mb-3
+            label.form-label Nombre de usuario
+            input.form-control(type="text" name="nombre_usuario" required)
+          .mb-3
             label.form-label Correo electrónico
             input.form-control(type="email" name="email" required)
-          .mb-3
-            label.form-label Nombre Usuario
-            input.form-control(type="text" name="nombre_usuario" required)
           .mb-3
             label.form-label Foto de perfil
             input.form-control(type="file" name="foto_perfil" accept="image/*")

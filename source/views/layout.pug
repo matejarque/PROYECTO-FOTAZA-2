@@ -41,7 +41,7 @@ html(lang="es")
                   img.rounded-pill.border(src="/img/default-avatar.png" alt="Perfil" style="width:35px; height:35px;")
               
               li.nav-item
-                a.btn.btn-sm.btn-outline-danger.ms-3(href="/salir") Salir
+                button.btn.btn-sm.btn-outline-danger.ms-3(type="button" data-bs-toggle="modal" data-bs-target="#modalCerrarLogin") Salir
             else
               li.nav-item
                 button.btn.btn-link.nav-link.fw-semibold(type="button" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Iniciar sesión
@@ -56,7 +56,8 @@ html(lang="es")
 
     main.container(style="margin-top:100px")
       block content
-
+    
+    include ./partials/modal.cerrarLogin.pug
     include ./partials/modal.registro.pug
     include ./partials/modal.iniciar-sesion.pug
     include ./partials/modal.check.pug

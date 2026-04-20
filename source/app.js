@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
- // ConfiguraciION DE SESION
+// -----------------------------------------------------  CONFIGUIRACION DE SESIÓNES ----------------------------------
 app.use(session({
     secret: process.env.SESSION_SECRET, 
     resave: false,
@@ -63,6 +63,13 @@ app.use(session({
         maxAge: 3600000 
     }
 }));
+
+
+app.get("/salir", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/");
+    })
+})
 
 
 

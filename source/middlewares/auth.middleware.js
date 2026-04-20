@@ -5,4 +5,6 @@ export const esUsuarioRegistrado = (req, res, next) => {
     } else {
         res.status(401).render('index', {error: 'Debes iniciar sesion para poder realizar esta accion',publicaciones: []});
     }
+    
+    return res.redirect("/")
 };

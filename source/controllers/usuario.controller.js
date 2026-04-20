@@ -30,8 +30,10 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
 export const crearUsuarioController = async(req, res) =>{
     try{
 
-        
-        const {  nombre_usuario, email, password, biografia, foto_perfil, pais } = req.body;
+        const {  nombre_usuario, email, password, biografia, pais } = req.body;
+        const foto_perfil = req.file ? req.file.filename : null;
+
+
         if(!nombre_usuario || !email|| !password){
             return res.status(400).json({mensaje: "faltan datos"})
         }
@@ -39,7 +41,14 @@ export const crearUsuarioController = async(req, res) =>{
         
         const hash = await bcrypt.hash(password, 10);
         const resultado = await crearUsuarioModel(nombre_usuario, email, hash, biografia || null, foto_perfil || null, pais || null);
-        return res.status(200).json({mensaje: "Usuario creado correctamente", idUsuario: resultado.insertId});
+        
+        req.session.usuarioLogueado = {
+            id:resultado.insertId,
+            nombre: nombre_usuario,
+            email: email
+        }
+        res.redirect("/");
+
     } catch(error){
         console.log("ERROR REGISTRO/crearUsuarioController:", error);
         res.status(500).json({mensaje: "error en el servidr"})

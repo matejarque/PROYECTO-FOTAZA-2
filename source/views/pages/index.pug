@@ -17,14 +17,9 @@ block content
       button.btn.btn-outline-secondary.btn-lg(type="button" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Ya tengo cuenta
 
     
-    .row.g-4 
-      
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
+  .row.g-4 
+      each pub in publicaciones 
+        include ../partials/card.publicacion.pug
 
   nav.mt-5(aria-label="Paginación de publicaciones")
     ul.pagination.justify-content-center
