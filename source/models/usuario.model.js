@@ -136,9 +136,9 @@ export const verificarExistenciaNombreUsuarioModel = async(nombre) => {
     try {
         const query = `SELECT id_usuario, nombre_usuario, correo_electronico, contrasena 
         FROM usuarios 
-        WHERE estado = 1 AND nombre = ?`;
+        WHERE estado = 1 AND nombre_usuario = ?`;
         const [resultado] = await db.query(query, [nombre]);
-        return resultado;
+        return resultado[0];
     } catch (error) {
         console.log("Error en veririficarExistenciaNombreUsuarioModel", error)
         throw error;

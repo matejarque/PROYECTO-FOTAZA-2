@@ -5,12 +5,12 @@
         h5#modalIniciarSesionLabel.modal-title Iniciar Sesion
         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
       .modal-body
-        form(action="/usuarios/verificar-inicio-sesion" method="POST")
+        form#formLogin
           .mb-3
-            label.form-label Usuario o Email
-            input.form-control(type="text" name="identificador" placeholder="Usuario o Email" required)
+            label.form-label Usuario
+            input.form-control(type="text" name="nombre" placeholder="Usuario" required)
           .mb-3
             label.form-label Contraseña
-            input.form-control(type="password" id="passwordLogin" required)
+            input.form-control(type="password" name="contrasena" id="passwordLogin" required)
           .d-grid
             button.btn.btn-primary(type="submit") Iniciar Sesion

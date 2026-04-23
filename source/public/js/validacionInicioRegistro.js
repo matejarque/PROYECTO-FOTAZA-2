@@ -32,15 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (formIniciarSesion) {
         formIniciarSesion.addEventListener('submit', function(event) {
-            const identificador = document.getElementsByName('identificador')[0].value;
+            const nombre = document.getElementsByName('nombre')[0].value;
             const passwordLogin = document.getElementById('passwordLogin').value;
             let error = false;
 
             // verificacion del usuario
-            if (identificador.length < 6) {
+            if (nombre.length < 6) {
                 alert("El identificador es muy corto.");
                 error = true;
-            } else if (identificador.length > 35) { 
+            } else if (nombre.length > 35) { 
                 alert("El identificador es demasiado largo.");
                 error = true;
             }

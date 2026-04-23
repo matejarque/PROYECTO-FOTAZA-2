@@ -11,8 +11,8 @@ router.post("/:idUsuario", esUsuarioRegistrado, crearPublicacionController);//fu
 router.get("/obtener/:id_publicacion", obtenerPublicacionPorIdController);//funciona
 router.get("/listar-todas", listarPublicacionesController); //funciona
 router.get("/obtener-todas", obtenerTodasLasPublicacionesController)//funciona -> trae todas las publicaciones de todo lo usuarios
-router.put("/editar/:idPublicacion/:idUsuario", editarPublicacionController);//funciona
-router.put("/eliminar/:id", eliminarPublicacionController);//Agregar usuario y pasarlo por session
+router.put("/editar/:idPublicacion/:idUsuario", esUsuarioRegistrado, editarPublicacionController);//funciona
+router.put("/eliminar/:id", esUsuarioRegistrado, eliminarPublicacionController);//Agregar usuario y pasarlo por session
 
 //estos aun no puedo probar
 router.put("/validarYbajarPublicacion", validarYBajarPublicacionController);

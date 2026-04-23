@@ -160,7 +160,7 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
         if (!usuarioEncontrado) {
             return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
         }
-
+        
         //se comparan ambas contraseñas, la primera en texto plano y la segunda es la hasheada
         const coinciden = await bcrypt.compare(contrasena, usuarioEncontrado.contrasena);
 
@@ -168,6 +168,8 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
         if (!coinciden) {
             return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
         }
+
+         req.session.usuarioLogueado = {id: usuarioEncontrado.id, nombre: usuarioEncontrado.nombre};
 
         return res.status(200).json({ mensaje: "Login exitoso", usuario: usuarioEncontrado.nombre });
 
@@ -178,9 +180,11 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
 }
 
 
-//tuve que agregarlo para cargar la pagina apenas se entra -> esto es de publicaciones, pero lo hago en usuario porque es para ellos
+
 export const mostrarPaginaInicioController = async (req, res) => {
+    //basicamente carga la pagina con publicaciones una vez se ingresa "/"
     try {
+        //llama a la funcion que lista todas las publicaciones
         const publicaciones = await listarPublicacionesModel(); 
         res.render('index', {publicaciones: publicaciones, usuarioLogueado: req.session.usuarioLogueado || null });
     } catch (error) {
