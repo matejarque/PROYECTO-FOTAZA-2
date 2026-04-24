@@ -5,7 +5,7 @@
       .d-flex.align-items-center.mb-1
         a.d-flex.align-items-center.text-decoration-none(href="#") 
           img.rounded-pill.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width: 30px; height: 30px; object-fit: cover;")
-          span.small.fw-bold.text-primary @usuario_demo
+          span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 
       .d-flex.align-items-center.mb-1 
         .text-warning
@@ -13,7 +13,7 @@
           | 4.2 / 5 (128 votos)
           
       //-titulo
-      h6.card-title.mb-1 Título de la Imagen
+      h6.card-title.mb-1 #{pub.titulo}
 
       //-descripcion
       p.card-text.text-muted.small.mb-3
@@ -21,13 +21,13 @@
 
     //- imagenes
     //- carrusel
-    #carrusel1.carousel.slide(data-bs-ride="false")
+    .carousel.slide(id=`carrusel-${pub.id_publicacion}` data-bs-ride="false")
 
       // indicadores
       .carousel-indicators
         button(
           type="button"
-          data-bs-target="#carrusel1"
+          data-bs-target=`#carrusel-${pub.id_publicacion}`
           data-bs-slide-to="0"
           class="active"
           aria-current="true"
@@ -35,7 +35,7 @@
         )
         button(
           type="button"
-          data-bs-target="#carrusel1"
+          data-bs-target=`#carrusel-${pub.id_publicacion}`
           data-bs-slide-to="1"
           aria-label="Imagen 2")
 
@@ -44,22 +44,15 @@
 
         .carousel-item.active
           img.d-block.w-100(
-            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop"
-            alt="Imagen 1"
-            style="height:250px; object-fit:cover;"
-          )
-
-        .carousel-item
-          img.d-block.w-100(
-            src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1000&auto=format&fit=crop"
-            alt="Imagen 2"
+            src=pub.ruta_url ? pub.ruta_url : "/img/default-avatar.jpg"
+            alt="Imagen"
             style="height:250px; object-fit:cover;"
           )
 
       // boton anterior
       button.carousel-control-prev(
         type="button"
-        data-bs-target="#carrusel1"
+        data-bs-target=`#carrusel-${pub.id_publicacion}`
         data-bs-slide="prev"
       )
         span.carousel-control-prev-icon(aria-hidden="true")
@@ -68,7 +61,7 @@
       // boton siguiente
       button.carousel-control-next(
         type="button"
-        data-bs-target="#carrusel1" 
+        data-bs-target=`#carrusel-${pub.id_publicacion}`
         data-bs-slide="next")
 
         span.carousel-control-next-icon(aria-hidden="true")
