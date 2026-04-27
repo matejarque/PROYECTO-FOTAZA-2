@@ -3,7 +3,7 @@ import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../mod
 
 export const crearPublicacionController = async (req, res) => {
     try {
-        const {idUsuario} = req.params;//mas adelante modificar a session
+        const {idUsuario} = req.params;
         const { titulo, descripcion } = req.body;
 
         if (!titulo || !descripcion || !idUsuario) {
@@ -12,7 +12,20 @@ export const crearPublicacionController = async (req, res) => {
 
         const resultado = await crearPublicacionModel(titulo, descripcion, idUsuario);
 
-        return res.status(200).json({mensaje: "Ppublicacion creada", id: resultado.insertId});
+        const idPublicacion = resultado.insertId;
+        if (req.files && req.files.length > 0) {
+
+        for (const file of req.files) {
+
+        const ruta = "/img/" + file.filename;
+
+        await registrarImagenAPublicacionModel(idPublicacion, ruta);
+
+      }
+
+    }
+
+        return res.redirect("/")
 
     } catch (error) {
         console.log("error en crearPublicacionController", error);

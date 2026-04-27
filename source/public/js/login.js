@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 alert("Login exitoso");
 
-                location.reload();
+                window.location.href = "/perfil";
 
             } else {
 

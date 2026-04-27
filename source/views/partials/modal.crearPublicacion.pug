@@ -1,0 +1,18 @@
+#modalCrearPublicacion.modal.fade(tabindex="-1")
+  .modal-dialog
+    .modal-content
+
+      .modal-header
+        h5.modal-title Crear publicación
+        button.btn-close(type="button" data-bs-dismiss="modal")
+
+      .modal-body
+        form(action="/publicaciones/crear" method="POST" enctype="multipart/form-data")
+
+          input.form-control.mb-2(type="text" name="titulo" placeholder="Título" required)
+
+          textarea.form-control.mb-2(name="descripcion" placeholder="Descripción" required)
+
+          input.form-control.mb-3(type="file" name="imagenes" multiple accept="image/*" required)
+
+          button.btn.btn-success.w-100(type="submit")| Publicar

@@ -35,28 +35,48 @@ html(lang="es")
           
           ul.navbar-nav.ms-auto.align-items-center
             if usuarioLogueado
-              li.nav-item.ms-3
+              li.nav-item
+                button.btn.btn-success.runded-pill.px-3.me3(type="button" data-bs-toggle="modal" data-bs-target="#modalCrearPublicacion")
+                  span.me-1| Subir
+
+              li.nav-item.ms-2
+                a.btn.btn-outline-primary.rounded-pill.px-3(href="/perfil") Perfil
+
+              li.nav-item.ms-3.d-flex.align-items-center
                 span.me-2.text-muted Hola, #{usuarioLogueado.nombre}
+
                 a(href="/perfil")
-                  img.rounded-pill.border(src="/public/img/default-avatar.jpg" alt="Perfil" style="width:35px; height:35px;")
-              
+                  img.rounded-pill.border(
+                    src="/img/default-avatar.jpg"
+                    alt="Perfil" style="width:35px; height:35px;")
+
               li.nav-item
-                button.btn.btn-sm.btn-outline-danger.ms-3(type="button" data-bs-toggle="modal" data-bs-target="#modalCerrarLogin") Salir
-            else
-              li.nav-item
-                button.btn.btn-link.nav-link.fw-semibold(type="button" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Iniciar sesión
+                button.btn.btn-sm.btn-outline-danger.ms-3(
+                  type="button"
+                  data-bs-toggle="modal" data-bs-target="#modalCerrarLogin") Salir
+            else 
+               li.nav-item
+                button.btn.btn-link.nav-link.fw-semibold(
+                  type="button"
+                  data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Iniciar sesion
               
-              li.nav-item.ms-2
-                button.btn.btn-outline-dark.rounded-pill.px-3(type="button" data-bs-toggle="modal" data-bs-target="#modalRegistro") Unirme
+               li.nav-item.ms-2
+                button.btn.btn-outline-dark.rounded-pill.px-3(
+                  type="button"
+                  data-bs-toggle="modal" data-bs-target="#modalRegistro") Unirme
               
-              li.nav-item.ms-2
-                button.btn.btn-success.rounded-pill.px-3(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") 
+               li.nav-item.ms-2
+                button.btn.btn-success.rounded-pill.px-3(
+                  type="button"
+                  data-bs-toggle="modal" data-bs-target="#modalCheck")
                   span.me-1 ↑
                   | Subir
 
+          
     main.container(style="margin-top:100px")
       block content
     
+    //modales
     include ./partials/modal.cerrarLogin.pug
     include ./partials/modal.registro.pug
     include ./partials/modal.iniciar-sesion.pug

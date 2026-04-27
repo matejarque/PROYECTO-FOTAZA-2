@@ -71,6 +71,18 @@ app.get("/salir", (req, res) => {
     })
 })
 
+app.get("/perfil", (req, res) => {
+
+    if (!req.session.usuario) {
+        return res.redirect("/");
+    }
+
+    res.render("pages/perfil", {
+        usuarioLogueado: req.session.usuarioLogueado
+    });
+
+});
+
 
 
 
@@ -82,7 +94,7 @@ app.get('/', async (req, res) => {
         const publicaciones = await listarPublicacionesModel();
         
         res.render('pages/index', { 
-            publicaciones: publicaciones,  usuarioLogueado: req.session});
+            publicaciones: publicaciones,  usuarioLogueado: req.session.usuarioLogueado});
     } catch (error) {
         console.error("Error al cargar las publicaciones en el Home:", error);
         res.render('pages/index', { publicaciones: [], usuarioLogueado: null });
