@@ -9,7 +9,7 @@ verificarEstadadoDeComentariosEnPublicacionModel, modificarAperturaDeComentarios
 
 export const crearComentarioController = async (req, res) => {
     try {
-        const {idUsuario} = req.params; //cambiar a session
+        const {idUsuario} = req.session.usuario.id_usuario
         const { comentario, idPublicacion } = req.body;
 
         if (!comentario || !idUsuario || !idPublicacion) {
@@ -18,11 +18,11 @@ export const crearComentarioController = async (req, res) => {
 
         const estadoPublicacion = await verificarEstadadoDeComentariosEnPublicacionModel(idPublicacion);
 
-        if (!estadoPublicacion) {
+        if (estadoPublicacion === 0) {
             return res.status(404).json({ mensaje: "La publicacion no existe" });
         }
 
-        if (estadoPublicacion.comentarios_abiertos === 0) {
+        if (estadoPublicacion[0].comentarios_abiertos === 0) {
             return res.status(400).json({mensaje: "El autor ha cerrado los comentarios en esta publicacion"});
         }
 

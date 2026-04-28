@@ -7,7 +7,7 @@ const router = express.Router();
 import { esUsuarioRegistrado } from '../middlewares/auth.middleware.js';
 
 //Rutas funcionando
-router.post("/crear/:idUsuario", esUsuarioRegistrado, crearComentarioController); //funciona
+router.post("/crear", esUsuarioRegistrado, crearComentarioController); //funciona
 router.get("/publicacion/:idPublicacion", listarComentariosPorPublicacionController);//funciona
 router.put("/editar/:idComentario/:idUsuario", esUsuarioRegistrado, editarComentarioController);//debo quitar idUsuario porque lo sacare de .session
 

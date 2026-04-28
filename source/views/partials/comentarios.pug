@@ -1,0 +1,42 @@
+// =========================
+// COMENTARIOS
+// =========================
+
+.collapse(id=`comentarios-${pub.id_publicacion}`)
+
+  .p-3.border-top
+
+    // LISTA DE COMENTARIOS
+    if pub.comentarios && pub.comentarios.length > 0
+
+      each c in pub.comentarios
+        .small.mb-2
+
+          strong.text-primary
+            | @#{c.nombre_usuario}
+
+          |  #{c.contenido}
+
+    else
+      small.text-muted
+        | No hay comentarios aún
+
+
+    // =========================
+    // FORMULARIO COMENTAR
+    // =========================
+    if usuarioLogueado
+
+      form(action="/comentarios/crear"method="POST")
+
+        input(type="hidden"name="idPublicacion" value=pub.id_publicacion)
+
+        .input-group.mt-2
+
+          input.form-control.form-control-sm(
+            type="text"
+            name="comentario"
+            placeholder="Escribe un comentario..." required)
+
+          button.btn.btn-sm.btn-primary(type="submit")
+            | Enviar
