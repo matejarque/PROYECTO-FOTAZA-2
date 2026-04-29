@@ -64,6 +64,12 @@ app.use(session({
     }
 }));
 
+app.use((req, res, next) => {
+    res.locals.usuarioLogueado = req.session.usuarioLogueado;
+    next();
+});
+
+
 
 app.get("/salir", (req, res) => {
     req.session.destroy(() => {
@@ -73,13 +79,13 @@ app.get("/salir", (req, res) => {
 
 app.get("/perfil", (req, res) => {
 
-    if (!req.session.usuario) {
+    if (!req.session.usuarioLogueado) {
         return res.redirect("/");
     }
 
-    res.render("pages/perfil", {
-        usuarioLogueado: req.session.usuarioLogueado
-    });
+    const seccion = req.query.seccion || "publicaciones";
+
+    res.render("pages/perfil", { seccion });
 
 });
 

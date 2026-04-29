@@ -6,64 +6,46 @@
     // ========================= 
     .card-body
 
-      // usuario
       .d-flex.align-items-center.mb-2
         a.d-flex.align-items-center.text-decoration-none(href="#") 
-          img.rounded-pill.me-2(
-            src="/img/default-avatar.jpg"
-            alt="Avatar"
-            style="width:30px;height:30px;object-fit:cover;")
+          img.rounded-pill.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width:30px;height:30px;object-fit:cover;")
           span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 
       .d-flex.align-items-center.mb-2
-        small.text-muted
-          | 4.2 / 5 (128 votos)
+        small.text-muted 4.2 / 5 (128 votos)
 
-      // titulo
       h6.card-title.mb-1 #{pub.titulo}
 
-      // descripcion
       p.card-text.text-muted.small.mb-3 #{pub.descripcion}
+
 
     // =========================
     // CARRUSEL
     // =========================
-    .carousel.slide(
-      id=`carrusel-${pub.id_publicacion}`
-      data-bs-ride="false"
-    )
+    .carousel.slide(id=`carrusel-${pub.id_publicacion}` data-bs-ride="false")
 
       if pub.imagenes && pub.imagenes.length > 1
         .carousel-indicators
           each img, i in pub.imagenes
-            button(
-              type="button"
-              data-bs-target=`#carrusel-${pub.id_publicacion}`
-              data-bs-slide-to=i class=i === 0 ? "active" : "")
+            button(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide-to=i class=i === 0 ? "active" : "")
 
       .carousel-inner
 
         if pub.imagenes && pub.imagenes.length > 0
           each img, i in pub.imagenes
             .carousel-item(class=i === 0 ? "active" : "")
-              img.d-block.w-100(
-                src=img.ruta_url
-                alt="Imagen" style="height:250px;object-fit:cover;")
+              img.d-block.w-100(src=img.ruta_url alt="Imagen" style="height:250px;object-fit:cover;")
         else
           .carousel-item.active
-            img.d-block.w-100(
-              src="/img/default-avatar.jpg"style="height:250px;object-fit:cover;")
+            img.d-block.w-100(src="/img/default-avatar.jpg" style="height:250px;object-fit:cover;")
+
 
       if pub.imagenes && pub.imagenes.length > 1
-        button.carousel-control-prev(
-          type="button"
-          data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="prev")
+        button.carousel-control-prev(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="prev")
           span.carousel-control-prev-icon
           span.visually-hidden Anterior
 
-        button.carousel-control-next(
-          type="button"
-          data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="next")
+        button.carousel-control-next(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="next")
           span.carousel-control-next-icon
           span.visually-hidden Siguiente
 
@@ -76,72 +58,28 @@
       if usuarioLogueado
 
         .d-flex.justify-content-between.gap-1.mb-2
-          button.btn.btn-sm.btn-outline-primary.flex-fill(type="button")
-            | ⭐ Puntuar
 
-          button.btn.btn-sm.btn-outline-secondary.flex-fill(
-            type="button"
-            data-bs-toggle="collapse" data-bs-target=`#comentarios-${pub.id_publicacion}`)
-            | 💬 Comentar
+          button.btn.btn-sm.btn-outline-primary.flex-fill(type="button") ⭐ Puntuar
 
-          button.btn.btn-sm.btn-outline-success.flex-fill(type="button")
-            | ✨ Interés
+          button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="collapse" data-bs-target=`#comentarios-${pub.id_publicacion}`) 💬 Comentar
+
+          button.btn.btn-sm.btn-outline-success.flex-fill(type="button") ✨ Interés
 
         .d-grid
-          button.btn.btn-sm.btn-link.text-danger.text-decoration-none(
-            type="button"
-            data-bs-toggle="modal" data-bs-target="#modalReportar")
-            | 🚩 Reportar contenido
+          button.btn.btn-sm.btn-link.text-danger.text-decoration-none(type="button" data-bs-toggle="modal" data-bs-target="#modalReportar") 🚩 Reportar contenido
 
       else
 
         .d-flex.justify-content-between.gap-1.mb-2
 
-          button.btn.btn-sm.btn-outline-primary.flex-fill(
-            type="button"
-            data-bs-toggle="modal" data-bs-target="#modalCheck")
-            | ⭐ Puntuar
+          button.btn.btn-sm.btn-outline-primary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ⭐ Puntuar
 
-          button.btn.btn-sm.btn-outline-secondary.flex-fill(
-            type="button"
-            data-bs-toggle="modal" data-bs-target="#modalCheck")
-            | 💬 Comentar
+          button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") 💬 Comentar
 
-          button.btn.btn-sm.btn-outline-success.flex-fill(
-            type="button"
-            data-bs-toggle="modal" data-bs-target="#modalCheck")
-            | ✨ Interés
+          button.btn.btn-sm.btn-outline-success.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ✨ Interés
 
 
     // =========================
-    // COMENTARIOS
+    // INCLUDE COMENTARIOS
     // =========================
-    .collapse(id=`comentarios-${pub.id_publicacion}`)
-
-      .p-3.border-top
-
-        if pub.comentarios && pub.comentarios.length > 0
-          each c in pub.comentarios
-            .small.mb-2
-              strong.text-primary @#{c.nombre_usuario}
-              |  #{c.contenido}
-        else
-          small.text-muted sin comentarios
-
-        if usuarioLogueado
-          form(action="/comentarios/crear"method="POST")
-            input(
-              type="hidden"
-              name="idPublicacion" value=pub.id_publicacion)
-
-            .input-group.mt-2
-              input.form-control.form-control-sm(
-                type="text"
-                name="comentario" placeholder="Escribe un comentario..." required)
-
-              button.btn.btn-sm.btn-primary(type="submit")
-                | Enviar
-
-
-  include ./comentarios.pug 
-   
+    include ./comentarios.pug

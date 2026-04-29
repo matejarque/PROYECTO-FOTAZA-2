@@ -1,49 +1,71 @@
-extends ./layout
+extends ../layout
 
 block content
   .container.mt-4
-
-    // Perfil
+    //////////////
+    // PERFIL
+    /////////////
     .row.mb-4.align-items-center
       .col-md-3.text-center
-        img(src="/img/default-avatar.jpg", width="120", style="border-radius:50%")
-      
+        img(src="/img/default-avatar.jpg" width="120" style="border-radius:50%")
+
       .col-md-9
         h3 @#{usuarioLogueado.nombre}
-        p #{usuarioLogueado.descripcion} || Esta es la descripción del usuario.
-
+        p #{usuarioLogueado.descripcion || "Esta es la descripción del usuario."}
         button.btn.btn-primary Editar perfil
 
     hr
-
-    // Botones de navegación
+    //////////////
+    // BOTONES
+    /////////////
     .row.mb-4.text-center
       .col
-        button.btn.btn-outline-primary(href="/perfil?seccion=publicaciones") Mis publicaciones
+        a.btn.btn-outline-primary(href="/perfil?seccion=publicaciones") Mis publicaciones
       
       .col
-        button.btn.btn-outline-secondary(href="/perfil?seccion=colecciones") Favoritos
+        a.btn.btn-outline-secondary(href="/perfil?seccion=colecciones") Colecciones
       
       .col
-        button.btn.btn-outline-success(href="/perfil?seccion=intereses") Intereses
+        a.btn.btn-outline-success(href="/perfil?seccion=intereses") Intereses
       
       .col 
-        a.btn.btn-outline-dark(href="perfil?seccion=chat") Chat
+        a.btn.btn-outline-dark(href="/perfil?seccion=chat") Chat
     
-    
-    // Publicaciones (por defecto)
+
+    // CONTENIDO
     .row
+
       if seccion === "colecciones"
-        h4 mis colecciones 
+        h4 Mis colecciones
+        .col-12
+          .alert.alert-info.text-center.mt-3 No tienes colecciones
+
       else if seccion === "intereses"
-        h4 imagenes que me interesan comprar 
+        h4 imagenes que me interesan adquirir
+
+        if intereses && intereses.length > 0
+          each img in intereses
+            p Imagen interesada
+        else
+          .col-12
+            .alert.alert-info.text-center.mt-3 No tienes intereses
+
       else if seccion === "chat"
-        h4 chats 
-      else 
-        h4 mis publicaciones
+        h4 Chats
 
+        if chats && chats.length > 0
+          each chat in chats
+            p Chat con #{chat.usuario}
+        else
+          .col-12
+            .alert.alert-info.text-center.mt-3 No tienes chats
 
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
-      include ../partials/card.publicacion.pug
+      else
+        h4 Mis publicaciones
+
+        if misPublicaciones && misPublicaciones.length > 0
+          each pub in misPublicaciones
+            include ../partials/card.publicacion.pug
+        else
+          .col-12
+            .alert.alert-info.text-center.mt-3 No tienes publicaciones
