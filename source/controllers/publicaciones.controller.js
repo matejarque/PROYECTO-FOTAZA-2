@@ -3,10 +3,10 @@ import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../mod
 
 export const crearPublicacionController = async (req, res) => {
     try {
-        const {idUsuario} = req.params;
+        const idUsuario = req.session.usuarioLogueado.id;
         const { titulo, descripcion } = req.body;
 
-        if (!titulo || !descripcion || !idUsuario) {
+        if (!titulo || !descripcion) {
             return res.status(400).json({ mensaje: "Faltan datos" });
         }
 
@@ -15,17 +15,17 @@ export const crearPublicacionController = async (req, res) => {
         const idPublicacion = resultado.insertId;
         if (req.files && req.files.length > 0) {
 
-        for (const file of req.files) {
+            for (const file of req.files) {
 
-        const ruta = "/img/" + file.filename;
+            const ruta = "/img/" + file.filename;
 
-        await registrarImagenAPublicacionModel(idPublicacion, ruta);
+            await registrarImagenAPublicacionModel(idPublicacion, ruta);
 
-      }
+        }
 
     }
 
-        return res.redirect("/")
+        return res.redirect("/perfil")
 
     } catch (error) {
         console.log("error en crearPublicacionController", error);
