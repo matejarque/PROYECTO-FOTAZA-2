@@ -1,4 +1,4 @@
-document.querySelector("form").addEventListener("submit", function(e) {
+document.querySelector("#modalCrearPublicacion form").addEventListener("submit", function(e) {
     const titulo = document.querySelector("[name='titulo']").value.trim();
     const descripcion = document.querySelector("[name='descripcion']").value.trim();
     const imagenes = document.querySelector("[name='imagenes']").files;

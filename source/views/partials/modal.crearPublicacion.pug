@@ -13,6 +13,14 @@
 
           textarea.form-control.mb-2(name="descripcion" placeholder="Descripción" required)
 
+          select.form-control.mb-2(name="idLicencia" required)
+            option(value="4") Selecciona una licencia
+            option(value="4") Sin copyright
+            option(value="1") Con copyright 
+            option(value="2") Creative Commons
+
           input.form-control.mb-3(type="file" name="imagenes" multiple accept="image/*" required)
 
-          button.btn.btn-success.w-100(type="submit")| Publicar
+          input.form-control.mb-2(type="text" name="marcaAgua" placeholder="Marca de agua (opcional)")
+
+          button.btn.btn-success.w-100(type="submit") Publicar

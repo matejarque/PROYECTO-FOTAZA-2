@@ -169,7 +169,7 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
             return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
         }
 
-         req.session.usuarioLogueado = {id: usuarioEncontrado.id, nombre: usuarioEncontrado.nombre};
+         req.session.usuarioLogueado = {id: usuarioEncontrado.id_usuario, nombre: usuarioEncontrado.nombre};
 
         return res.status(200).json({ mensaje: "Login exitoso", usuario: usuarioEncontrado.nombre });
 

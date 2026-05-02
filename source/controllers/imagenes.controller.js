@@ -6,11 +6,11 @@ import { registrarImagenAPublicacionModel,listarImagenesPorPublicacionModel} fro
 export const registrarImagenAPublicacionController = async(req, res)=>{
    //idPublicacion, rutaUrl, idLicencia, marcaDeAgua
     try {
-        const {idPublicacion, rutaUrl, ancho, alto, peso, idLicencia, marcaDeAgua} = req.body;
-        if(!idPublicacion || !rutaUrl || !idLicencia || !marcaDeAgua || !ancho || !alto || !peso){
+        const {idPublicacion, rutaUrl,  idLicencia, marcaDeAgua} = req.body;
+        if(!idPublicacion || !rutaUrl || !idLicencia || !marcaDeAgua ){
             return res.status(400).json({error: "faltant datos"});
         }
-        const resul = await registrarImagenAPublicacionModel(idPublicacion, rutaUrl, ancho, alto, peso, idLicencia, marcaDeAgua);
+        const resul = await registrarImagenAPublicacionModel(idPublicacion, rutaUrl,  idLicencia, marcaDeAgua);
         res.status(200).json({imagenRegistrada: resul});
 
 

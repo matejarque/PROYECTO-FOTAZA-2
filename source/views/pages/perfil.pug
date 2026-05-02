@@ -10,8 +10,8 @@ block content
         img(src="/img/default-avatar.jpg" width="120" style="border-radius:50%")
 
       .col-md-9
-        h3 @#{usuarioLogueado.nombre}
-        p #{usuarioLogueado.descripcion || "Esta es la descripción del usuario."}
+        h3 @#{usuarioLogueado.nombre_usuario}
+        p #{usuarioLogueado.bio || "Esta es la descripcion."}
         button.btn.btn-primary Editar perfil
 
     hr

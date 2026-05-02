@@ -1,38 +1,41 @@
 import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
 import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
+import { registrarImagenAPublicacionModel} from "../models/imagenes.model.js"
+
 
 export const crearPublicacionController = async (req, res) => {
     try {
         const idUsuario = req.session.usuarioLogueado.id;
-        const { titulo, descripcion } = req.body;
+
+        let { titulo, descripcion, idLicencia, marcaAgua } = req.body;
+
+        //par amandar el id licencia como 4
+        if (!idLicencia || idLicencia === "") {
+            idLicencia = 4; 
+        }
 
         if (!titulo || !descripcion) {
             return res.status(400).json({ mensaje: "Faltan datos" });
         }
 
         const resultado = await crearPublicacionModel(titulo, descripcion, idUsuario);
-
         const idPublicacion = resultado.insertId;
+
         if (req.files && req.files.length > 0) {
-
             for (const file of req.files) {
+                const ruta = "/img/" + file.filename;
 
-            const ruta = "/img/" + file.filename;
-
-            await registrarImagenAPublicacionModel(idPublicacion, ruta);
-
+                await registrarImagenAPublicacionModel(idPublicacion, ruta, idLicencia, marcaAgua || null);
+            }
         }
 
-    }
-
-        return res.redirect("/perfil")
+        return res.redirect("/perfil");
 
     } catch (error) {
-        console.log("error en crearPublicacionController", error);
+        console.log("ERROR CONTROLLER:", error);
         return res.status(500).json({ mensaje: "Error en el servidor" });
     }
 };
-
 
 export const listarPublicacionesController = async (req, res) => {
     try {
