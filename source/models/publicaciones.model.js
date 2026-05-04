@@ -29,18 +29,31 @@ export const listarPublicacionesModel = async () => {
             SELECT    
                 p.id_publicacion,
                 p.titulo,
+                p.descripcion,
                 u.nombre_usuario,
-                MIN(i.ruta_url) AS ruta_url 
+                GROUP_CONCAT(i.ruta_url) AS rutas_concatenadas 
             FROM publicaciones p 
             JOIN usuarios u ON p.id_usuario = u.id_usuario
             LEFT JOIN imagenes i ON p.id_publicacion = i.id_publicacion
             WHERE p.estado = 1 
-            GROUP BY p.id_publicacion, p.titulo, u.nombre_usuario 
+            GROUP BY p.id_publicacion, p.titulo, u.nombre_usuario, p.descripcion
             ORDER BY p.fecha_creacion DESC 
             LIMIT 12`;
             
         const [resultado] = await db.query(query);
-        return resultado;
+
+        // Procesamos el resultado para que coincida con lo que espera tu archivo Pug
+        const publicacionesProcesadas = resultado.map(pub => {
+            return {
+                ...pub,
+                // Si rutas_concatenadas tiene datos, los dividimos en un array de objetos
+                imagenes: pub.rutas_concatenadas 
+                    ? pub.rutas_concatenadas.split(',').map(url => ({ ruta_url: url }))
+                    : []
+            };
+        });
+
+        return publicacionesProcesadas;
 
     } catch (error) {
         console.log("error en listarPublicacionesModel", error);

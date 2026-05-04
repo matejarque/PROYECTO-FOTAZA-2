@@ -154,7 +154,7 @@ export const validarYBajarPublicacionController = async (req, res) => {
 
 export const publicacionesDeUsuariosSeguidosController = async (req, params) => {
     try {
-        const {idUsuarioLogueado} = req.params//luego pasarlo a req.session
+        const idUsuarioLogueado = req.session.usuarioLogueado.id
         if(!idUsuarioLogueado){
             return res.status(400).json({mensaje: "falta el id del usuario logueado"});
         }

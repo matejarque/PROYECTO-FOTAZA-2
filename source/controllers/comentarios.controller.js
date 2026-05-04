@@ -9,12 +9,22 @@ verificarEstadadoDeComentariosEnPublicacionModel, modificarAperturaDeComentarios
 
 export const crearComentarioController = async (req, res) => {
     try {
-        const {idUsuario} = req.session.usuario.id_usuario
+        const idUsuario = req.session.usuarioLogueado.id
         const { comentario, idPublicacion } = req.body;
-
-        if (!comentario || !idUsuario || !idPublicacion) {
-            return res.status(400).json({mensaje: "faltan datos para crear el comentario"});
+        console.log("SESSION:", req.session);
+        console.log("USER:", req.session.usuarioLogueado);
+        if (!comentario ) {
+            return res.status(400).json({mensaje: "falta el comentario"});
         }
+
+         if (!idUsuario ) {
+            return res.status(400).json({mensaje: "falta el id de uuario"});
+        }
+
+         if (!idPublicacion) {
+            return res.status(400).json({mensaje: "ffalta el id de publicacion"});
+        }
+
 
         const estadoPublicacion = await verificarEstadadoDeComentariosEnPublicacionModel(idPublicacion);
 

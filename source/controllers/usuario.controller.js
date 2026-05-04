@@ -169,9 +169,13 @@ export const verificarDatosInicioSesionUsuarioController = async (req, res) => {
             return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos" });
         }
 
-         req.session.usuarioLogueado = {id: usuarioEncontrado.id_usuario, nombre: usuarioEncontrado.nombre};
+         req.session.usuarioLogueado = {id: usuarioEncontrado.id_usuario, 
+            nombre: usuarioEncontrado.nombre_usuario, 
+            bio: usuarioEncontrado.bio, 
+            foto: usuarioEncontrado.foto_perfil,
+            pais: usuarioEncontrado.pais};
 
-        return res.status(200).json({ mensaje: "Login exitoso", usuario: usuarioEncontrado.nombre });
+        return res.status(200).json({ mensaje: "Login exitoso", usuario: usuarioEncontrado.nombre_usuario });
 
     } catch (error) {
         console.log("error en verificarContrasenaUsuarioController", error);
