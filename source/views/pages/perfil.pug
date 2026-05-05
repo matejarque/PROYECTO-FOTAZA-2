@@ -1,39 +1,41 @@
 extends ../layout
 
 block content
-  .container.mt-4
-    //////////////
-    // PERFIL
-    /////////////
-    .row.mb-4.align-items-center
-      .col-md-3.text-center
-        img(src="/img/default-avatar.jpg" width="120" style="border-radius:50%")
+  .container.mt-4.perfil-container
 
-      .col-md-9
-        h3 @#{usuarioLogueado.nombre}
-        p #{usuarioLogueado.bio || "Esta es la descripcion."}
-        button.btn.btn-primary Editar perfil
+    // HEADER PERFIL
+    .perfil-header
+
+      .perfil-avatar
+        img(src="/img/default-avatar.jpg")
+
+      .perfil-info
+        .perfil-top
+          h3 @#{usuarioLogueado.nombre}
+          button.btn.btn-sm.btn-outline-primary Editar perfil
+
+        .perfil-stats
+          div
+            strong #{cantidadPublicaciones || 0}
+            span Publicaciones
+          div
+            strong #{cantidadSeguidores || 0}
+            span Seguidores
+          div
+            strong #{cantidadSeguidos || 0}
+            span Seguidos
+
+        p.perfil-bio #{usuarioLogueado.bio || "Esta es la descripcion."}
 
     hr
-    //////////////
-    // BOTONES
-    /////////////
-    .row.mb-4.text-center
-      .col
-        a.btn.btn-outline-primary(href="/perfil?seccion=publicaciones") Mis publicaciones
-      
-      .col
-        a.btn.btn-outline-warning(href="/perfil?seccion=seguidos") Seguidos
-      
-      .col
-        a.btn.btn-outline-secondary(href="/perfil?seccion=colecciones") Colecciones
-      
-      .col
-        a.btn.btn-outline-success(href="/perfil?seccion=intereses") Intereses
-      
-      .col 
-        a.btn.btn-outline-dark(href="/perfil?seccion=chat") Chat
-    
+
+    // TABS
+    .perfil-tabs
+      a(href="/perfil?seccion=publicaciones" class=seccion==="publicaciones"?"active":"") Publicaciones
+      a(href="/perfil?seccion=seguidos" class=seccion==="seguidos"?"active":"") Seguidos
+      a(href="/perfil?seccion=colecciones" class=seccion==="colecciones"?"active":"") Colecciones
+      a(href="/perfil?seccion=intereses" class=seccion==="intereses"?"active":"") Intereses
+      a(href="/perfil?seccion=chat" class=seccion==="chat"?"active":"") Chat
 
     // CONTENIDO
     .row
@@ -44,7 +46,7 @@ block content
           .alert.alert-info.text-center.mt-3 No tienes colecciones
 
       else if seccion === "intereses"
-        h4 imagenes que me interesan adquirir
+        h4 Imágenes que me interesan adquirir
 
         if intereses && intereses.length > 0
           each img in intereses
@@ -83,4 +85,4 @@ block content
           .col-12
             .alert.alert-info.text-center.mt-3 No tienes publicaciones
             
-            button.btn.btn-success.mt-2(type="button" data-bs-toggle="modal" data-bs-target="#modalCrearPublicacion" jutify-content.center) Crear primera publicacion
+            button.btn.btn-success.mt-2(type="button" data-bs-toggle="modal"  data-bs-target="#modalCrearPublicacion") Crear primera publicacion

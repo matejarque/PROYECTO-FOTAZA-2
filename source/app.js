@@ -6,7 +6,9 @@ import { fileURLToPath } from 'url';
 import session from 'express-session';
 //IMPORTO DIRECTAMENTE DE MODEL, COMO ES EL HOME PRINCIAPL
 import { listarPublicacionesModel } from "./models/publicaciones.model.js";
-
+import {contarSeguidoresModel} from "./models/seguidor.model.js";
+import {obtenerPublicacionesPorUsuarioModel} from "./models/publicaciones.model.js";
+import { buscarUsuarioPorIdModel } from "./models/usuario.model.js";
 // --------------------------------------------- CONFIGURACION DE VARIABLES Y RUTAS ----------------------------------
 
 dotenv.config();
@@ -77,16 +79,48 @@ app.get("/salir", (req, res) => {
     })
 })
 
-app.get("/perfil", (req, res) => {
+app.get("/perfil",  async (req, res) => {
 
     if (!req.session.usuarioLogueado) {
         return res.redirect("/");
     }
-
+    
     const seccion = req.query.seccion || "publicaciones";
+    const idUsuario = req.session.usuarioLogueado.id;
 
-    res.render("pages/perfil", { seccion });
+    const misPublicaciones = await obtenerPublicacionesPorUsuarioModel(idUsuario);
+    const { seguidores, seguidos } = await contarSeguidoresModel(idUsuario);
 
+      res.render("pages/perfil", {
+        seccion,
+        misPublicaciones,
+        cantidadPublicaciones: misPublicaciones.length,
+        cantidadSeguidores: seguidores,
+        cantidadSeguidos: seguidos});
+
+});
+
+//este es para el perfil publico
+app.get("/perfil/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const publicaciones = await obtenerPublicacionesPorUsuarioModel(id);
+        const { seguidores, seguidos } = await contarSeguidoresModel(id);
+
+        const [usuario] = await buscarUsuarioPorIdModel(id);
+
+        res.render("pages/perfilPublico", {
+            usuario,
+            publicaciones,
+            cantidadSeguidores: seguidores,
+            cantidadSeguidos: seguidos
+        });
+
+    } catch (error) {
+        console.log("error perfil publico", error);
+        res.redirect("/");
+    }
 });
 
 

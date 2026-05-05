@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+  .container.mt-4
+
+    .row.mb-4.align-items-center
+      .col-md-3.text-center
+        img(src="/img/default-avatar.jpg" width="120" style="border-radius:50%")
+
+      .col-md-9
+        h3 @#{usuario.nombre_usuario}
+        p #{usuario.bio || "sin descripcion"}
+
+    .row.text-center.mb-3
+      .col
+        strong #{publicaciones.length}
+        br
+        small Publicaciones
+
+      .col
+        strong #{cantidadSeguidores}
+        br
+        small Seguidores
+
+      .col
+        strong #{cantidadSeguidos}
+        br
+        small Seguidos
+
+    hr
+
+    h4 Publicaciones
+
+    if publicaciones.length > 0
+      each pub in publicaciones
+        include ../partials/card.publicacion.pug
+    else
+      .alert.alert-info No tiene publicaciones

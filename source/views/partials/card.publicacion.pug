@@ -7,7 +7,7 @@
     .card-body
 
       .d-flex.align-items-center.mb-2
-        a.d-flex.align-items-center.text-decoration-none(href="#") 
+        a.d-flex.align-items-center.text-decoration-none(href=`/perfil/${pub.id_usuario}`) 
           img.rounded-pill.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width:30px;height:30px;object-fit:cover;")
           span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 

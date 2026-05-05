@@ -1,4 +1,4 @@
-import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel, verificarSeguimientoModel} from '../models/seguidor.model.js';
+import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel, verificarSeguimientoModel, listarSeguidoresModel} from '../models/seguidor.model.js';
 //seguirModel dejarDeSeguirModel idUsuarioSeguidor, idUsuarioSeguido
 export const seguirController = async (req, res) => {
     try {
@@ -74,5 +74,20 @@ export const contarSeguidoresController = async (req, res) => {
     } catch (error) {
         console.log("error en contarSeguidoresController:", error);
         return res.status(500).json({ mensaje: "Eerror ontar seguidores" });
+    }
+};
+
+export const obtenerSeguidoresYSeguidosController = async (req, res) => {
+    try {
+        const idUsuario = req.session.usuarioLogueado.id;
+
+        const seguidores = await listarSeguidoresModel(idUsuario);
+        const seguidos = await listarSeguidosModel(idUsuario);
+
+        return res.status(200).json({seguidores,seguidos});
+
+    } catch (error) {
+        console.log("error en obtenerSeguidoresYSeguidosController", error);
+        return res.status(500).json({ mensaje: "Error en el servidor" });
     }
 };
