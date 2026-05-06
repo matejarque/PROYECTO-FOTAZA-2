@@ -1,0 +1,73 @@
+.perfil-container {
+  max-width: 900px;
+}
+
+/* HEADER */
+.perfil-header {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+/* AVATAR */
+.perfil-avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* INFO */
+.perfil-info {
+  flex: 1;
+}
+
+/* TOP */
+.perfil-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* STATS */
+.perfil-stats {
+  display: flex;
+  gap: 30px;
+  margin: 10px 0;
+}
+
+.perfil-stats div {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.perfil-stats strong {
+  font-size: 18px;
+}
+
+/* BIO */
+.perfil-bio {
+  margin-top: 5px;
+  color: #555;
+}
+
+/* TABS */
+.perfil-tabs {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.perfil-tabs a {
+  padding: 10px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+.perfil-tabs a.active {
+  border-bottom: 2px solid black;
+  color: black;
+}
