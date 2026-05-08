@@ -9,6 +9,8 @@ import { listarPublicacionesModel } from "./models/publicaciones.model.js";
 import {contarSeguidoresModel} from "./models/seguidor.model.js";
 import {obtenerPublicacionesPorUsuarioModel} from "./models/publicaciones.model.js";
 import { buscarUsuarioPorIdModel } from "./models/usuario.model.js";
+
+
 // --------------------------------------------- CONFIGURACION DE VARIABLES Y RUTAS ----------------------------------
 
 dotenv.config();
@@ -79,50 +81,65 @@ app.get("/salir", (req, res) => {
     })
 })
 
-app.get("/perfil",  async (req, res) => {
+app.get("/perfil", async (req, res) => {
 
-    if (!req.session.usuarioLogueado) {
-        return res.redirect("/");
-    }
-    
-    const seccion = req.query.seccion || "publicaciones";
-    const idUsuario = req.session.usuarioLogueado.id;
-
-    const misPublicaciones = await obtenerPublicacionesPorUsuarioModel(idUsuario);
-    const { seguidores, seguidos } = await contarSeguidoresModel(idUsuario);
-
-      res.render("pages/perfil", {
-        seccion,
-        misPublicaciones,
-        cantidadPublicaciones: misPublicaciones.length,
-        cantidadSeguidores: seguidores,
-        cantidadSeguidos: seguidos});
-
-});
-
-//este es para el perfil publico
-app.get("/perfil/:id", async (req, res) => {
     try {
-        const { id } = req.params;
 
-        const publicaciones = await obtenerPublicacionesPorUsuarioModel(id);
-        const { seguidores, seguidos } = await contarSeguidoresModel(id);
+        if (!req.session.usuarioLogueado) {
+            return res.redirect("/");
+        }
 
-        const [usuario] = await buscarUsuarioPorIdModel(id);
+        const seccion = req.query.seccion || "publicaciones";
 
-        res.render("pages/perfilPublico", {
-            usuario,
-            publicaciones,
+        const idUsuario = req.session.usuarioLogueado.id;
+
+        const misPublicaciones = await obtenerPublicacionesPorUsuarioModel(idUsuario);
+
+        const { seguidores, seguidos } = await contarSeguidoresModel(idUsuario);
+
+        res.render("pages/perfil", {
+            seccion,
+            misPublicaciones,
+            cantidadPublicaciones: misPublicaciones.length,
             cantidadSeguidores: seguidores,
-            cantidadSeguidos: seguidos
-        });
+            cantidadSeguidos: seguidos});
 
     } catch (error) {
-        console.log("error perfil publico", error);
+        console.log("error perfil", error);
         res.redirect("/");
     }
 });
 
+//este es para el perfil publico
+app.get("/perfil/:id", async (req, res) => {
+
+    try {
+
+        const {id} = req.params;
+
+        const publicaciones = await obtenerPublicacionesPorUsuarioModel(id);
+
+        const {seguidores, seguidos} = await contarSeguidoresModel(id);
+
+        const usuario = await buscarUsuarioPorIdModel(id);
+
+        if (!usuario || usuario.length === 0) {
+            return res.redirect("/");
+        }
+
+        res.render("pages/perfilPublico", {
+            usuario: usuario[0],
+            publicaciones,
+            cantidadPublicaciones: publicaciones.length,
+            cantidadSeguidores: seguidores,
+            cantidadSeguidos: seguidos});
+
+    } catch (error) {
+
+        console.log("error perfil publico", error);
+        res.redirect("/");
+    }
+});
 
 
 

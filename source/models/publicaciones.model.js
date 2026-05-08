@@ -12,7 +12,10 @@ import db from '../config/db.js';
 //funciona, crea la publicacion base
 export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
     try {
-        const query = `INSERT INTO publicaciones (titulo, descripcion, id_usuario) VALUES (?, ?, ?)`;
+        const query = `
+        INSERT INTO 
+            publicaciones (titulo, descripcion, id_usuario) 
+            VALUES (?, ?, ?)`;
         const [resultado] = await db.query(query, [titulo, descripcion, idUsuario]);
 
         return resultado;
@@ -25,32 +28,31 @@ export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
 //funciona lista las publicaciones de un usuario (solo las activas)
 export const listarPublicacionesModel = async () => {
     try {
+
         const query = `
             SELECT    
                 p.id_publicacion,
                 p.titulo,
                 p.descripcion,
+                p.id_usuario,
                 u.nombre_usuario,
                 GROUP_CONCAT(i.ruta_url) AS rutas_concatenadas 
             FROM publicaciones p 
             JOIN usuarios u ON p.id_usuario = u.id_usuario
             LEFT JOIN imagenes i ON p.id_publicacion = i.id_publicacion
             WHERE p.estado = 1 
-            GROUP BY p.id_publicacion, p.titulo, u.nombre_usuario, p.descripcion
-            ORDER BY p.fecha_creacion DESC 
-            LIMIT 12`;
+            GROUP BY 
+                p.id_publicacion,
+                p.titulo,
+                p.descripcion,
+                p.id_usuario,
+                u.nombre_usuario
+            ORDER BY p.fecha_creacion DESC LIMIT 12`;
             
         const [resultado] = await db.query(query);
 
-        // Procesamos el resultado para que coincida con lo que espera tu archivo Pug
         const publicacionesProcesadas = resultado.map(pub => {
-            return {
-                ...pub,
-                // Si rutas_concatenadas tiene datos, los dividimos en un array de objetos
-                imagenes: pub.rutas_concatenadas 
-                    ? pub.rutas_concatenadas.split(',').map(url => ({ ruta_url: url }))
-                    : []
-            };
+            return {...pub,imagenes: pub.rutas_concatenadas ? pub.rutas_concatenadas.split(',').map(url => ({ ruta_url: url })) : []};
         });
 
         return publicacionesProcesadas;
@@ -135,10 +137,12 @@ export const obtenerTodasLasPublicacionesModel = async() => {
 
 export const obtenerPublicacionesPorUsuarioModel = async (idUsuario) => {
 
-    const query = `SELECT id_publicacion, titulo, descripcion, fecha_creacion
-        FROM publicaciones
-        WHERE id_usuario = ?
-        AND estado = 1 ORDER BY fecha_creacion DESC`;
+    const query = `
+        SELECT id_publicacion, titulo, descripcion, fecha_creacion
+            FROM publicaciones
+            WHERE id_usuario = ?
+            AND estado = 1 ORDER BY fecha_creacion
+            DESC`;
 
     const [resultado] = await db.query(query, [idUsuario]);
 

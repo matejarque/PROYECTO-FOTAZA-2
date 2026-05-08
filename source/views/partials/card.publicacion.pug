@@ -1,23 +1,26 @@
 .col-12.col-sm-6.col-md-4
+
   .card.shadow-sm.h-100.publicacion-card
 
     // =========================
     // BODY
-    // ========================= 
+    // =========================
     .card-body
 
-      .d-flex.align-items-center.mb-2
-        a.d-flex.align-items-center.text-decoration-none(href=`/perfil/${pub.id_usuario}`) 
-          img.rounded-pill.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width:30px;height:30px;object-fit:cover;")
+      .d-flex.align-items-center.mb-3.position-relative
+        a.usuario-link(href=`/perfil/${pub.id_usuario}`)
+          img.avatar-mini(src="/img/default-avatar.jpg" alt="Avatar")
           span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 
       .d-flex.align-items-center.mb-2
-        small.text-muted 4.2 / 5 (128 votos)
+        small.text-muted
+          | 4.2 / 5 (128 votos)
 
-      h6.card-title.mb-1 #{pub.titulo}
+      h6.card-title.mb-2
+        | #{pub.titulo}
 
-      p.card-text.text-muted.small.mb-3 #{pub.descripcion}
-
+      p.card-text.text-muted.small.mb-3
+        | #{pub.descripcion}
 
     // =========================
     // CARRUSEL
@@ -26,39 +29,45 @@
 
       if pub.imagenes && pub.imagenes.length > 1
         .carousel-indicators
+
           each img, i in pub.imagenes
             button(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide-to=i class=i === 0 ? "active" : "")
 
       .carousel-inner
 
         if pub.imagenes && pub.imagenes.length > 0
+
           each img, i in pub.imagenes
             .carousel-item(class=i === 0 ? "active" : "")
-              img.d-block.w-100(src=img.ruta_url alt="Imagen" style="height:250px;object-fit:cover;")
-        else
-          .carousel-item.active
-            img.d-block.w-100(src="/img/default-avatar.jpg" style="height:250px;object-fit:cover;")
 
+              img.d-block.w-100(src=img.ruta_url alt="Imagen" loading="lazy" style="height:250px; object-fit:cover;")
+
+        else
+
+          .carousel-item.active
+            img.d-block.w-100(src="/img/default-avatar.jpg" alt="Imagen" loading="lazy" style="height:250px; object-fit:cover;")
 
       if pub.imagenes && pub.imagenes.length > 1
+
         button.carousel-control-prev(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="prev")
+
           span.carousel-control-prev-icon
-          span.visually-hidden Anterior
+          span.visually-hidden
+            | Anterior
 
         button.carousel-control-next(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="next")
-          span.carousel-control-next-icon
-          span.visually-hidden Siguiente
 
+          span.carousel-control-next-icon
+          span.visually-hidden
+            | Siguiente
 
     // =========================
     // FOOTER BOTONES
     // =========================
     .card-footer.bg-white.border-top-0.pt-3
-
       if usuarioLogueado
 
         .d-flex.justify-content-between.gap-1.mb-2
-
           button.btn.btn-sm.btn-outline-primary.flex-fill(type="button") ⭐ Puntuar
 
           button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="collapse" data-bs-target=`#comentarios-${pub.id_publicacion}`) 💬 Comentar
@@ -71,13 +80,11 @@
       else
 
         .d-flex.justify-content-between.gap-1.mb-2
-
           button.btn.btn-sm.btn-outline-primary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ⭐ Puntuar
 
           button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") 💬 Comentar
 
           button.btn.btn-sm.btn-outline-success.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ✨ Interés
-
 
     // =========================
     // INCLUDE COMENTARIOS
