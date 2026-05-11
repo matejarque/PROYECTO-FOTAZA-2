@@ -6,10 +6,9 @@
     // BODY
     // =========================
     .card-body
-
-      .d-flex.align-items-center.mb-3.position-relative
-        a.usuario-link(href=`/perfil/${pub.id_usuario}`)
-          img.avatar-mini(src="/img/default-avatar.jpg" alt="Avatar")
+      .d-flex.align-items-center.mb-3
+        a.usuario-link.d-flex.align-items-center.text-decoration-none(href=`/perfil/${pub.id_usuario}`)
+          img.avatar-mini.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width:30px; height:30px; border-radius:50%; object-fit:cover;")
           span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 
       .d-flex.align-items-center.mb-2

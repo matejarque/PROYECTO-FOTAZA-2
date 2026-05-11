@@ -28,12 +28,12 @@ export const crearComentarioController = async (req, res) => {
 
         const estadoPublicacion = await verificarEstadadoDeComentariosEnPublicacionModel(idPublicacion);
 
-        if (estadoPublicacion === 0) {
-            return res.status(404).json({ mensaje: "La publicacion no existe" });
-        }
+        if (estadoPublicacion.length === 0) {
+            return res.status(404).json({mensaje: "La publicación no existe"});
+            }
 
         if (estadoPublicacion[0].comentarios_abiertos === 0) {
-            return res.status(400).json({mensaje: "El autor ha cerrado los comentarios en esta publicacion"});
+            return res.status(400).json({mensaje: "El autor ha cerrado los comentarios en esta publicación"});
         }
 
         const resultado = await crearComentarioModel(comentario, idUsuario, idPublicacion);

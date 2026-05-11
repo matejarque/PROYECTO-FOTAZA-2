@@ -1,5 +1,19 @@
+.usuario-link {
+    transition: opacity 0.2s;
+    z-index: 10;
+    position: relative;
+}
+
 .hover-shadow:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,.12) !important;
 }
 
+.usuario-link:hover {
+    opacity: 0.7;
+    text-decoration: underline !important;
+}
+
+.avatar-mini {
+    border: 1px solid #dee2e6;
+}
