@@ -8,6 +8,7 @@ id_usuario
 comentarios_abiertos
  */
 import db from '../config/db.js';
+import { listarComentariosPorPublicacionModel } from "./comentarios.model.js";
 
 //funciona, crea la publicacion base
 export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
@@ -47,19 +48,43 @@ export const listarPublicacionesModel = async () => {
                 p.descripcion,
                 p.id_usuario,
                 u.nombre_usuario
-            ORDER BY p.fecha_creacion DESC LIMIT 12`;
-            
+            ORDER BY p.fecha_creacion DESC 
+            LIMIT 12
+        `;
+
         const [resultado] = await db.query(query);
 
-        const publicacionesProcesadas = resultado.map(pub => {
-            return {...pub,imagenes: pub.rutas_concatenadas ? pub.rutas_concatenadas.split(',').map(url => ({ ruta_url: url })) : []};
-        });
+        const publicacionesProcesadas = await Promise.all(
+
+            resultado.map(async (pub) => {
+
+                const comentarios = await listarComentariosPorPublicacionModel(pub.id_publicacion);
+
+                return {
+                    ...pub,
+
+                    imagenes: pub.rutas_concatenadas
+                        ? pub.rutas_concatenadas
+                            .split(',')
+                            .map(url => ({
+                                ruta_url: url
+                            }))
+                        : [],
+
+                    comentarios
+                };
+
+            })
+
+        );
 
         return publicacionesProcesadas;
 
     } catch (error) {
+
         console.log("error en listarPublicacionesModel", error);
         throw error;
+
     }
 };
 
