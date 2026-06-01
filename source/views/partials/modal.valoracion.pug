@@ -1,0 +1,31 @@
+if usuarioLogueado
+  // Cada imagen tiene su propio modal identificado por su id_imagen único
+  .modal.fade(id=`modalValorar-${img.id_imagen}` tabindex="-1" aria-hidden="true")
+    .modal-dialog.modal-dialog-centered
+      .modal-content
+
+        .modal-header
+          h5.modal-title Valorar Imagen
+          button.btn-close(type="button" data-bs-dismiss="modal")
+
+        .modal-body
+          // Mostramos una miniatura en el modal para que el usuario sepa qué está puntuando
+          .text-center.mb-3
+            img(src=img.ruta_url style="max-height: 120px; object-fit: contain;" class="rounded img-thumbnail")
+          
+          form(action="/valoraciones/valorar" method="POST")
+            // Enviamos el id de la imagen en lugar de la publicación
+            input(type="hidden" name="idImagen" value=img.id_imagen)
+
+            .mb-3
+              label.form-label Selecciona una puntuacion para esta imagen
+
+              select.form-select(name="puntuacion" required)
+                option(value="") Seleccionar
+                option(value="1") ⭐ 1
+                option(value="2") ⭐⭐ 2
+                option(value="3") ⭐⭐⭐ 3
+                option(value="4") ⭐⭐⭐⭐ 4
+                option(value="5") ⭐⭐⭐⭐⭐ 5
+
+            button.btn.btn-primary.w-100(type="submit") Enviar valoracion

@@ -29,62 +29,67 @@ export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
 //funciona lista las publicaciones de un usuario (solo las activas)
 export const listarPublicacionesModel = async () => {
     try {
-
+        // se traen las publicaiones
         const query = `
-            SELECT    
+            SELECT   
                 p.id_publicacion,
                 p.titulo,
                 p.descripcion,
                 p.id_usuario,
                 u.nombre_usuario,
-                GROUP_CONCAT(i.ruta_url) AS rutas_concatenadas 
+                GROUP_CONCAT(
+                    CONCAT_WS(':', i.id_imagen, i.ruta_url, IFNULL(v.promedio, 0), IFNULL(v.votos, 0)) 
+                    SEPARATOR '|') AS imagenes_data
             FROM publicaciones p 
             JOIN usuarios u ON p.id_usuario = u.id_usuario
             LEFT JOIN imagenes i ON p.id_publicacion = i.id_publicacion
+            LEFT JOIN (
+                SELECT 
+                    id_imagen, 
+                    AVG(puntuacion) AS promedio, 
+                    COUNT(id_valoracion) AS votos 
+                FROM valoraciones 
+                GROUP BY id_imagen
+            ) v ON i.id_imagen = v.id_imagen
             WHERE p.estado = 1 
-            GROUP BY 
-                p.id_publicacion,
-                p.titulo,
-                p.descripcion,
-                p.id_usuario,
-                u.nombre_usuario
+            GROUP BY p.id_publicacion, u.nombre_usuario, p.titulo, p.descripcion, p.id_usuario
             ORDER BY p.fecha_creacion DESC 
             LIMIT 12
         `;
 
         const [resultado] = await db.query(query);
 
+        // Se traen las cadenas para armar el objeto con la estructura para comentarios
         const publicacionesProcesadas = await Promise.all(
-
             resultado.map(async (pub) => {
-
                 const comentarios = await listarComentariosPorPublicacionModel(pub.id_publicacion);
+
+                // se parsea a un string complejo
+                const imagenes = pub.imagenes_data
+                    ? pub.imagenes_data.split('|').map(imgStr => {
+                          const [id_imagen, ruta_url, promedio, votos] = imgStr.split(':');
+                          return {
+                              id_imagen: parseInt(id_imagen),
+                              ruta_url,
+                              promedio: parseFloat(promedio).toFixed(1),
+                              votos: parseInt(votos)
+                          };
+                      })
+                    : [];
 
                 return {
                     ...pub,
-
-                    imagenes: pub.rutas_concatenadas
-                        ? pub.rutas_concatenadas
-                            .split(',')
-                            .map(url => ({
-                                ruta_url: url
-                            }))
-                        : [],
-
+                    imagenes,
                     comentarios
                 };
-
             })
-
         );
 
         return publicacionesProcesadas;
 
     } catch (error) {
-
         console.log("error en listarPublicacionesModel", error);
         throw error;
-
     }
 };
 

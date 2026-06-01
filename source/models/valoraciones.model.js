@@ -45,9 +45,11 @@ export const verificarVotoExistenteModel = async (idImagen, idUsuario) => {
 
 export const sacarPromedioValoracionesModel = async (idImagen) => {
     try {
-        const query = `SELECT AVG(puntuacion) AS promedio FROM valoraciones WHERE id_imagen = ?`;
+        
+        const query = `  SELECTROUND(AVG(puntuacion),0) promedio,COUNT(*) votos FROM valoraciones WHERE id_publicacion = ?`;
         const [resultado] = await db.query(query, [idImagen]);
         return resultado;
+
     } catch (error) {
         console.log("Error en sacarPromedioValoracionesModel", error);
         throw error;

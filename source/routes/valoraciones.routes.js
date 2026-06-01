@@ -4,7 +4,7 @@ import { esUsuarioRegistrado } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 //funcionan
-router.post("/valorar/:idUsuario", esUsuarioRegistrado, registrarValoracionController);//funciona
+router.post("/valorar", esUsuarioRegistrado, registrarValoracionController);//funciona
 router.get("/promediar/:idImagen", sacarPromedioValoracionesController);//funciona
 
 
