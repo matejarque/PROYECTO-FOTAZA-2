@@ -1,5 +1,5 @@
 import {registrarValoracionModel, obtenerAutorDeImagenModel,verificarVotoExistenteModel, sacarPromedioValoracionesModel} from "../models/valoraciones.model.js";
-
+import db from "../config/db.js";
 //idImagen, idUsuario, puntuacion -> model
 export const registrarValoracionController = async (req, res) => {
     try {

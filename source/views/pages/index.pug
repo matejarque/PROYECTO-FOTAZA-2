@@ -54,3 +54,12 @@ block content
 
       li.page-item
         a.page-link(href="#") →
+
+    // ==========================================================================
+    // INYECCIÓN DE MODALES DE VALORACIÓN EN LA RAÍZ DEL CONTENIDO
+    // Esto evita interferencias con el overflow y z-index del carrusel de fotos
+    // ==========================================================================
+  each pub in publicaciones
+    if pub.imagenes && pub.imagenes.length > 0
+      each img in pub.imagenes
+        include ../partials/modal.valoracion.pug

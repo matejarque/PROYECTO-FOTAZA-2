@@ -38,11 +38,10 @@
                 .position-absolute.top-0.end-0.bg-dark.text-white.bg-opacity-75.m-2.p-1.px-2.rounded.small
                   | ⭐ #{img.promedio}/5 (#{img.votos} votos)
 
-              // Bloque de acciones específicas para ESTA imagen si está logueado
+              // Bloque de acciones especificas para ESTA imagen si el usuario lo esta
               .p-2.bg-light.border-bottom.d-flex.justify-content-between.align-items-center
                 span.text-muted.small Imagen ##{i + 1}
                 if usuarioLogueado
-                  // Validamos que el usuario no sea el autor de la publicación antes de dejarlo puntuar
                   if usuarioLogueado.id !== pub.id_usuario
                     button.btn.btn-xs.btn-outline-primary.py-0(type="button" data-bs-toggle="modal" data-bs-target=`#modalValorar-${img.id_imagen}`) ⭐ Puntuar esta foto
                   else
@@ -77,11 +76,7 @@
           button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") 💬 Comentar
           button.btn.btn-sm.btn-outline-success.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ✨ Interés
 
-    // =========================
-    // INCLUDES (Generamos los modales de valoración recorriendo las imágenes de la publicación)
-    // =========================
+    // ========================
+    // INCLUDES 
+    // ========================
     include ./comentarios.pug
-    if pub.imagenes && pub.imagenes.length > 0
-      each img in pub.imagenes
-        // Pasamos la variable 'img' explícitamente al modal para renderizar uno por imagen
-        include ./modal.valoracion.pug
