@@ -7,10 +7,9 @@ import session from 'express-session';
 //IMPORTO DIRECTAMENTE DE MODEL, COMO ES EL HOME PRINCIAPL
 import { listarPublicacionesModel } from "./models/publicaciones.model.js";
 import {contarSeguidoresModel} from "./models/seguidor.model.js";
-import {obtenerPublicacionesPorUsuarioModel} from "./models/publicaciones.model.js";
+import { obtenerPublicacionesPorUsuarioModel } from "./models/publicaciones.model.js";
 import { buscarUsuarioPorIdModel } from "./models/usuario.model.js";
-
-
+import { verificarSeguimientoModel } from "./models/seguidor.model.js";
 // --------------------------------------------- CONFIGURACION DE VARIABLES Y RUTAS ----------------------------------
 
 dotenv.config();
@@ -33,6 +32,7 @@ import denunciasRoutes from "./routes/denuncias.routes.js";
 import notificacionesRoutes from "./routes/notificaciones.routes.js";
 import interesImagenRoutes from "./routes/interes_imagen.routes.js";
 import coleccionesRoutes from "./routes/colecciones.routes.js";
+import  buscarRoutes  from './routes/buscar.routes.js';
 
 
 
@@ -98,6 +98,7 @@ app.get("/perfil", async (req, res) => {
         const { seguidores, seguidos } = await contarSeguidoresModel(idUsuario);
 
         res.render("pages/perfil", {
+            usuarioLogueado: req.session.usuarioLogueado,
             seccion,
             misPublicaciones,
             cantidadPublicaciones: misPublicaciones.length,
@@ -112,19 +113,22 @@ app.get("/perfil", async (req, res) => {
 
 //este es para el perfil publico
 app.get("/perfil/:id", async (req, res) => {
-
     try {
-
-        const {id} = req.params;
-
+        const { id } = req.params;
         const publicaciones = await obtenerPublicacionesPorUsuarioModel(id);
-
-        const {seguidores, seguidos} = await contarSeguidoresModel(id);
-
+        const { seguidores, seguidos } = await contarSeguidoresModel(id);
         const usuario = await buscarUsuarioPorIdModel(id);
 
         if (!usuario || usuario.length === 0) {
             return res.redirect("/");
+        }
+
+        // Determinar si el usuario logueado ya sigue a este perfil público
+        let loSigo = false;
+        if (req.session.usuarioLogueado) {
+            const idSeguidor = req.session.usuarioLogueado.id;
+            const seguimiento = await verificarSeguimientoModel(idSeguidor, id);
+            loSigo = seguimiento.length > 0;
         }
 
         res.render("pages/perfilPublico", {
@@ -132,10 +136,11 @@ app.get("/perfil/:id", async (req, res) => {
             publicaciones,
             cantidadPublicaciones: publicaciones.length,
             cantidadSeguidores: seguidores,
-            cantidadSeguidos: seguidos});
+            cantidadSeguidos: seguidos,
+            loSigo 
+        });
 
     } catch (error) {
-
         console.log("error perfil publico", error);
         res.redirect("/");
     }
@@ -177,7 +182,7 @@ app.use("/notificaciones", notificacionesRoutes);
 app.use("/interes-imagen", interesImagenRoutes);
 app.use("/colecciones", coleccionesRoutes);
 
-
+app.use(buscarRoutes);
 
 
 // -----------------------------------------------------  RUTAS DE UTILIDAD Y ERRORES ----------------------------------

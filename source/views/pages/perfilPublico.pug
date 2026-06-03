@@ -11,6 +11,22 @@ block content
         .perfil-top
           h3 @#{usuario.nombre_usuario}
 
+          // ==========================================================================
+          // CONTROL DE SEGUIMIENTO (ACCIONES DE COMUNIDAD)
+          // ==========================================================================
+          if usuarioLogueado
+            if usuarioLogueado.id !== usuario.id_usuario
+              if loSigo
+                form(action="/seguidores/dejar-seguir" method="POST")
+                  input(type="hidden" name="idUsuarioSeguido" value=usuario.id_usuario)
+                  button.btn.btn-sm.btn-danger(type="submit") Dejar de seguir
+              else
+                form(action="/seguidores/seguir" method="POST")
+                  input(type="hidden" name="idUsuarioSeguido" value=usuario.id_usuario)
+                  button.btn.btn-sm.btn-primary(type="submit") Seguir
+          else
+            button.btn.btn-sm.btn-outline-secondary(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") Seguir
+
         .perfil-stats
           .stat
             strong #{cantidadPublicaciones || 0}
@@ -41,4 +57,4 @@ block content
 
         .col-12
           .alert.alert-dark.text-center
-            | Este usuario aun no tiene publicaciones
+            | Este usuario aun no tiene publicaciones.

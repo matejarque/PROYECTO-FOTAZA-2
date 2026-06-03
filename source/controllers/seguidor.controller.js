@@ -2,57 +2,47 @@ import {seguirModel, dejarDeSeguirModel,contarSeguidoresModel, verificarSeguimie
 //seguirModel dejarDeSeguirModel idUsuarioSeguidor, idUsuarioSeguido
 export const seguirController = async (req, res) => {
     try {
-        //const {idUsuarioSeguidor} = req.session;
-        const { idUsuarioSeguidor, idUsuarioSeguido } = req.body;
+        const idUsuarioSeguidor = req.session.usuarioLogueado.id;
+        const { idUsuarioSeguido } = req.body;
 
-        
         if (!idUsuarioSeguidor || !idUsuarioSeguido) {
-            return res.status(400).json({ mensaje: "Faltan ids de usuarios para poder continuar" });
+            return res.status(400).json({ mensaje: "Faltan ids de usuarios" });
         }
 
         if (parseInt(idUsuarioSeguidor) === parseInt(idUsuarioSeguido)) {
-            return res.status(404).json({ mensaje: "No se puede autoseguir" });
+            return res.status(400).json({ mensaje: "No se puede autoseguir" });
         }
 
         const existe = await verificarSeguimientoModel(idUsuarioSeguidor, idUsuarioSeguido);
 
-        if(existe.length === 1){
-            return res.status(409).json({mensaje: "ya sigues este usuario, no puedes seguirlo nuevamente"});
-
-        }else{
-            const resultado = await seguirModel(idUsuarioSeguidor, idUsuarioSeguido);
-            return res.status(200).json({ mensaje: "ahora lo sigue", data: resultado});
+        if (existe.length === 1) {
+            return res.redirect(`/perfil/${idUsuarioSeguido}`); 
+        } else {
+            await seguirModel(idUsuarioSeguidor, idUsuarioSeguido);
+            return res.redirect(`/perfil/${idUsuarioSeguido}`); 
         }
-        
         
     } catch (error) {
         console.log("Error en seguirController:", error);
-        return res.status(500).json({ mensaje: "Error en sel serveral seguir usuario"});
+        return res.status(500).send("Error interno al intentar seguir.");
     }   
 }
 
-
-
 export const dejarDeSeguirController = async (req, res) => {
     try {
-        //const {idUsuarioSeguidor} = req.session;
-        const { idUsuarioSeguidor, idUsuarioSeguido } = req.body;
+        const idUsuarioSeguidor = req.session.usuarioLogueado.id;
+        const { idUsuarioSeguido } = req.body;
 
         if (!idUsuarioSeguidor || !idUsuarioSeguido) {
             return res.status(400).json({ mensaje: "Faltan IDs para dejar de seguir" });
         }
 
-        const resultado = await dejarDeSeguirModel(idUsuarioSeguidor, idUsuarioSeguido);
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({ mensaje: "no se encontro la ruta no existe esa relacion" });
-        }
-
-        return res.status(200).json({mensaje: "Ya no segus a este usuario", data: resultado });
+        await dejarDeSeguirModel(idUsuarioSeguidor, idUsuarioSeguido);
+        return res.redirect(`/perfil/${idUsuarioSeguido}`); // <-- REDIRECCIÓN SEGURA EXPLÍCITA
 
     } catch (error) {
         console.log("Error en dejarDeSeguirController:", error);
-        return res.status(500).json({ mensaje: "Error interno al intentar dejar de seguir" });
+        return res.status(500).send("Error interno al intentar dejar de seguir.");
     }
 }
 

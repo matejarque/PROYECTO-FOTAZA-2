@@ -1,23 +1,14 @@
-/**
- * id_publicacion
-titulo
-descripcion
-visibilidad
-contador_visualizaciones,
-id_usuario
-comentarios_abiertos
- */
 import db from '../config/db.js';
 import { listarComentariosPorPublicacionModel } from "./comentarios.model.js";
 
-//funciona, crea la publicacion base
-export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
+// MODIFICADO: Ahora recibe e inserta idCategoria de manera limpia
+export const crearPublicacionModel = async (titulo, descripcion, idUsuario, idCategoria) => {
     try {
         const query = `
         INSERT INTO 
-            publicaciones (titulo, descripcion, id_usuario) 
-            VALUES (?, ?, ?)`;
-        const [resultado] = await db.query(query, [titulo, descripcion, idUsuario]);
+            publicaciones (titulo, descripcion, id_usuario, id_categoria) 
+            VALUES (?, ?, ?, ?)`;
+        const [resultado] = await db.query(query, [titulo, descripcion, idUsuario, idCategoria || null]);
 
         return resultado;
 
@@ -26,6 +17,7 @@ export const crearPublicacionModel = async (titulo, descripcion, idUsuario) => {
         throw error;
     }
 };
+
 //funciona lista las publicaciones de un usuario (solo las activas)
 export const listarPublicacionesModel = async () => {
     try {
@@ -155,7 +147,7 @@ export const obtenerTodasLasPublicacionesModel = async() => {
         JOIN usuarios u ON publi.id_usuario = u.id_usuario
         WHERE publi.estado = 1
         ORDER BY publi.fecha_creacion DESC`;
-        const [resultado] = await db.query(query,(1));
+        const [resultado] = await db.query(query); 
         return resultado;
 
     } catch (error) {
@@ -195,16 +187,30 @@ export const buscarPublicacionesModel = async (termino) => {
  */
 export const publicacionesDeUsuariosSeguidosModel = async (idUsuarioLogueado) => {
     try {
-        const quety = `SELECT p.*, u.nombre_usuario 
+        const query = `SELECT p.*, u.nombre_usuario 
             FROM publicaciones p
             JOIN seguidores s ON p.id_usuario = s.id_usuario_seguido
             JOIN usuarios u ON p.id_usuario = u.id_usuario
             WHERE s.id_usuario_seguidor = ? AND p.estado = 1
             ORDER BY p.fecha_creacion DESC`;
-        const [resultado] = await db.query(quety, [idUsuarioLogueado]);
+        const [resultado] = await db.query(query, [idUsuarioLogueado]);
+        
+        return resultado; 
         
     } catch (error) {
         console.log("error en publicacionesDeUsuarioSeguidos");
         throw error;
     }
 }
+
+export const obtenerTodasLasCategoriasModel = async () => {
+    try {
+        const query = `SELECT id_categoria, nombre_categoria FROM categorias ORDER BY nombre_categoria ASC`;
+        const [resultado] = await db.query(query);
+        return resultado;
+    } catch (error) {
+        console.log("error en obtenerTodasLasCategoriasModel");
+        throw error;
+    }
+
+};

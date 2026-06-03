@@ -18,20 +18,24 @@ html(lang="es")
           span.navbar-toggler-icon
 
         #navbarContent.collapse.navbar-collapse
-         
-          if usuarioLogueado
-            form.mx-auto.w-50(action="/buscar" method="GET")
-              .input-group
-                span.input-group-text.bg-light.border-end-0 | 🔍
-                input.form-control.bg-light.border-start-0(type="search" name="q" placeholder="Busca imágenes...")
-              .d-flex.gap-2.mt-2
-                select.form-select.form-select-sm(name="filtroCategoria")
-                  option(value="") Todas las categorías
-                  option(value="Naturaleza") Naturaleza
-                  option(value="Animales") Animales
-                select.form-select.form-select-sm(name="filtroOrden")
-                  option(value="recientes") Mas recientes
-                  option(value="valoradas") Mas valoradas
+          
+          form.mx-auto.w-50(action="/buscar" method="GET")
+            .input-group
+              span.input-group-text.bg-light.border-end-0 | 🔍
+              input.form-control.bg-light.border-start-0(type="search" name="q" placeholder="Busca imágenes..." value=busqueda ? busqueda.q : "")
+            .d-flex.gap-2.mt-2
+              // ==========================================================================
+              // FILTRO DE CATEGORIAS
+              // ==========================================================================
+              select.form-select.form-select-sm(name="filtroCategoria")
+                option(value="") Todas las categorías
+                if listaCategoriasGlobal
+                  each cat in listaCategoriasGlobal
+                    option(value=cat.nombre_categoria selected=busqueda && busqueda.filtroCategoria === cat.nombre_categoria) #{cat.nombre_categoria}
+              
+              select.form-select.form-select-sm(name="filtroOrden")
+                option(value="recientes" selected=busqueda && busqueda.filtroOrden === "recientes") Más recientes
+                option(value="valoradas" selected=busqueda && busqueda.filtroOrden === "valoradas") Más valoradas
           
           ul.navbar-nav.ms-auto.align-items-center
             if usuarioLogueado
@@ -58,7 +62,7 @@ html(lang="es")
                li.nav-item
                 button.btn.btn-link.nav-link.fw-semibold(
                   type="button"
-                  data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Iniciar sesion
+                  data-bs-toggle="modal" data-bs-target="#modalIniciarSesion") Iniciar sesión
               
                li.nav-item.ms-2
                 button.btn.btn-outline-dark.rounded-pill.px-3(
@@ -71,7 +75,6 @@ html(lang="es")
                   data-bs-toggle="modal" data-bs-target="#modalCheck")
                   span.me-1 ↑
                   | Subir
-
           
     main.container(style="margin-top:100px")
       block content
@@ -88,4 +91,3 @@ html(lang="es")
     script(src="/js/validacionInicioRegistro.js")
     script(src="/js/login.js")
     script(src="/js/comentarios.js")
-    

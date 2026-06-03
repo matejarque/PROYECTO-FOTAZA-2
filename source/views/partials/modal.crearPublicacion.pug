@@ -13,8 +13,17 @@
 
           textarea.form-control.mb-2(name="descripcion" placeholder="Descripción" required)
 
-          select.form-control.mb-2(name="idLicencia" required)
-            option(value="4") Selecciona una licencia
+          // ==========================================================================
+          // SELECCIÓN DE CATEGORIA
+          // ==========================================================================
+          select.form-select.mb-2(name="idCategoria" required)
+            option(value="") Selecciona una categoría
+            if listaCategoriasGlobal
+              each cat in listaCategoriasGlobal
+                option(value=cat.id_categoria) #{cat.nombre_categoria}
+
+          select.form-select.mb-2(name="idLicencia" required)
+            option(value="") Selecciona una licencia
             option(value="4") Sin copyright
             option(value="1") Con copyright 
             option(value="2") Creative Commons

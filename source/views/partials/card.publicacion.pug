@@ -30,15 +30,12 @@
         if pub.imagenes && pub.imagenes.length > 0
           each img, i in pub.imagenes
             .carousel-item(class=i === 0 ? "active" : "")
-              // Contenedor relativo para posicionar las estrellas sobre la imagen
               .position-relative
                 img.d-block.w-100(src=img.ruta_url alt="Imagen" loading="lazy" style="height:250px; object-fit:cover;")
                 
-                // Badge flotante con la puntuación de ESTA imagen específica
                 .position-absolute.top-0.end-0.bg-dark.text-white.bg-opacity-75.m-2.p-1.px-2.rounded.small
                   | ⭐ #{img.promedio}/5 (#{img.votos} votos)
 
-              // Bloque de acciones especificas para ESTA imagen si el usuario lo esta
               .p-2.bg-light.border-bottom.d-flex.justify-content-between.align-items-center
                 span.text-muted.small Imagen ##{i + 1}
                 if usuarioLogueado

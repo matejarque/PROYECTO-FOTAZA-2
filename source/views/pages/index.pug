@@ -30,8 +30,15 @@ block content
       h5.fw-semibold.mb-0
         | Publicaciones recientes
 
-      small.text-muted
-        | Hola de nuevo, #{usuarioLogueado.nombre_usuario}
+  if busqueda && (busqueda.q || busqueda.filtroCategoria)
+    .alert.alert-light.border.d-flex.justify-content-between.align-items-center.mb-4
+      span.text-muted
+        | Resultados para: 
+        if busqueda.q
+          strong  "#{busqueda.q}" 
+        if busqueda.filtroCategoria
+          span.badge.bg-secondary.ms-2 #{busqueda.filtroCategoria}
+      a.btn.btn-sm.btn-link.text-decoration-none(href="/") Limpiar filtros
 
   .row.g-4
     each pub in publicaciones
@@ -55,11 +62,11 @@ block content
       li.page-item
         a.page-link(href="#") →
 
-    // ==========================================================================
-    // INYECCIÓN DE MODALES DE VALORACIÓN EN LA RAÍZ DEL CONTENIDO
-    // Esto evita interferencias con el overflow y z-index del carrusel de fotos
-    // ==========================================================================
+  // ==========================================================================
+  // modales de valoracion
+  // ==========================================================================
   each pub in publicaciones
     if pub.imagenes && pub.imagenes.length > 0
       each img in pub.imagenes
-        include ../partials/modal.valoracion.pug
+        if img && img.id_imagen
+          include ../partials/modal.valoracion.pug

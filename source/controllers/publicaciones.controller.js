@@ -1,4 +1,4 @@
-import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
+import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, obtenerTodasLasCategoriasModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
 import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
 import { registrarImagenAPublicacionModel} from "../models/imagenes.model.js"
 
@@ -7,24 +7,22 @@ export const crearPublicacionController = async (req, res) => {
     try {
         const idUsuario = req.session.usuarioLogueado.id;
 
-        let { titulo, descripcion, idLicencia, marcaAgua } = req.body;
+        let { titulo, descripcion, idLicencia, marcaAgua, idCategoria} = req.body;
 
-        //par amandar el id licencia como 4
         if (!idLicencia || idLicencia === "") {
             idLicencia = 4; 
         }
 
-        if (!titulo || !descripcion) {
-            return res.status(400).json({ mensaje: "Faltan datos" });
+        if (!titulo || !descripcion || !idCategoria) {
+            return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
         }
 
-        const resultado = await crearPublicacionModel(titulo, descripcion, idUsuario);
+        const resultado = await crearPublicacionModel(titulo, descripcion, idUsuario, idCategoria);
         const idPublicacion = resultado.insertId;
 
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const ruta = "/img/" + file.filename;
-
                 await registrarImagenAPublicacionModel(idPublicacion, ruta, idLicencia, marcaAgua || null);
             }
         }
@@ -67,24 +65,22 @@ export const obtenerPublicacionPorIdController = async (req, res) => {
     }
 };
 
-
-
 export const eliminarPublicacionController = async (req, res) =>{
-try {
+    try {
 
-    const { id } = req.params;
+        const { id } = req.params;
 
-    const resultado = await eliminarPublicacionModel(id);
+        const resultado = await eliminarPublicacionModel(id);
 
-    return res.status(200).json({mensaje: "se elimino la publicacion", data: resultado});
+        return res.status(200).json({mensaje: "se elimino la publicacion", data: resultado});
 
-} catch (error) {
+    } catch (error) {
 
-    console.log("error eliminarPublicacionController", error);
+        console.log("error eliminarPublicacionController", error);
 
-    return res.status(500).json({mensaje: "error en el servidor eliminarPublicacionController"});
-}
-}
+        return res.status(500).json({mensaje: "error en el servidor eliminarPublicacionController"});
+    }
+};
 
 export const editarPublicacionController = async (req, res) =>{
     try {
@@ -106,7 +102,7 @@ export const editarPublicacionController = async (req, res) =>{
         console.log("error editarPublicacionController", error);
         return res.status(500).json({mensaje: "error en el servidor editarPublicacionController"});
     }
-}
+};
 
 export const obtenerTodasLasPublicacionesController = async (req, res) => {   
     try {
@@ -116,7 +112,7 @@ export const obtenerTodasLasPublicacionesController = async (req, res) => {
         console.log(error);
         return res.status(500).json({ mensaje: "Error en el servidor-catchObtenerTodasLasPublicacionesController" });
     }
-}
+};
 
 export const validarYBajarPublicacionController = async (req, res) => {
     try {
@@ -170,8 +166,22 @@ export const publicacionesDeUsuariosSeguidosController = async (req, params) => 
         console.log("errir en publicacionesDeUsuariosSeguidsController");
         res.status(500).json({dato: "error en el servidor/publicacionesDeUsuariosSeguidosController"});
     }
-}
+};
 
-
-
-
+// ==========================================================================
+// NUEVO: CONTROLADOR PARA ENVIAR CATEGORÍAS EN FORMATO JSON AL FRONTEND
+// ==========================================================================
+export const listarCategoriasController = async (req, res) => {
+    try {
+        const categorias = await obtenerTodasLasCategoriasModel();
+        return res.status(200).json({ 
+            mensaje: "Categorías obtenidas correctamente", 
+            data: categorias 
+        });
+    } catch (error) {
+        console.log("Error en listarCategoriasController:", error);
+        return res.status(500).json({ 
+            mensaje: "Error interno del servidor al procesar las categorías" 
+        });
+    }
+};
