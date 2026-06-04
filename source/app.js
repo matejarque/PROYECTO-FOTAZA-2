@@ -10,12 +10,15 @@ import {contarSeguidoresModel} from "./models/seguidor.model.js";
 import { obtenerPublicacionesPorUsuarioModel } from "./models/publicaciones.model.js";
 import { buscarUsuarioPorIdModel } from "./models/usuario.model.js";
 import { verificarSeguimientoModel } from "./models/seguidor.model.js";
+import { obtenerTodasLasCategoriasModel } from "./models/publicaciones.model.js";
+
+
 // --------------------------------------------- CONFIGURACION DE VARIABLES Y RUTAS ----------------------------------
 
 dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 // Importacion de todas las rutas
 import usuarioRoutes from "./routes/usuario.routes.js"; 
@@ -32,10 +35,7 @@ import denunciasRoutes from "./routes/denuncias.routes.js";
 import notificacionesRoutes from "./routes/notificaciones.routes.js";
 import interesImagenRoutes from "./routes/interes_imagen.routes.js";
 import coleccionesRoutes from "./routes/colecciones.routes.js";
-import  buscarRoutes  from './routes/buscar.routes.js';
-
-
-
+import buscarRoutes from './routes/buscar.routes.js';
 
 
 // -----------------------------------------------------  INICIALIZACION DE TODA LA APP     ----------------------------------
@@ -43,12 +43,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-
 // // -----------------------------------------------------  CONFIGURACION DE PUG ----------------------------------
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
-
 
 
 // -----------------------------------------------------  MIDELWARES GLOBALES ----------------------------------
@@ -56,8 +53,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// -----------------------------------------------------  CONFIGUIRACION DE SESIÓNES ----------------------------------
+// -----------------------------------------------------  CONFIGUIRACION DE SESSIONES ----------------------------------
 app.use(session({
     secret: process.env.SESSION_SECRET, 
     resave: false,
@@ -68,42 +64,51 @@ app.use(session({
     }
 }));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     res.locals.usuarioLogueado = req.session.usuarioLogueado;
+    
+    try {
+        res.locals.listaCategoriasGlobal = await obtenerTodasLasCategoriasModel();
+    } catch (error) {
+        console.log("Error al cargar categorias globales en las vistas:", error);
+        res.locals.listaCategoriasGlobal = [];
+    }
+    
     next();
 });
 
-
-
+// DESTRUCCION DE LA SESSION
 app.get("/salir", (req, res) => {
-    req.session.destroy(() => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log("Error al destruir la sesion:", err);
+        }
+        res.clearCookie('connect.sid'); // Borra el token identificador de la compu del usuario
         res.redirect("/");
-    })
-})
+    });
+});
+
 
 app.get("/perfil", async (req, res) => {
-
     try {
-
         if (!req.session.usuarioLogueado) {
             return res.redirect("/");
         }
 
         const seccion = req.query.seccion || "publicaciones";
-
         const idUsuario = req.session.usuarioLogueado.id;
-
         const misPublicaciones = await obtenerPublicacionesPorUsuarioModel(idUsuario);
-
         const { seguidores, seguidos } = await contarSeguidoresModel(idUsuario);
 
         res.render("pages/perfil", {
             usuarioLogueado: req.session.usuarioLogueado,
             seccion,
             misPublicaciones,
+            amountPublicaciones: misPublicaciones.length,
             cantidadPublicaciones: misPublicaciones.length,
             cantidadSeguidores: seguidores,
-            cantidadSeguidos: seguidos});
+            cantidadSeguidos: seguidos
+        });
 
     } catch (error) {
         console.log("error perfil", error);
@@ -111,7 +116,7 @@ app.get("/perfil", async (req, res) => {
     }
 });
 
-//este es para el perfil publico
+//perfil publico
 app.get("/perfil/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -123,7 +128,6 @@ app.get("/perfil/:id", async (req, res) => {
             return res.redirect("/");
         }
 
-        // Determinar si el usuario logueado ya sigue a este perfil público
         let loSigo = false;
         if (req.session.usuarioLogueado) {
             const idSeguidor = req.session.usuarioLogueado.id;
@@ -147,16 +151,14 @@ app.get("/perfil/:id", async (req, res) => {
 });
 
 
-
-
 // -----------------------------------------------------  RUTA RAIZ ------------- ----------------------------------
-
 app.get('/', async (req, res) => {
     try {
         const publicaciones = await listarPublicacionesModel();
-        
         res.render('pages/index', { 
-            publicaciones: publicaciones,  usuarioLogueado: req.session.usuarioLogueado});
+            publicaciones: publicaciones,  
+            usuarioLogueado: req.session.usuarioLogueado
+        });
     } catch (error) {
         console.error("Error al cargar las publicaciones en el Home:", error);
         res.render('pages/index', { publicaciones: [], usuarioLogueado: null });
@@ -164,9 +166,7 @@ app.get('/', async (req, res) => {
 });
 
 
-
 // -----------------------------------------------------  USO DE RUTAS  --------------------------------------------
-
 app.use("/usuarios", usuarioRoutes);
 app.use("/publicaciones", publicacionesRoutes);
 app.use("/comentarios", comentariosRoutes);
@@ -181,25 +181,17 @@ app.use("/denuncias", denunciasRoutes);
 app.use("/notificaciones", notificacionesRoutes);
 app.use("/interes-imagen", interesImagenRoutes);
 app.use("/colecciones", coleccionesRoutes);
-
 app.use(buscarRoutes);
 
-
 // -----------------------------------------------------  RUTAS DE UTILIDAD Y ERRORES ----------------------------------
-
-
-
-// Ruta de prueba para la DB 
 app.get('/db', (req, res) => {
     res.send("Chequea la consola de tu terminal para ver el estado de la conexión.");
 });
 
-// Para manejar erorres 404, podria agregar otros
 app.all(/.*/, (req, res) => {
     res.status(404).send('<h1>404 No Disponible - Fotaza 2</h1>');
 });
 
-// --- LEvantar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor levantado en el puerto ${PORT}`);
     console.log(`http://localhost:${PORT}`);

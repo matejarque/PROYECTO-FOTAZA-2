@@ -12,9 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const contrasena = datos.get("contrasena");
 
         try {
+            
             const respuesta = await fetch("/usuarios/verificar-inicio-sesion", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
+                credentials: "include", 
                 body: JSON.stringify({nombre, contrasena})});
 
             const resultado = await respuesta.json();
@@ -22,11 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (respuesta.ok) {
 
                 alert("Login exitoso");
-
                 window.location.href = "/perfil";
 
             } else {
-
                 alert(resultado.mensaje);
             }
 
