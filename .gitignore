@@ -1,6 +1,24 @@
+# Dependencias de Node
 node_modules/
+
+# Variables de entorno y secretos (¡NUNCA SUBIR!)
 .env
 .env.*
+
+# Archivos de subida de imágenes y assets temporales
 uploads/
+public/img/*
+!public/img/default-avatar.jpg
+
+# Archivos de logs y reportes de errores
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Documentacion temporal o privada
 READMEPropio.md
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
