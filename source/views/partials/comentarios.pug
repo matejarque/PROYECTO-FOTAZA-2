@@ -1,37 +1,44 @@
 // =========================
 // COMENTARIOS
 // =========================
-
-.collapse(id=`comentarios-${pub.id_publicacion}`)
-
+.collapse.comentarios-box(id=`comentarios-${pub.id_publicacion}` data-id-publicacion=pub.id_publicacion)
   .p-3.border-top
+    
+    .d-flex.justify-content-between.align-items-center.mb-3
+      h6.mb-0.text-muted Lista de comentarios
+      
+      // SOLO SE MUESTRA SI ES EL DUEÑO Y SI LOS COMENTARIOS ESTÁN ABIERTOS (Default o 1)
+      if usuarioLogueado && usuarioLogueado.id === pub.id_usuario
+        // Si pub.comentarios_abiertos no viene en el SQL, usamos '|| 1' para forzar que inicie abierto de forma segura
+        if (pub.comentarios_abiertos || 1) === 1
+          button.btn.btn-xs.btn-outline-danger.rounded-pill.btn-toggle-comentarios(
+            type="button"
+            data-id-publicacion=pub.id_publicacion
+            data-estado-actual="1"
+          ) 🔒 Cerrar comentarios
 
     .lista-comentarios
-
       if pub.comentarios && pub.comentarios.length > 0
-
         each c in pub.comentarios
           .small.mb-2
             strong.text-primary @#{c.nombre_usuario}
             |  #{c.contenido}
-
       else
         small.text-muted.sin-comentarios No hay comentarios aún
 
+    // Formulario interactivo controlado por el estado de la publicación
     if usuarioLogueado
-
-      form.form-comentario
-
-        input(type="hidden" name="idPublicacion" value=pub.id_publicacion)
-
-        .input-group.mt-2
-
-          input.form-control.form-control-sm(
-            type="text"
-            name="comentario"
-            placeholder="Escribe un comentario..."
-            required
-          )
-
-          button.btn.btn-sm.btn-primary(type="submit")
-            | Enviar
+      .form-contenedor(style=(pub.comentarios_abiertos === 0) ? "display:none" : "display:block")
+        form.form-comentario.mt-2
+          input(type="hidden" name="idPublicacion" value=pub.id_publicacion)
+          .input-group
+            input.form-control.form-control-sm(
+              type="text"
+              name="comentario"
+              placeholder="Escribe un comentario..."
+              required
+            )
+            button.btn.btn-sm.btn-primary(type="submit") Enviar
+      
+      .aviso-cerrado.mt-2(style=(pub.comentarios_abiertos === 0) ? "display:block" : "display:none")
+        small.text-danger.fw-semibold  Esta publicacion ha sido cerrada
