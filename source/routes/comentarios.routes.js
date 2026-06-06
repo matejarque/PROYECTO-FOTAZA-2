@@ -11,7 +11,7 @@ router.post("/crear", esUsuarioRegistrado, crearComentarioController); //funcion
 router.get("/publicacion/:idPublicacion", listarComentariosPorPublicacionController);//funciona
 router.put("/editar/:idComentario/:idUsuario", esUsuarioRegistrado, editarComentarioController);//debo quitar idUsuario porque lo sacare de .session
 
-router.put("/modificar-apertura/:idPublicacion/:idUsuario", esUsuarioRegistrado, modificarEstadoComentariosController);//este es para cerrar los comentarios de publicacion, deberia de colocarlo en publicacion?
+router.put("/modificar-apertura/:idPublicacion", esUsuarioRegistrado, modificarEstadoComentariosController);//este es para cerrar los comentarios de publicacion, deberia de colocarlo en publicacion?
 
 router.put("/eliminar/:idComentario", esUsuarioRegistrado, eliminarComentarioController);//funciono a la primera
 //router.put("/reportar/:idComentario", comentarioReportadoController);//funciona, pero me di cuenta que muchos usuarios pueden reportar un comentario, estohay que manejarlo con otra tabla

@@ -50,25 +50,29 @@ export const crearComentarioController = async (req, res) => {
 
 export const modificarEstadoComentariosController = async (req, res) => {
     try {
-        const { idPublicacion, idUsuario } = req.params;
+        const { idPublicacion } = req.params; 
+        const idUsuario = req.session.usuarioLogueado?.id; 
         const { comentarioAbierto } = req.body; 
 
         if (comentarioAbierto === undefined || !idUsuario) {
-            return res.status(400).json({ mensaje: "faltan datos comentarioAbierto o idUsuario" });
+            return res.status(400).json({ mensaje: "Faltan datos obligatorios (comentarioAbierto o sesión válida)" });
         }
 
+        
         const resultado = await modificarAperturaDeComentariosEnPublicacionModel(idPublicacion, comentarioAbierto, idUsuario);
 
         if (resultado.affectedRows === 0) {
-            return res.status(400).json({mensaje: "No se pudo actualizar"});
+            return res.status(403).json({ mensaje: "No tienes permisos para cerrar los comentarios de esta publicación" });
         }
 
-        const estadoTexto = comentarioAbierto === 1 ? 1 : 0;
-        return res.status(200).json({ mensaje: `Los comentarios ahora estan ${estadoTexto}` });
+        return res.status(200).json({ 
+            mensaje: "Estado de comentarios actualizado correctamente",
+            comentarios_abiertos: comentarioAbierto
+        });
 
     } catch (error) {
         console.log("Error en modificarEstadoComentariosController", error);
-        return res.status(500).json({ mensaje: "Error al intentar cambiar el estado de los comentarios modificarEstadoComentarioController" });
+        return res.status(500).json({ mensaje: "Error interno en el servidor al cambiar estado" });
     }
 };
 

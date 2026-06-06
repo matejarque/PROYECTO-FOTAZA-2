@@ -1,18 +1,15 @@
 import { crearPublicacionModel, eliminarPublicacionModel, editarPublicacionModel, obtenerPublicacionPorIdModel, obtenerTodasLasCategoriasModel, listarPublicacionesModel, obtenerTodasLasPublicacionesModel, publicacionesDeUsuariosSeguidosModel } from "../models/publicaciones.model.js";
 import { suspenderUsuarioODarDeAltaModel, buscarUsuarioPorIdModel } from "../models/usuario.model.js";
 import { registrarImagenAPublicacionModel} from "../models/imagenes.model.js"
+import { subirArchivoALaNube } from "../service/cloudinary.js";
 
 
 export const crearPublicacionController = async (req, res) => {
     try {
         const idUsuario = req.session.usuarioLogueado.id;
+        let { titulo, descripcion, idLicencia, marcaAgua, idCategoria } = req.body;
 
-        let { titulo, descripcion, idLicencia, marcaAgua, idCategoria} = req.body;
-
-        if (!idLicencia || idLicencia === "") {
-            idLicencia = 4; 
-        }
-
+        if (!idLicencia || idLicencia === "") idLicencia = 4; 
         if (!titulo || !descripcion || !idCategoria) {
             return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
         }
@@ -22,8 +19,8 @@ export const crearPublicacionController = async (req, res) => {
 
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
-                const ruta = "/img/" + file.filename;
-                await registrarImagenAPublicacionModel(idPublicacion, ruta, idLicencia, marcaAgua || null);
+                const urlRemota = await subirArchivoALaNube(file.buffer, file.mimetype);
+                await registrarImagenAPublicacionModel(idPublicacion, urlRemota, idLicencia, marcaAgua || null);
             }
         }
 
@@ -31,7 +28,7 @@ export const crearPublicacionController = async (req, res) => {
 
     } catch (error) {
         console.log("ERROR CONTROLLER:", error);
-        return res.status(500).json({ mensaje: "Error en el servidor" });
+        return res.status(500).json({ mensaje: "Error en el servidor al publicar" });
     }
 };
 

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { buscarPublicaciones } from '../controllers/buscar.controller.js';
+import { buscarPublicacionesController } from '../controllers/buscar.controller.js';
 
 const router = Router();
 
 
-router.get('/buscar', buscarPublicaciones);
+router.get('/buscar', buscarPublicacionesController);
 
 export default router;

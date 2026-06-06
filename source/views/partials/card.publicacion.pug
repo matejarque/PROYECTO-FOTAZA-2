@@ -7,17 +7,14 @@
     .card-body
       .d-flex.align-items-center.mb-3
         a.usuario-link.d-flex.align-items-center.text-decoration-none(href=`/perfil/${pub.id_usuario}`)
-          img.avatar-mini.me-2(src="/img/default-avatar.jpg" alt="Avatar" style="width:30px; height:30px; border-radius:50%; object-fit:cover;")
+          img.avatar-mini.me-2(src="/img/default-avatar.jpg" alt="Avatar")
           span.small.fw-bold.text-primary @#{pub.nombre_usuario}
 
-      h6.card-title.mb-2
-        | #{pub.titulo}
-
-      p.card-text.text-muted.small.mb-3
-        | #{pub.descripcion}
+      h6.card-title.mb-2 #{pub.titulo}
+      p.card-text.text-muted.small.mb-3 #{pub.descripcion}
 
     // =========================
-    // CARRUSEL CON VALORACIONES POR IMAGEN
+    // CARRUSEL CON VALORACIONES
     // =========================
     .carousel.slide(id=`carrusel-${pub.id_publicacion}` data-bs-ride="false")
 
@@ -30,24 +27,29 @@
         if pub.imagenes && pub.imagenes.length > 0
           each img, i in pub.imagenes
             .carousel-item(class=i === 0 ? "active" : "")
-              .position-relative
-                img.d-block.w-100(src=img.ruta_url alt="Imagen" loading="lazy" style="height:250px; object-fit:cover;")
+              .position-relative.media-contenedor
+                // Verificamos si es video o imagen por la url de Cloudinary
+                if img.ruta_url && (img.ruta_url.includes('.mp4') || img.ruta_url.includes('.mov') || img.ruta_url.includes('.avi'))
+                  video.d-block.w-100.media-render(controls)
+                    source(src=img.ruta_url type="video/mp4")
+                else
+                  img.d-block.w-100.media-render(src=img.ruta_url || "/img/default-avatar.jpg" alt="Contenido")
                 
                 .position-absolute.top-0.end-0.bg-dark.text-white.bg-opacity-75.m-2.p-1.px-2.rounded.small
                   | ⭐ #{img.promedio}/5 (#{img.votos} votos)
 
-              .p-2.bg-light.border-bottom.d-flex.justify-content-between.align-items-center
+              .p-2.bg-light.border-bottom.d-flex.justify-content-between.align-items-center.barra-puntuacion
                 span.text-muted.small Imagen ##{i + 1}
-                if usuarioLogueado
-                  if usuarioLogueado.id !== pub.id_usuario
-                    button.btn.btn-xs.btn-outline-primary.py-0(type="button" data-bs-toggle="modal" data-bs-target=`#modalValorar-${img.id_imagen}`) ⭐ Puntuar esta foto
-                  else
-                    span.text-muted.small.text-danger (Tu publicación)
-                else
-                  button.btn.btn-xs.btn-outline-primary.py-0(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ⭐ Puntuar
+                button.btn.btn-xs.btn-outline-primary.py-0.btn-puntuar-foto(
+                  type="button"
+                  data-id-imagen=img.id_imagen
+                  data-id-autor=pub.id_usuario
+                  data-id-logueado=usuarioLogueado ? usuarioLogueado.id : ""
+                ) ⭐ Puntuar esta foto
         else
           .carousel-item.active
-            img.d-block.w-100(src="/img/default-avatar.jpg" alt="Imagen" loading="lazy" style="height:250px; object-fit:cover;")
+            .position-relative.media-contenedor
+              img.d-block.w-100.media-render(src="/img/default-avatar.jpg" alt="Imagen por defecto")
 
       if pub.imagenes && pub.imagenes.length > 1
         button.carousel-control-prev(type="button" data-bs-target=`#carrusel-${pub.id_publicacion}` data-bs-slide="prev")
@@ -61,19 +63,20 @@
     // FOOTER BOTONES GENERALES
     // =========================
     .card-footer.bg-white.border-top-0.pt-3
-      if usuarioLogueado
-        .d-flex.justify-content-between.gap-1.mb-2
-          button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="collapse" data-bs-target=`#comentarios-${pub.id_publicacion}`) 💬 Comentar (#{pub.comentarios ? pub.comentarios.length : 0})
-          button.btn.btn-sm.btn-outline-success.flex-fill(type="button") ✨ Interés
+      .d-flex.justify-content-between.gap-1.mb-2
+        button.btn.btn-sm.btn-outline-secondary.flex-fill.btn-trigger-comentarios(
+          type="button" 
+          data-bs-toggle="collapse" 
+          data-bs-target=`#comentarios-${pub.id_publicacion}`
+        ) 💬 Comentar #{usuarioLogueado && pub.comentarios ? `(${pub.comentarios.length})` : ''}
+        
+        button.btn.btn-sm.btn-outline-success.flex-fill.btn-interes(type="button" data-id-pub=pub.id_publicacion) ✨ Interés
 
+      if usuarioLogueado
         .d-grid
           button.btn.btn-sm.btn-link.text-danger.text-decoration-none(type="button" data-bs-toggle="modal" data-bs-target="#modalReportar") 🚩 Reportar contenido
-      else
-        .d-flex.justify-content-between.gap-1.mb-2
-          button.btn.btn-sm.btn-outline-secondary.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") 💬 Comentar
-          button.btn.btn-sm.btn-outline-success.flex-fill(type="button" data-bs-toggle="modal" data-bs-target="#modalCheck") ✨ Interés
 
     // ========================
-    // INCLUDES 
+    // INCLUDES
     // ========================
     include ./comentarios.pug

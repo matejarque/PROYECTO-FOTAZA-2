@@ -83,17 +83,17 @@ main.container{
     border-bottom:1px solid #f1f1f1;
 }
 
-/* Corrección de superposición del botón de puntuar con las flechas del carrusel */
+
 .carousel-item .d-flex.justify-content-between.align-items-center {
     position: relative;
-    z-index: 15 !important; /* Fuerza a la barra de puntuación a estar por encima de las flechas */
-    background-color: #f8f9fa !important; /* Mantiene el fondo sólido para aislar los clics */
+    z-index: 15 !important; 
+    background-color: #f8f9fa !important; 
 }
 
-/* Evita que los controles laterales invadan la zona inferior donde se encuentra el botón */
+
 .carousel-control-prev,
 .carousel-control-next {
-    height: 82% !important; /* Acorta las flechas para que no tapen el botón de puntuar */
+    height: 82% !important; 
     z-index: 10 !important;
 }
 
@@ -317,17 +317,50 @@ body{
 }
 
 /* ==========================================================================
-   5. PARCHE CRÍTICO: CORRECCIÓN DE PARPADEO Y SUPERPOSICIÓN EN MODALES
-   ========================================================================== */
+   CORRECCIÓN DE PARPADEO Y SUPERPOSICIÓN EN MODALES
+========================================================================== */
 .modal {
-    z-index: 1060 !important; /* Fuerza al modal sobre cualquier capa del layout */
+    z-index: 1060 !important; 
 }
 
 .modal-backdrop {
-    z-index: 1050 !important; /* Mantiene el fondo oscuro estrictamente por detrás del modal */
+    z-index: 1050 !important; 
 }
-
 .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto; /* Controla el scroll del modal evitando conflictos con animaciones hijas */
+    overflow-y: auto; 
+}
+
+
+/* ==========================================================================
+    AJUSTE DE CONTENEDORES MULTIMEDIA (CLOUDINARY Y VIDEOS)
+========================================================================== */
+
+.media-contenedor {
+    width: 100%;
+    height: 250px;
+    background-color: #eaeaea; 
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media-render {
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover; 
+}
+
+/* Evita que los controles laterales de Bootstrap pisen el botón de interactuar */
+.carousel-control-prev,
+.carousel-control-next {
+    height: 75% !important; 
+    top: 0 !important;
+    z-index: 5 !important;
+}
+
+.barra-puntuacion {
+    position: relative;
+    z-index: 10 !important;
 }

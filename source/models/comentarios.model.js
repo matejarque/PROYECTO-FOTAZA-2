@@ -1,14 +1,5 @@
 import db from '../config/db.js';
 
-/**
- * 
-id_comentario
-contenido
-fecha_creacion
-estado
-id_usuario
-id_publicacion
- */
 export const crearComentarioModel = async (comentario, idUsuario, idPublicacion) => {
     try {
          const query = `INSERT INTO comentarios (contenido, id_usuario, id_publicacion)VALUES (?, ?, ?)`;
@@ -21,6 +12,8 @@ export const crearComentarioModel = async (comentario, idUsuario, idPublicacion)
     }
 }
 
+
+//esta es para publicaciones
 export const modificarAperturaDeComentariosEnPublicacionModel = async (idPublicacion, comentarioAbierto, idUsuario ) => {
     try {
         const query = `UPDATE publicaciones SET comentarios_abiertos = ? WHERE id_publicacion = ? AND id_usuario = ?`
