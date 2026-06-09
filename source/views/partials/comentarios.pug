@@ -7,15 +7,13 @@
     .d-flex.justify-content-between.align-items-center.mb-3
       h6.mb-0.text-muted Lista de comentarios
       
-      // SOLO SE MUESTRA SI ES EL DUEÑO Y SI LOS COMENTARIOS ESTÁN ABIERTOS (Default o 1)
       if usuarioLogueado && usuarioLogueado.id === pub.id_usuario
-        // Si pub.comentarios_abiertos no viene en el SQL, usamos '|| 1' para forzar que inicie abierto de forma segura
         if (pub.comentarios_abiertos || 1) === 1
           button.btn.btn-xs.btn-outline-danger.rounded-pill.btn-toggle-comentarios(
             type="button"
             data-id-publicacion=pub.id_publicacion
             data-estado-actual="1"
-          ) 🔒 Cerrar comentarios
+          )  Cerrar comentarios
 
     .lista-comentarios
       if pub.comentarios && pub.comentarios.length > 0
