@@ -7,14 +7,14 @@
         button.btn-close(type="button" data-bs-dismiss="modal")
 
       .modal-body
-        form(action="/publicaciones/crear" method="POST" enctype="multipart/form-data")
+        form#formCrearPublicacionNueva(action="/publicaciones/crear" method="POST" enctype="multipart/form-data")
 
           input.form-control.mb-2(type="text" name="titulo" placeholder="Título" required)
 
           textarea.form-control.mb-2(name="descripcion" placeholder="Descripción" required)
 
           // ==========================================================================
-          // SELECCIÓN DE CATEGORIA
+          // SELECCION DE CATEGORIA
           // ==========================================================================
           select.form-select.mb-2(name="idCategoria" required)
             option(value="") Selecciona una categoría
@@ -28,7 +28,8 @@
             option(value="1") Con copyright 
             option(value="2") Creative Commons
 
-          input.form-control.mb-3(type="file" name="imagenes" multiple accept="image/*" required)
+          // Input multiple //me cargaba una imagen, luego pasar a un .js
+          input.form-control.mb-3(type="file" name="imagenes" multiple accept="image/*,video/*" required)
 
           input.form-control.mb-2(type="text" name="marcaAgua" placeholder="Marca de agua (opcional)")
 
