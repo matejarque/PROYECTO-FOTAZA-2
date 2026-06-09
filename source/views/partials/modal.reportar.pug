@@ -2,19 +2,19 @@
   .modal-dialog.modal-dialog-centered
     .modal-content
       .modal-header
-        h5.modal-title Reportar publicación 
+        h5.modal-title Reportar publicacion 
         button.btn-close(type="button" data-bs-dismiss="modal")
 
       .modal-body
-        p ¿Cual es el motivo del reporte?
+        p ¿Cual es el motivo de reporte?
 
-        select#selectMotivoDenuncia.form-select.mb-3
-          option(value="" disabled selected) Selecciona un motivo...
-          option(value="1") Spam
-          option(value="2") Contenido ofensivo
-          option(value="3") Contenido inapropiado
-          option(value="4") Otro
+        //luego cargarlo con la base de datos
+        select.form-select.mb-3
+          option Spam
+          option Contenido ofensivo
+          option Contenido inapropiado
+          option Otro
 
       .modal-footer
         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
-        button#btnConfirmarReporte.btn.btn-danger(type="button" data-id-publicacion="") Enviar reporte
+        button.btn.btn-danger(type="button") Enviar reporte

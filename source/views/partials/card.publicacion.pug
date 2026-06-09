@@ -28,6 +28,7 @@
           each img, i in pub.imagenes
             .carousel-item(class=i === 0 ? "active" : "")
               .position-relative.media-contenedor
+                // Verificamos si es video o imagen por la url de Cloudinary
                 if img.ruta_url && (img.ruta_url.includes('.mp4') || img.ruta_url.includes('.mov') || img.ruta_url.includes('.avi'))
                   video.d-block.w-100.media-render(controls)
                     source(src=img.ruta_url type="video/mp4")
@@ -45,25 +46,6 @@
                   data-id-autor=pub.id_usuario
                   data-id-logueado=usuarioLogueado ? usuarioLogueado.id : ""
                 ) ⭐ Puntuar esta foto
-
-            // MODAL DINÁMICO DE VALORACIÓN PARA CADA IMAGEN (Evita el error 404)
-            .modal.fade(id=`modalValorar-${img.id_imagen}` tabindex="-1" aria-hidden="true")
-              .modal-dialog.modal-dialog-centered.modal-sm
-                .modal-content
-                  .modal-header
-                    h6.modal-title Puntuar Imagen ##{i + 1}
-                    button.btn-close(type="button" data-bs-dismiss="modal")
-                  .modal-body.text-center
-                    form.form-puntuar(data-id-imagen=img.id_imagen)
-                      .mb-3
-                        label.form-label.fw-bold Elige una puntuación:
-                        select.form-select.select-puntuacion(required)
-                          option(value="5") ⭐⭐⭐⭐⭐ (5)
-                          option(value="4") ⭐⭐⭐⭐ (4)
-                          option(value="3") ⭐⭐⭐ (3)
-                          option(value="2") ⭐⭐ (2)
-                          option(value="1") ⭐ (1)
-                      button.btn.btn-sm.btn-primary.w-100(type="submit") Enviar Puntuación
         else
           .carousel-item.active
             .position-relative.media-contenedor
@@ -92,12 +74,7 @@
 
       if usuarioLogueado
         .d-grid
-          button.btn.btn-sm.btn-link.text-danger.text-decoration-none.btn-abrir-reporte(
-            type="button" 
-            data-bs-toggle="modal" 
-            data-bs-target="#modalReportar"
-            data-id-publicacion=pub.id_publicacion
-          ) 🚩 Reportar contenido
+          button.btn.btn-sm.btn-link.text-danger.text-decoration-none(type="button" data-bs-toggle="modal" data-bs-target="#modalReportar") 🚩 Reportar contenido
 
     // ========================
     // INCLUDES

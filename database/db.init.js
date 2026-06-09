@@ -1,4 +1,4 @@
-import db from '../source/config/db.js'; 
+import db from './source/config/db.js'; 
 import dotenv from 'dotenv';
 
 dotenv.config();
