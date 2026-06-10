@@ -19,4 +19,17 @@ const db = mysql.createPool({
     }
 });
 
+// ===============================
+// PRUEBA DE CONEXION
+// ===============================
+(async () => {
+    try {
+        const conn = await db.getConnection();
+        console.log("✅ MYSQL CONECTADO CORRECTAMENTE");
+        conn.release();
+    } catch (error) {
+        console.error("❌ ERROR CONECTANDO MYSQL:", error);
+    }
+})();
+
 export default db;
