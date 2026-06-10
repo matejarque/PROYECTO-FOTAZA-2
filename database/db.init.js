@@ -146,13 +146,13 @@ const inicializarBaseDeDatos = async () => {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
         await db.query(`CREATE TABLE IF NOT EXISTS seguidores (
-        id_usuario_seguidor INT NOT NULL,
-        id_usuario_seguido INT NOT NULL,
-        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (id_usuario_seguidor, id_usuario_seguido),
-        FOREIGN KEY (id_usuario_seguidor) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
-        FOREIGN KEY (id_usuario_seguido) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
-     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
+            id_usuario_seguidor INT NOT NULL,
+            id_usuario_seguido INT NOT NULL,
+            fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id_usuario_seguidor, id_usuario_seguido),
+            FOREIGN KEY (id_usuario_seguidor) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
+            FOREIGN KEY (id_usuario_seguido) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
         await db.query(`CREATE TABLE intereses_imagen (
                 id_interes INT AUTO_INCREMENT PRIMARY KEY,
@@ -206,15 +206,14 @@ const inicializarBaseDeDatos = async () => {
         await db.query(`INSERT INTO motivos_denuncia (id_motivo, nombre) VALUES (1, 'Contenido inapropiado'), (2, 'Plagio / Derechos de autor'), (3, 'Spam o estafa'), (4, 'Otro')`);
 
         // ==========================================================================
-        //                     GENERACION DE USUARIO
+        //                          GENERACION DE USUARIOS
         // ==========================================================================
         console.log(" Encriptando contraseñas e insertando usuarios de prueba.");
 
-        const hashAdmin = await bcrypt.hash('admin', 10);
         const hashUsuarios = await bcrypt.hash('12345678', 10); 
 
         await db.query(`INSERT INTO usuarios (id_usuario, nombre_usuario, correo_electronico, contrasena, id_rol, bio, pais) 
-            VALUES (1, 'admin', 'admin@fotaza.com', ?, 1, 'Cuenta Administradora del sistema.', 'Argentina')`, [hashAdmin]);
+            VALUES (1, 'ejarque_matias', 'matias@fotaza.com', ?, 1, 'Cuenta Administradora del sistema.', 'Argentina')`, [hashUsuarios]);
 
         
         const usuariosPrueba = [
@@ -225,7 +224,7 @@ const inicializarBaseDeDatos = async () => {
             ['test_user5', 'user5@fotaza.com', 'Buscando inspiración en la comunidad.'],
             ['test_user6', 'user6@fotaza.com', 'Amante de la vida silvestre y los animales.'],
             ['test_user7', 'user7@fotaza.com', 'Compartiendo pedacitos de mi galería personal.'],
-            ['test_user8', 'user8@fotaza.com', 'Probando interacciones dinámicas en la app.'],
+            ['test_user8', 'user8@fotaza.com', 'Probando interacciones dinámicas.'],
             ['test_user9', 'user9@fotaza.com', 'Creador independiente enfocado en licencias CC.']
         ];
 
