@@ -26,16 +26,16 @@
                   Comentario eliminado por denuncias
               else
                 strong.text-primary @#{com.nombre_usuario}
-                span #{com.texto_comentario}
+                span #{com.contenido}
 
-            if usuarioLogueado
+            if usuarioLogueado && com.estado !== "eliminado"
               button.btn.btn-sm.btn-link.text-danger.p-0.btn-reportar-comentario(
                 type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#modalReportar"
                 data-id-comentario=com.id_comentario
                 data-id-publicacion=pub.id_publicacion
-              )| Reportar
+              ) Reportar
       else
         small.text-muted.sin-comentarios No hay comentarios aún
 
