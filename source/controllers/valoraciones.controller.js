@@ -37,7 +37,7 @@ export const registrarValoracionController = async (req, res) => {
         await db.query(`INSERT INTO valoraciones (id_imagen, id_usuario, puntuacion, fecha_creacion)VALUES (?, ?, ?, NOW())`, [idImagen, idUsuario, puntuacion]);
 
         // recarga la vista para actualizar la puntuacion
-        return res.redirect("back");
+        return res.redirect(req.headers.referer || "/");
 
     } catch (error) {
         console.log("Error en registrarValoracionController", error);

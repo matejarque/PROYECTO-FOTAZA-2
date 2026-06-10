@@ -7,22 +7,35 @@
     .d-flex.justify-content-between.align-items-center.mb-3
       h6.mb-0.text-muted Lista de comentarios
       
-      // SOLO SE MUESTRA SI ES EL DUEÑO Y SI LOS COMENTARIOS ESTÁN ABIERTOS (Default o 1)
       if usuarioLogueado && usuarioLogueado.id === pub.id_usuario
-        // Si pub.comentarios_abiertos no viene en el SQL, usamos '|| 1' para forzar que inicie abierto de forma segura
         if (pub.comentarios_abiertos || 1) === 1
           button.btn.btn-xs.btn-outline-danger.rounded-pill.btn-toggle-comentarios(
             type="button"
             data-id-publicacion=pub.id_publicacion
             data-estado-actual="1"
-          ) 🔒 Cerrar comentarios
+          )  Cerrar comentarios
 
     .lista-comentarios
       if pub.comentarios && pub.comentarios.length > 0
-        each c in pub.comentarios
-          .small.mb-2
-            strong.text-primary @#{c.nombre_usuario}
-            |  #{c.contenido}
+        each com in pub.comentarios
+          .d-flex.justify-content-between.align-items-center.mb-2.small
+
+            div
+              if com.estado === "eliminado"
+                small.text-danger.fw-bold
+                  Comentario eliminado por denuncias
+              else
+                strong.text-primary @#{com.nombre_usuario}
+                span #{com.texto_comentario}
+
+            if usuarioLogueado
+              button.btn.btn-sm.btn-link.text-danger.p-0.btn-reportar-comentario(
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#modalReportar"
+                data-id-comentario=com.id_comentario
+                data-id-publicacion=pub.id_publicacion
+              )| Reportar
       else
         small.text-muted.sin-comentarios No hay comentarios aún
 

@@ -1,5 +1,6 @@
 import db from './source/config/db.js'; 
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt'; 
 
 dotenv.config();
 
@@ -9,7 +10,6 @@ const inicializarBaseDeDatos = async () => {
         console.log("         Inicializacion de la Base de Datos");
         console.log("==================================================");
 
-        //  Desactivar temporalmente las restricciones de clave foranea
         await db.query('SET FOREIGN_KEY_CHECKS = 0');
 
         const tablas = [
@@ -29,23 +29,20 @@ const inicializarBaseDeDatos = async () => {
         //                          CREACION DE TABLAS
         // ==========================================================================
         
-        console.log("🏗️  Creando nuevas tablas...");
+        console.log("creando tablas");
 
-        await db.query(`
-            CREATE TABLE roles (
+        await db.query(`CREATE TABLE roles (
                 id_rol INT AUTO_INCREMENT PRIMARY KEY,
                 nombre VARCHAR(50) NOT NULL UNIQUE,
                 estado TINYINT(1) DEFAULT 1
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
-        await db.query(`
-            CREATE TABLE categorias (
+        await db.query(`CREATE TABLE categorias (
                 id_categoria INT AUTO_INCREMENT PRIMARY KEY,
                 nombre_categoria VARCHAR(50) NOT NULL UNIQUE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
-        await db.query(`
-            CREATE TABLE licencias (
+        await db.query(`CREATE TABLE licencias (
                 id_licencia INT AUTO_INCREMENT PRIMARY KEY,
                 tipo VARCHAR(50) NOT NULL UNIQUE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
@@ -196,47 +193,53 @@ const inicializarBaseDeDatos = async () => {
                 FOREIGN KEY (id_etiqueta) REFERENCES etiquetas (id_etiqueta) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
-        console.log(" Tablas creadas exitosamente");
+        console.log(" Tablas creadas exitosamente.");
 
         // ==========================================================================
-        // 4. INSERT DE DATOS DE PRUEBA
+        //                          CONFIGURACION DE LA BASE INSERTS
         // ==========================================================================
-        console.log("Insertando registros de prueba");
+        console.log("Insertando registros esenciales...");
 
-        // Roles esenciales 
         await db.query(`INSERT INTO roles (id_rol, nombre) VALUES (1, 'administrador'), (2, 'validador'), (3, 'usuario')`);
-        
-        // categorias
-        await db.query(`INSERT INTO categorias (id_categoria, nombre_categoria) VALUES (1, 'Naturaleza'), (2, 'Animales'), (3, 'Urbano')`);
-        
-        // Licencias base
+        await db.query(`INSERT INTO categorias (id_categoria, nombre_categoria) VALUES (1, 'Naturaleza'), (2, 'Animales'), (3, 'Urbano'), (4, 'Paisajes'), (5, 'Retratos')`);
         await db.query(`INSERT INTO licencias (id_licencia, tipo) VALUES (1, 'Con copyright'), (2, 'Creative Commons'), (4, 'Sin copyright')`);
+        await db.query(`INSERT INTO motivos_denuncia (id_motivo, nombre) VALUES (1, 'Contenido inapropiado'), (2, 'Plagio / Derechos de autor'), (3, 'Spam o estafa'), (4, 'Otro')`);
+
+        // ==========================================================================
+        //                     GENERACION DE USUARIO
+        // ==========================================================================
+        console.log(" Encriptando contraseñas e insertando usuarios de prueba.");
+
+        const hashAdmin = await bcrypt.hash('admin', 10);
+        const hashUsuarios = await bcrypt.hash('12345678', 10); 
+
+        await db.query(`INSERT INTO usuarios (id_usuario, nombre_usuario, correo_electronico, contrasena, id_rol, bio, pais) 
+            VALUES (1, 'admin', 'admin@fotaza.com', ?, 1, 'Cuenta Administradora del sistema.', 'Argentina')`, [hashAdmin]);
+
         
-        // Motivos de denuncia para el modal
-        await db.query(`INSERT INTO motivos_denuncia (id_motivo, nombre) VALUES (1, 'Contenido inapropiado'), (2, 'Plagio / Derechos de autor'), (3, 'Spam o estafa')`);
+        const usuariosPrueba = [
+            ['test_user1', 'user1@fotaza.com', 'Fotógrafo amateur explorando paisajes.'],
+            ['test_user2', 'user2@fotaza.com', 'Amante de la fotografía urbana y callejera.'],
+            ['test_user3', 'user3@fotaza.com', 'Diseñador y creador de contenidos digitales.'],
+            ['test_user4', 'user4@fotaza.com', 'Coleccionista de retratos y momentos artísticos.'],
+            ['test_user5', 'user5@fotaza.com', 'Buscando inspiración en la comunidad.'],
+            ['test_user6', 'user6@fotaza.com', 'Amante de la vida silvestre y los animales.'],
+            ['test_user7', 'user7@fotaza.com', 'Compartiendo pedacitos de mi galería personal.'],
+            ['test_user8', 'user8@fotaza.com', 'Probando interacciones dinámicas en la app.'],
+            ['test_user9', 'user9@fotaza.com', 'Creador independiente enfocado en licencias CC.']
+        ];
 
-        // Usuarios
-        await db.query(`
-            INSERT INTO usuarios (id_usuario, nombre_usuario, correo_electronico, contrasena, id_rol, bio) VALUES 
-            (1, 'validador_test', 'validador@fotaza.com', '12345678', 2, 'Cuenta de prueba para el rol de Validador de contenidos.'),
-            (2, 'matias', 'matias@fotaza.com', '12345678', 3, 'Desarrollador de Fotaza 2.'),
-            (3, 'pedro_test', 'pedro@fotaza.com', '12345678', 3, 'Usuario secundario para interacciones de prueba.')`);
-
-        // Datos complementarios
-        await db.query(`
-            INSERT INTO publicaciones (id_publicacion, titulo, descripcion, id_usuario, id_categoria, estado) VALUES 
-            (1, 'Salas de Ensayo', 'Un recorrido por los estudios de grabacion.', 2, 3, 1),
-            (2, 'Bosque en Otoño', 'Fotografia de paisajes naturales del sur.', 3, 1, 1)
-        `);
-
-        await db.query(`
-            INSERT INTO imagenes (id_imagen, id_publicacion, ruta_url, id_licencia) VALUES 
-            (1, 1, '/img/default-avatar.jpg', 4),
-            (2, 2, '/img/default-avatar.jpg', 1)
-        `);
+        let idActual = 2;
+        for (const user of usuariosPrueba) {
+            await db.query(`
+                INSERT INTO usuarios (id_usuario, nombre_usuario, correo_electronico, contrasena, id_rol, bio, pais) 
+                VALUES (?, ?, ?, ?, 3, ?, 'Argentina')
+            `, [idActual, user[0], user[1], hashUsuarios, user[2]]);
+            idActual++;
+        }
 
         console.log("==================================================");
-        console.log(" Base de datos inicializada y con datos cargados!!!!!! ");
+        console.log("  Base de datos lista! ");
         console.log("==================================================");
         process.exit(0);
 

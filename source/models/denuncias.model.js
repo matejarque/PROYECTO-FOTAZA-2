@@ -69,3 +69,15 @@ export const contarDenunciasComentarioModel = async (idComentario) => {
         throw error;
     }
 };
+
+export const existeDenunciaComentarioModel = async (idDenunciante, idComentario) => {
+
+    const query = ` SELECT id_denuncia FROM denuncias WHERE id_usuario_denunciante = ? AND id_comentario = ?`;
+    const [resultado] = await db.query(query, [idDenunciante,idComentario]);
+    return resultado.length > 0;
+};
+
+export const actualizarEstadoComentarioModel = async (idComentario,estado) => {
+    const query = ` UPDATE comentarios SET estado = ? WHERE id_comentario = ?`;
+    await db.query(query, [estado,idComentario]);
+};

@@ -74,7 +74,12 @@
 
       if usuarioLogueado
         .d-grid
-          button.btn.btn-sm.btn-link.text-danger.text-decoration-none(type="button" data-bs-toggle="modal" data-bs-target="#modalReportar") 🚩 Reportar contenido
+          button.btn.btn-sm.btn-link.text-danger.text-decoration-none.btn-abrir-reporte-publicacion(
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#modalReportar"
+            data-id-publicacion=pub.id_publicacion
+          ) 🚩 Reportar contenido
 
     // ========================
     // INCLUDES

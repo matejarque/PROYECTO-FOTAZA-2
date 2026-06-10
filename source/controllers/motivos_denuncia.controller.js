@@ -1,4 +1,4 @@
-import {editarMotivoDenunciaModel, listarMotivosDenunciaModel, crearMotivoDenunciaModel} from "../models/motivos_denuncia.models.js";
+import {editarMotivoDenunciaModel, listarMotivosDenunciaModel, crearMotivoDenunciaModel} from "../models/motivos_denuncia.model.js";
 
 export const crearMotivoDenunciaController = async (req, res) => {
     try {
@@ -22,7 +22,7 @@ export const listarMotivoDenunciaController = async(req, res) => {
         return res.status(200).json({resul: resultado});
 
     } catch (error) {
-        console.log("Errror en listar motivoDenunciaController". error)
+        console.log("Errror en listar motivoDenunciaController", error)
         res.status(500).json({mensaje: "error en servidor/listarMotivoDenunciaController"})
     }
 }

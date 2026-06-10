@@ -27,34 +27,37 @@ export const buscarUsuarioPorEmailController = async(req, res) =>{
 }
 
 //AMPLIAR LA VALIDACION O HACERLO MAS ADELANTE?
-export const crearUsuarioController = async(req, res) =>{
-    try{
-
-        const {  nombre_usuario, email, password, biografia, pais } = req.body;
+export const crearUsuarioController = async(req, res) => {
+    try {
+        const { nombre_usuario, email, password, biografia, pais } = req.body;
         const foto_perfil = req.file ? req.file.filename : null;
 
-
-        if(!nombre_usuario || !email|| !password){
-            return res.status(400).json({mensaje: "faltan datos"})
+        if (!nombre_usuario || !email || !password) {
+            return res.redirect("/?error_registro=Faltan+datos+obligatorios");
         }
-        
         
         const hash = await bcrypt.hash(password, 10);
         const resultado = await crearUsuarioModel(nombre_usuario, email, hash, biografia || null, foto_perfil || null, pais || null);
         
         req.session.usuarioLogueado = {
-            id:resultado.insertId,
+            id: resultado.insertId,
             nombre: nombre_usuario,
             email: email
-        }
-        res.redirect("/");
+        };
+        
+        return res.redirect("/");
 
-    } catch(error){
+    } catch (error) {
         console.log("ERROR REGISTRO/crearUsuarioController:", error);
-        res.status(500).json({mensaje: "error en el servidr"})
-    }
-}
+        
+        // INTERCEPTAR DUPLICADO
+        if (error.errno === 1062 || error.code === 'ER_DUP_ENTRY') {
+            return res.redirect("/?error_registro=duplicado");
+        }
 
+        return res.redirect("/?error_registro=error_servidor");
+    }
+};
 export const editarUsuarioController = async(req, res) =>{
     try{
         const {idUsuario} = req.params; //mas a futuro modificar a session

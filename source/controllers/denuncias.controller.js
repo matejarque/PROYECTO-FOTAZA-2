@@ -1,21 +1,57 @@
-import {registrarDenunciaModel, contarDenunciasComentarioModel, contarDenunciasUnicasModel, listarPublicacionesParaValidarModel} from "../models/denuncias.model.js";
+import {registrarDenunciaModel, contarDenunciasComentarioModel, contarDenunciasUnicasModel, listarPublicacionesParaValidarModel,
+     existeDenunciaComentarioModel, actualizarEstadoComentarioModel} from "../models/denuncias.model.js";
 
 
-export const registrarDenunciaController  = async(req,res)=>{
+export const registrarDenunciaController = async (req, res) => {
+
     try {
-        //const {idDenunciante} = req.session;
-        const {idDenunciante, idPublicacion, idComentario, idMotivo, descripcion} = req.body;
-        if(!idPublicacion || !idMotivo){
-            return res.status(400).json({mensaje: "faltan idPublicacion o idMotivo"});
+        const {idPublicacion, idComentario, idMotivo, descripcion} = req.body;
+        const idDenunciante = req.session.usuarioLogueado.id;
+
+        if (!idMotivo) {
+            return res.status(400).json({mensaje: "Falta motivo"});
         }
-        const resultado  = await registrarDenunciaModel(idDenunciante, idPublicacion, idComentario, idMotivo, descripcion);
-        return res.status(200).json({mensaje: "denuncia registrada", resul: resultado});
+
+        if (!idPublicacion && !idComentario) {
+            return res.status(400).json({mensaje:"No marco un contenido, ingrese uno"});
+        }
+
+        // ======================
+        // DENUNCIA COMENTARIO
+        // ======================
+
+        if (idComentario) {
+            const yaDenuncio = await existeDenunciaComentarioModel(idDenunciante, idComentario);
+
+            if (yaDenuncio) {
+                return res.status(400).json({ mensaje: "Ya denunciaste este comentario"});
+            }
+
+            await registrarDenunciaModel(idDenunciante, idPublicacion, idComentario, idMotivo, descripcion);
+
+            await actualizarEstadoComentarioModel(idComentario, "reportado");
+
+            const totalDenuncias = await contarDenunciasComentarioModel(idComentario);
+
+            if (totalDenuncias >= 3) {
+                await actualizarEstadoComentarioModel(idComentario,"eliminado");
+            }
+
+            return res.status(200).json({mensaje:"Comentario denunciado"});
+        }
+
+        // ======================
+        // DENUNCIA PUBLICACION
+        // ======================
+
+        await registrarDenunciaModel(idDenunciante, idPublicacion, null, idMotivo, descripcion);
+        return res.status(200).json({mensaje:"Publicación denunciada"});
 
     } catch (error) {
-        console.log("Error en registrar registrarDenunciaController", error);
-        res.status(500).json({mensaje: "Error en servidor/registrarDenunciaController"});
+        console.log("Error registrarDenunciaController",error);
+        return res.status(500).json({mensaje:"Error interno"});
     }
-}
+};
 
 export const contarDenunciasUnicasController = async (req, res) => {
     try {
