@@ -1,4 +1,4 @@
-import db from './source/config/db.js'; 
+import db from '../source/config/db.js'; 
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'; 
 
@@ -145,14 +145,14 @@ const inicializarBaseDeDatos = async () => {
                 FOREIGN KEY (id_motivo) REFERENCES motivos_denuncia (id_motivo) ON DELETE RESTRICT
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
-        await db.query(`CREATE TABLE seguidores (
-                id_usuario_seguidor INT NOT NULL,
-                id_usuario_seguido INT NOT NULL,
-                fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id_usuario_seguidor, id_usuario_seguido),
-                FOREIGN KEY (id_usuario_seguidor) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
-                FOREIGN KEY (id_usuario_seguido) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
+        await db.query(`CREATE TABLE IF NOT EXISTS seguidores (
+        id_usuario_seguidor INT NOT NULL,
+        id_usuario_seguido INT NOT NULL,
+        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id_usuario_seguidor, id_usuario_seguido),
+        FOREIGN KEY (id_usuario_seguidor) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
+        FOREIGN KEY (id_usuario_seguido) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`);
 
         await db.query(`CREATE TABLE intereses_imagen (
                 id_interes INT AUTO_INCREMENT PRIMARY KEY,
